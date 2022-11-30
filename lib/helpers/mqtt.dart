@@ -54,9 +54,7 @@ class MqttProvider with ChangeNotifier {
     }
 
     _mqttClient = MqttServerClient.withPort(
-        "bb3d53a7e0b941edbd4f657916fb2c0a.s2.eu.hivemq.cloud",
-        'flutter_client/$deviceId',
-        8883);
+        mqttHost, 'flutter_client/$deviceId', mqttPort);
     _mqttClient.secure = true;
     _mqttClient.securityContext = SecurityContext.defaultContext;
     _mqttClient.keepAlivePeriod = 20;
