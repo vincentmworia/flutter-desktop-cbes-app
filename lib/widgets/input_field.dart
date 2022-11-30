@@ -72,7 +72,6 @@ class _InputFieldState extends State<InputField> {
         initialValue: widget.initialValue,
         key: widget.key,
         controller: widget.controller,
-
         keyboardType: widget.keyboardType,
         focusNode: widget.focusNode,
         autocorrect: widget.autoCorrect,

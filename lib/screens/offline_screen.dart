@@ -8,7 +8,7 @@ class OfflineScreen extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+      color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
       child: Center(
         child: Text(
           "OFFLINE",

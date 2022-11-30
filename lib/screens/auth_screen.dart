@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import '../main.dart';
 import '../models/user.dart';
@@ -78,30 +79,50 @@ class _AuthScreenState extends State<AuthScreen> {
     if (kDebugMode) {
       print(deviceWidth);
     }
-    final bgImage = Stack(
-      children: [
-        SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: Image.asset(
-            'images/home3.jpg',
-            fit: BoxFit.cover,
-          ),
+    // final bgImage = Stack(
+    //   children: [
+    //     SizedBox(
+    //       height: double.infinity,
+    //       width: double.infinity,
+    //       child: Image.asset(
+    //         'images/home3.jpg',
+    //         fit: BoxFit.cover,
+    //       ),
+    //     ),
+    //     Container(
+    //       width: double.infinity,
+    //       height: double.infinity,
+    //       color: Theme.of(context)
+    //           .colorScheme
+    //           .primary
+    //           .withOpacity(MyApp.appOpacity),
+    //     ),
+    //   ],
+    // );
+    // double _sigmaX = 6.0; // from 0-10
+    double _sigmaY = 3.0; // from 0-10
+    double _opacity = .85; // from 0-1.0
+    final bgImage = Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('images/home3.jpg'),
+          fit: BoxFit.cover,
         ),
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Theme.of(context)
-              .colorScheme
-              .primary
-              .withOpacity(MyApp.appOpacity),
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: _sigmaY, sigmaY: _sigmaY),
+        child: Container(
+          color: Colors.black.withOpacity(_opacity),
         ),
-      ],
+      ),
     );
 
     if (kDebugMode) {
       print(_connectionStatus);
     }
+    const borderRadius=15.0;
     return WindowsWrapper(
         child: LayoutBuilder(
       builder: (context, cons) => Stack(
@@ -110,25 +131,23 @@ class _AuthScreenState extends State<AuthScreen> {
           Visibility(
             visible: goodConnection,
             child: Align(
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.center,
               child: Container(
                 width: deviceWidth < 700 ? 700 * 0.425 : deviceWidth * 0.425,
-                height: deviceHeight * 0.9,
+                height: deviceHeight,
                 decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                    ),
-                    gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).colorScheme.primary.withOpacity(0.75),
-                        Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withOpacity(0.75)
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight
-                    )),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(borderRadius),
+                    topRight: Radius.circular(borderRadius),
+                    bottomLeft: Radius.circular(borderRadius),
+                    bottomRight: Radius.circular(borderRadius),
+                  ),
+                  gradient: LinearGradient(colors: [
+                    Theme.of(context).colorScheme.primary.withOpacity(0.9),
+                    Theme.of(context).colorScheme.secondary.withOpacity(0.9),
+                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                ),
+                padding: const EdgeInsets.all(8),
                 child: AuthScreenForm(
                     authMode: _authMode,
                     isLoading: _isLoading,

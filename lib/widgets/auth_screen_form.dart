@@ -5,6 +5,7 @@ import '../models/user.dart';
 import '../screens/auth_screen.dart';
 import './input_field.dart';
 import '../helpers/custom_data.dart';
+import 'custom_check_box.dart';
 
 class AuthScreenForm extends StatefulWidget {
   const AuthScreenForm({
@@ -76,6 +77,8 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
           style: TextStyle(
               color: (_authMode == AuthMode.login && mode == "Login") ||
                       (_authMode == AuthMode.register && mode == "Register")
+                  // ? Colors.white
+                  // : Colors.white24,
                   ? Theme.of(context).colorScheme.secondary
                   : Colors.white,
               fontSize: 18.0,
@@ -103,9 +106,20 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Text(
         "CBES",
-        style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-            color:Colors.white,
-            letterSpacing: deviceWidth * 0.025),
+        style: Theme.of(context)
+            .textTheme
+            .headlineMedium!
+            .copyWith(color: Colors.white, letterSpacing: deviceWidth * 0.025),
+      ),
+    );
+    final toggleLoginRegister = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(child: _authModeText("Login")),
+          Expanded(child: _authModeText("Register")),
+        ],
       ),
     );
 
@@ -116,14 +130,15 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            titleText,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(child: _authModeText("Login")),
-                Expanded(child: _authModeText("Register")),
-              ],
+            // titleText,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                'images/logo1.PNG',
+                fit: BoxFit.cover,
+              ),
             ),
+
             spacing,
             InputField(
               key: const ValueKey('email'),
@@ -153,7 +168,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
             ),
             if ((_authMode == AuthMode.register))
               SizedBox(
-                width:double.infinity,
+                width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -260,11 +275,11 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                   if (double.tryParse(value) == null) {
                     return 'Invalid number';
                   }
-                  if (value.startsWith("+254")) {
-                    return 'Use 0700000000 format';
+                  if (!value.startsWith("+254")) {
+                    return 'Use +254700000000 format';
                   }
-                  if (value.length != 10) {
-                    return 'Use 0700000000 format';
+                  if (value.length != 13) {
+                    return 'Invalid phone number';
                   }
                   return null;
                 },
@@ -342,18 +357,22 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 },
               ),
             // todo remember me logic
-            // spacing,
-            // if (_authMode == AuthMode.login && deviceWidth > 750)
-            //   Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     children: const <Widget>[
-            //       Text("Remember Me",
-            //           style: TextStyle(
-            //               fontSize: 16.0,
-            //               fontWeight: FontWeight.w300)),
-            //       CustomCheckBox()
-            //     ],
-            //   ),
+            spacing,
+            if (_authMode == AuthMode.login && deviceWidth > 750)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: const <Widget>[
+                    Text("Remember Me",
+                        style: TextStyle(
+                          color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w300)),
+                    CustomCheckBox()
+                  ],
+                ),
+              ),
             spacing,
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -363,12 +382,13 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                     padding: const EdgeInsets.all(10),
                     elevation: 3,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2.0))),
+                        borderRadius: BorderRadius.circular(10.0))),
                 // onPressed: _isLoading ? () {} : _submit,
                 // onPressed: _submit,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  if (_formKey.currentState == null || !(_formKey.currentState!.validate())) {
+                  if (_formKey.currentState == null ||
+                      !(_formKey.currentState!.validate())) {
                     return;
                   }
                   _formKey.currentState!.save();
@@ -378,7 +398,27 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 child: widget.isLoading
                     ? const Text("")
                     : Text(_authMode == AuthMode.login ? "Login" : "Register")),
-            spacing,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 28.0),
+              child: TextButton(
+                child: Text(
+                  "Click to ${_authMode == AuthMode.login ? "Register" : "Login"}",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  setState(() {
+
+                    _authMode == AuthMode.login
+                        ? _authMode = AuthMode.register
+                        : _authMode = AuthMode.login;
+                  });
+                  // todo Switch page
+                },
+              ),
+            ),
           ],
         ),
       ),

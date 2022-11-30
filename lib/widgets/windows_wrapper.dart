@@ -27,43 +27,13 @@ class WindowsWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: WindowBorder(
-        color: Colors.white,
-        width: 1,
-        child: Column(
-          children: [
-            WindowTitleBarBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.account_balance,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      MyApp.appTitle,
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  // const Text(MyApp.appTitle),
-                  Expanded(child: MoveWindow()),
-                  Row(
-                    children: [
-                      MinimizeWindowButton(colors: buttonColors),
-                      MaximizeWindowButton(colors: buttonColors),
-                      CloseWindowButton(colors: closeButtonColors),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Expanded(child: child)
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: WindowBorder(
+          color: Colors.white,
+          width: 0.5,
+          child: child,
         ),
       ),
     );

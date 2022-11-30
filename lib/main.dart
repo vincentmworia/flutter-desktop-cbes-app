@@ -5,10 +5,10 @@ import './screens/auth_screen.dart';
 
 void main() async {
   runApp(const MyApp());
-
+/*auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);*/
   doWhenWindowReady(() {
     final win = appWindow;
-    const initialSize = Size(700, 550);
+    const initialSize = Size(1000, 600);
     win.minSize = initialSize;
     win.size = initialSize;
     win.alignment = Alignment.center;
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   static const appTitle = 'CBES DASHBOARD';
   static const appPrimaryColor = Color(0xff00b159);
   static const appSecondaryColor = Color(0xfff37735);
-  static const appOpacity=0.25;
+  static const appOpacity = 0.25;
 
   static const _defaultScreen = AuthScreen();
 
