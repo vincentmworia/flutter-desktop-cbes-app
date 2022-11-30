@@ -101,6 +101,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
 
   @override
   Widget build(BuildContext context) {
+    // print("h: ${widget.authMode}");
     final deviceWidth = MediaQuery.of(context).size.width;
     final titleText = Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -366,7 +367,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                   children: const <Widget>[
                     Text("Remember Me",
                         style: TextStyle(
-                          color: Colors.white,
+                            color: Colors.white,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w300)),
                     CustomCheckBox()
@@ -393,7 +394,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                   }
                   _formKey.currentState!.save();
 
-                  widget.submit(user);
+                  widget.submit(user, _authMode);
                 },
                 child: widget.isLoading
                     ? const Text("")
@@ -410,7 +411,6 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 ),
                 onPressed: () {
                   setState(() {
-
                     _authMode == AuthMode.login
                         ? _authMode = AuthMode.register
                         : _authMode = AuthMode.login;

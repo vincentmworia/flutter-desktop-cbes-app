@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:cbesdesktop/providers/firebase_auth.dart';
+
+import '../helpers/custom_data.dart';
 import '../main.dart';
 import '../models/user.dart';
 import '../widgets/auth_screen_form.dart';
@@ -38,12 +41,22 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
-  void _submit(User user) {
+  void _submit(User user, AuthMode authMode) async {
     setState(() => _isLoading = true);
     print(user.toMap());
-    print(user.autoLogin);
-    Future.delayed(const Duration(seconds: 3))
-        .then((value) => setState(() => _isLoading = false));
+    // Use provider to get the status of autologin, Use shared preferences api to autologin
+    // print(user.autoLogin);
+    print(authMode);
+    if (authMode == AuthMode.register) {
+      // await FirebaseAuthentication.signUp(user)
+      //     .then((value) => setState(() => _isLoading = false))
+      //     .then((msg) async => await customDialog(context, msg));
+      await FirebaseAuthentication.signUp(user)
+          .then((message) async => await customDialog(context, message));
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -79,29 +92,8 @@ class _AuthScreenState extends State<AuthScreen> {
     if (kDebugMode) {
       print(deviceWidth);
     }
-    // final bgImage = Stack(
-    //   children: [
-    //     SizedBox(
-    //       height: double.infinity,
-    //       width: double.infinity,
-    //       child: Image.asset(
-    //         'images/home3.jpg',
-    //         fit: BoxFit.cover,
-    //       ),
-    //     ),
-    //     Container(
-    //       width: double.infinity,
-    //       height: double.infinity,
-    //       color: Theme.of(context)
-    //           .colorScheme
-    //           .primary
-    //           .withOpacity(MyApp.appOpacity),
-    //     ),
-    //   ],
-    // );
-    // double _sigmaX = 6.0; // from 0-10
-    double _sigmaY = 3.0; // from 0-10
-    double _opacity = .85; // from 0-1.0
+    double sigma = 2.0; // from 0-10
+    double opacity = 0.7; // from 0-1.0
     final bgImage = Container(
       width: double.infinity,
       height: double.infinity,
@@ -112,9 +104,9 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: _sigmaY, sigmaY: _sigmaY),
+        filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
         child: Container(
-          color: Colors.black.withOpacity(_opacity),
+          color: Colors.black.withOpacity(opacity),
         ),
       ),
     );
@@ -122,7 +114,7 @@ class _AuthScreenState extends State<AuthScreen> {
     if (kDebugMode) {
       print(_connectionStatus);
     }
-    const borderRadius=15.0;
+    const borderRadius = 15.0;
     return WindowsWrapper(
         child: LayoutBuilder(
       builder: (context, cons) => Stack(
@@ -131,16 +123,16 @@ class _AuthScreenState extends State<AuthScreen> {
           Visibility(
             visible: goodConnection,
             child: Align(
-              alignment: Alignment.center,
+              alignment: Alignment.centerRight,
               child: Container(
-                width: deviceWidth < 700 ? 700 * 0.425 : deviceWidth * 0.425,
+                width: deviceWidth * 0.45,
                 height: deviceHeight,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(borderRadius),
-                    topRight: Radius.circular(borderRadius),
+                    // topRight: Radius.circular(borderRadius),
                     bottomLeft: Radius.circular(borderRadius),
-                    bottomRight: Radius.circular(borderRadius),
+                    // bottomRight: Radius.circular(borderRadius),
                   ),
                   gradient: LinearGradient(colors: [
                     Theme.of(context).colorScheme.primary.withOpacity(0.9),

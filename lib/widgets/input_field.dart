@@ -59,7 +59,7 @@ class _InputFieldState extends State<InputField> {
         gapPadding: 4.0,
         borderSide: BorderSide(
           color: color,
-          width: 2.0,
+          width: 3.0,
         ),
       );
 
@@ -85,7 +85,7 @@ class _InputFieldState extends State<InputField> {
           filled: true,
           fillColor: Colors.white,
           focusedBorder:
-              _outlinedInputBorder(Theme.of(context).colorScheme.secondary),
+              _outlinedInputBorder(Theme.of(context).colorScheme.primary),
           enabledBorder: _outlinedInputBorder(Colors.grey),
           contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
           constraints: BoxConstraints(
