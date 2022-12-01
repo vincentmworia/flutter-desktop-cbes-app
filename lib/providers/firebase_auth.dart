@@ -1,7 +1,13 @@
 import 'dart:convert';
 
 // import 'package:flutter/foundation.dart';
+import 'package:cbesdesktop/models/signin.dart';
+import 'package:cbesdesktop/models/loggedin.dart';
+import 'package:cbesdesktop/providers/login_user_data.dart';
+import 'package:cbesdesktop/providers/mqtt.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../private_data.dart';
@@ -9,7 +15,7 @@ import '../models/signup.dart';
 
 class FirebaseAuthentication {
   static Uri _actionEndpointUrl(String action) => Uri.parse(
-      "https://identitytoolkit.googleapis.com/v1/accounts:$action?key=$firebaseApiKey");
+      "https://identitytoolkit.googleapis.com/v1/accounts:${action}key=$firebaseApiKey");
 
   // todo create a refresh token after every 1 hour
 
@@ -42,7 +48,7 @@ class FirebaseAuthentication {
 
   static Future<String> signUp(User user) async {
     String? message;
-    final response = await http.post(_actionEndpointUrl("signUp"),
+    final response = await http.post(_actionEndpointUrl("signUp?"),
         body: json.encode({
           "email": user.email!,
           "password": user.password!,
@@ -64,10 +70,47 @@ class FirebaseAuthentication {
         body: json.encode({
           signedUpUser.localId: user.toMap(),
         }));
-    message =
-        'Welcome,\n${user.firstName} ${user.lastName}';
+    message = 'Registered\n${user.firstName} ${user.lastName}';
     return message;
   }
 
-  // static Future<String> signIn(User user) async {}
+  static Future<String> signIn(User user, BuildContext context) async {
+    String? message;
+    final response = await http.post(_actionEndpointUrl("signInWithPassword?"),
+        body: json.encode({
+          "email": user.email!,
+          "password": user.password!,
+          "returnSecureToken": true,
+        }));
+
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    if (responseData['error'] != null) {
+      message = _getErrorMessage(responseData['error']['message']);
+      return message;
+    }
+    print(responseData);
+    final signedInUser = SignIn.fromMap(responseData);
+    // todo fetch the user from the database,
+    final dbResponse = await http.get(Uri.parse(
+        '$firebaseDbUrl/users/${signedInUser.localId}.json?auth=${signedInUser.idToken}'));
+    final loggedIn = LoggedIn.fromMap(json.decode(dbResponse.body));
+    Future.delayed(Duration.zero)
+        .then((_) => Provider.of<LoginUserData>(context, listen: false)
+            .setLoggedInUser(loggedIn))
+        .then((value) async =>
+            await Provider.of<MqttProvider>(context,listen: false).initializeMqttClient())
+        .then((value) {
+      switch (value) {
+        case ConnectionStatus.disconnected:
+          message = "MQTT Broker Disconnected";
+          return message;
+        case ConnectionStatus.connected:
+          message = "MQTT Broker connected";
+          break;
+      }
+    });
+
+    message = 'Welcome';
+    return message!;
+  }
 }

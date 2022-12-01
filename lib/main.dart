@@ -1,5 +1,8 @@
+import 'package:cbesdesktop/providers/login_user_data.dart';
+import 'package:cbesdesktop/providers/mqtt.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:provider/provider.dart';
 
 import './screens/auth_screen.dart';
 
@@ -29,32 +32,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: appTitle,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: appPrimaryColor,
-          secondary: appSecondaryColor,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LoginUserData()),
+        ChangeNotifierProvider(create: (_) => MqttProvider()),
+      ],
+      child: MaterialApp(
+        title: appTitle,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: appPrimaryColor,
+            secondary: appSecondaryColor,
+          ),
+          appBarTheme: AppBarTheme(
+            toolbarHeight: 70,
+            centerTitle: true,
+            elevation: 0,
+            titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Colors.white, fontSize: 25.0, letterSpacing: 5.0),
+          ).copyWith(iconTheme: const IconThemeData(size: 30.0)),
         ),
-        appBarTheme: AppBarTheme(
-          toolbarHeight: 70,
-          centerTitle: true,
-          elevation: 0,
-          titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-              color: Colors.white, fontSize: 25.0, letterSpacing: 5.0),
-        ).copyWith(iconTheme: const IconThemeData(size: 30.0)),
-      ),
-      home: _defaultScreen,
-      routes: {
-        AuthScreen.routeName: (_) => const AuthScreen(),
-        // HomeScreen.routeName: (_) => const HomeScreen(),
-      },
-      onGenerateRoute: (settings) => MaterialPageRoute(
-        builder: (_) => _defaultScreen,
-      ),
-      onUnknownRoute: (settings) => MaterialPageRoute(
-        builder: (_) => _defaultScreen,
+        home: _defaultScreen,
+        routes: {
+          AuthScreen.routeName: (_) => const AuthScreen(),
+          // HomeScreen.routeName: (_) => const HomeScreen(),
+        },
+        onGenerateRoute: (settings) => MaterialPageRoute(
+          builder: (_) => _defaultScreen,
+        ),
+        onUnknownRoute: (settings) => MaterialPageRoute(
+          builder: (_) => _defaultScreen,
+        ),
       ),
     );
   }

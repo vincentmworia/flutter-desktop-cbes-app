@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cbesdesktop/private_data.dart';
+import 'package:cbesdesktop/providers/login_user_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:provider/provider.dart';
+
+import '../private_data.dart';
 
 enum ConnectionStatus {
   disconnected,
@@ -13,7 +16,6 @@ enum ConnectionStatus {
 
 // todo subscribe to all mqtt channels
 class MqttProvider with ChangeNotifier {
-  // MqttServerClient? _mqttClient;
   late MqttServerClient _mqttClient;
 
   MqttServerClient get mqttClient => _mqttClient;
@@ -23,15 +25,6 @@ class MqttProvider with ChangeNotifier {
   String get willMessage => _devicesClientMessage;
 
   Map get heatingUnitData => _heatingUnitData;
-
-  // List<Map<String,double>> get heatingUnitGraphData => _heatingUnitGraphData;
-  // final List<Map<String, double>> heatingUnitGraphData = [];
-
-  String get screenTwoData => _screenTwoData;
-
-  String get screenThreeData => _screenThreeData;
-
-  //todo initialized data
   Map _heatingUnitData = {
     "tank1": "0",
     "tank2": "0",
@@ -39,12 +32,26 @@ class MqttProvider with ChangeNotifier {
     "flow1": "0",
     "flow2": "0",
   };
-  var _screenTwoData = "SCREEN TWO";
-  var _screenThreeData = "SCREEN THREE";
 
-  static const String deviceId = "Vincent's Phone";
-  static const String _devicesClient = 'devices/client/phone/$deviceId';
-  static const String _devicesClientMessage = '$deviceId disconnected well';
+  // todo set unique Id for individual devices? From Email?
+
+  static final platform = Platform.isAndroid
+      ? "Android"
+      : Platform.isWindows
+          ? "Windows"
+          : Platform.isFuchsia
+              ? "Fuchsia"
+              : Platform.isIOS
+                  ? "IOS"
+                  : Platform.isLinux
+                      ? "Linux"
+                      : "Unknown Operating System";
+
+  static final String deviceId = LoginUserData.getLoggedUser!.email;
+  static final String _devicesClient = 'cbes/dekut/devices/$platform/$deviceId';
+  static final String _devicesClientMessage = '$deviceId disconnected well';
+
+  // todo If disconnected, nullify the token and forcefully logout the user
 
   Future<ConnectionStatus> initializeMqttClient() async {
     var connectionStatus = ConnectionStatus.disconnected;
@@ -100,15 +107,10 @@ class MqttProvider with ChangeNotifier {
       _mqttClient.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
         final topic = c[0].topic;
-        if (kDebugMode) {
-          print(topic);
-        }
         var message =
             MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
-        // final topicBreakdown = topic.split('/');
-        // final topicBreakdown = topic.split('/');
-
+        // TODO HEATING UNIT DATA,
         if (topic == "cbes/dekut/heating_unit") {
           final data = message.split(',');
           final tank1Value = (data[0].split(':'))[1];
@@ -123,23 +125,10 @@ class MqttProvider with ChangeNotifier {
             "flow1": flow1Value,
             "flow2": flow2Value.substring(0, flow2Value.length - 1),
           };
-          // todo dynamically feed in the graph, take the timestamp
-          // heatingUnitGraphData.add({
-          //   "tank1": double.parse(tank1Value),
-          //   "tank2": double.parse(tank2Value),
-          //   "tank3": double.parse(tank3Value),
-          // });
+          print(_heatingUnitData);
         }
-        if (topic.contains("tank2")) {
-          _screenTwoData = message;
-        }
-        if (topic.contains("tank3")) {
-          _screenThreeData = message;
-        }
-        if (kDebugMode) {
-          print(message);
-        }
-        notifyListeners();
+
+        if (topic == "cbes/dekut/devices/#") {}
       });
     }
 
@@ -147,7 +136,6 @@ class MqttProvider with ChangeNotifier {
   }
 
   void publishMsg(String topic, String message) {
-    // todo mqtt data has to be converted into   Uint8Buffer data
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
     if (kDebugMode) {

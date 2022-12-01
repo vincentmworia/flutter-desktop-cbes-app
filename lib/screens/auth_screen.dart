@@ -46,13 +46,14 @@ class _AuthScreenState extends State<AuthScreen> {
     print(user.toMap());
     // Use provider to get the status of autologin, Use shared preferences api to autologin
     // print(user.autoLogin);
-    print(authMode);
     if (authMode == AuthMode.register) {
-      // await FirebaseAuthentication.signUp(user)
-      //     .then((value) => setState(() => _isLoading = false))
-      //     .then((msg) async => await customDialog(context, msg));
       await FirebaseAuthentication.signUp(user)
           .then((message) async => await customDialog(context, message));
+    }
+    if (authMode == AuthMode.login) {
+      Future.delayed(Duration.zero).then((value) async =>
+          await FirebaseAuthentication.signIn(user, context)
+              .then((message) async => await customDialog(context, message)));
     }
     setState(() {
       _isLoading = false;
@@ -82,6 +83,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const opMain = 0.9;
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
         _connectionStatus == ConnectivityResult.mobile ||
         _connectionStatus == ConnectivityResult.wifi;
@@ -92,8 +94,8 @@ class _AuthScreenState extends State<AuthScreen> {
     if (kDebugMode) {
       print(deviceWidth);
     }
-    double sigma = 2.0; // from 0-10
-    double opacity = 0.7; // from 0-1.0
+    double sigma = 3.0; // from 0-10
+    double opacity = 0.8; // from 0-1.0
     final bgImage = Container(
       width: double.infinity,
       height: double.infinity,
@@ -135,8 +137,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     // bottomRight: Radius.circular(borderRadius),
                   ),
                   gradient: LinearGradient(colors: [
-                    Theme.of(context).colorScheme.primary.withOpacity(0.9),
-                    Theme.of(context).colorScheme.secondary.withOpacity(0.9),
+                    Theme.of(context).colorScheme.primary.withOpacity(opMain),
+                    Theme.of(context).colorScheme.secondary.withOpacity(opMain),
                   ], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 ),
                 padding: const EdgeInsets.all(8),
