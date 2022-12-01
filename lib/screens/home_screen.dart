@@ -1,4 +1,6 @@
+import 'package:cbesdesktop/providers/mqtt.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/windows_wrapper.dart';
 
@@ -8,10 +10,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
         child: WindowsWrapper(
       child: Center(
-        child: Text('HOME'),
+        child: Consumer<MqttProvider>(
+          builder: (context, value, child) =>
+              Text(value.heatingUnitData.toMap().toString()),
+        ),
       ),
     ));
   }

@@ -127,9 +127,8 @@ class _AuthScreenState extends State<AuthScreen> {
       builder: (context, cons) => Stack(
         children: [
           bgImage,
-          if (!_isLoading)
             Visibility(
-              visible: (goodConnection && !_isLoading),
+              visible: (goodConnection  ),
               child: Align(
                 alignment: Alignment.center,
                 child: Container(
@@ -152,6 +151,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ),
+
           if (!goodConnection) const OfflineScreen(),
         ],
       ),

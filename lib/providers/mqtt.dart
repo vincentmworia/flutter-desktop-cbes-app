@@ -105,7 +105,7 @@ class MqttProvider with ChangeNotifier {
           _heatingUnitData =
               HeatingUnit.fromMap(json.decode(message) as Map<String, dynamic>);
 
-          print(_heatingUnitData);
+          notifyListeners();
         }
 
         if (topic == "cbes/dekut/devices/#") {
