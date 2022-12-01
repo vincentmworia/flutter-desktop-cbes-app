@@ -13,7 +13,7 @@ void main() async {
     final win = appWindow;
     const initialSize = Size(1000, 600);
     win.minSize = initialSize;
-    win.size = initialSize;
+    // win.size = initialSize;
     win.alignment = Alignment.center;
     win.title = MyApp.appTitle;
     win.show();

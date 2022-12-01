@@ -84,9 +84,9 @@ class _InputFieldState extends State<InputField> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          focusedBorder:
-              _outlinedInputBorder(Theme.of(context).colorScheme.primary),
-          enabledBorder: _outlinedInputBorder(Colors.grey),
+          // focusedBorder:
+          //     _outlinedInputBorder(Theme.of(context).colorScheme.primary),
+          // enabledBorder: _outlinedInputBorder(Colors.grey),
           contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
           constraints: BoxConstraints(
             maxWidth: inputWidth,

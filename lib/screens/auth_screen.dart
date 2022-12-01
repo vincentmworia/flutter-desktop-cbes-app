@@ -28,7 +28,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   var _isLoading = false;
 
-  var _authMode = AuthMode.login;
+  final _authMode = AuthMode.login;
 
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
 
@@ -42,8 +42,11 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _submit(User user, AuthMode authMode) async {
-    setState(() => _isLoading = true);
-    print(user.toMap());
+    setState(() {
+      _isLoading = true;
+      print(_isLoading);
+    });
+
     // Use provider to get the status of autologin, Use shared preferences api to autologin
     // print(user.autoLogin);
     if (authMode == AuthMode.register) {
@@ -57,6 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
     }
     setState(() {
       _isLoading = false;
+      print(_isLoading);
     });
   }
 
@@ -83,6 +87,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("object");
     const opMain = 0.9;
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
         _connectionStatus == ConnectivityResult.mobile ||
@@ -94,15 +99,21 @@ class _AuthScreenState extends State<AuthScreen> {
     if (kDebugMode) {
       print(deviceWidth);
     }
-    double sigma = 3.0; // from 0-10
-    double opacity = 0.8; // from 0-1.0
+    double sigma = 10; // from 0-10
+    double opacity = 0.5; // from 0-1.0
+    const borderRadius = 15.0;
     final bgImage = Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('images/home3.jpg'),
-          fit: BoxFit.cover,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            Theme.of(context).colorScheme.secondary.withOpacity(opMain),
+            Theme.of(context).colorScheme.primary.withOpacity(opMain),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
       child: BackdropFilter(
@@ -113,33 +124,28 @@ class _AuthScreenState extends State<AuthScreen> {
       ),
     );
 
-    if (kDebugMode) {
-      print(_connectionStatus);
-    }
-    const borderRadius = 15.0;
     return WindowsWrapper(
         child: LayoutBuilder(
       builder: (context, cons) => Stack(
         children: [
+
           bgImage,
+          if(!_isLoading)
           Visibility(
-            visible: goodConnection,
+            visible: (goodConnection && !_isLoading),
             child: Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.center,
               child: Container(
                 width: deviceWidth * 0.45,
                 height: deviceHeight,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(borderRadius),
-                    // topRight: Radius.circular(borderRadius),
-                    bottomLeft: Radius.circular(borderRadius),
+                    topRight: Radius.circular(borderRadius),
+                    // bottomLeft: Radius.circular(borderRadius),
                     // bottomRight: Radius.circular(borderRadius),
                   ),
-                  gradient: LinearGradient(colors: [
-                    Theme.of(context).colorScheme.primary.withOpacity(opMain),
-                    Theme.of(context).colorScheme.secondary.withOpacity(opMain),
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 ),
                 padding: const EdgeInsets.all(8),
                 child: AuthScreenForm(

@@ -364,13 +364,13 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 padding: const EdgeInsets.symmetric(horizontal: 28.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text("Remember Me",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w300)),
-                    CustomCheckBox()
+                    const CustomCheckBox()
                   ],
                 ),
               ),
@@ -405,8 +405,8 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 child: Text(
                   "Click to ${_authMode == AuthMode.login ? "Register" : "Login"}",
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
