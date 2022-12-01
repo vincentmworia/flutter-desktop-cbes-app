@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 
   static const appTitle = 'CBES DASHBOARD';
   static const appPrimaryColor = Color(0xff00b159);
-  static const appSecondaryColor = Color(0xfff37735);
+  static const appSecondaryColor = Color(0xff000000);
   static const appOpacity = 0.25;
 
   static const _defaultScreen = AuthScreen();

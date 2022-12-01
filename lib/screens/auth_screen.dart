@@ -27,7 +27,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   var _isLoading = false;
 
-  final _authMode = AuthMode.login;
+  var _authMode = AuthMode.login;
 
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
 
@@ -40,20 +40,28 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
-  void _submit(User user, AuthMode authMode) async {
+  void _switchAuthMode(AuthMode authMode) {
+    setState(() {
+      _authMode = authMode;
+      print(_authMode);
+    });
+  }
+
+  void _submit(User user ) async {
     setState(() {
       _isLoading = true;
     });
     // Use provider to get the status of autologin, Use shared preferences api to autologin
     // print(user.autoLogin);
-    if (authMode == AuthMode.register) {
+
+    if (_authMode == AuthMode.register) {
       await FirebaseAuthentication.signUp(user)
           .then((message) async => await customDialog(context, message))
           .then((_) => setState(() {
                 _isLoading = false;
               }));
     }
-    if (authMode == AuthMode.login) {
+    if (_authMode == AuthMode.login) {
       Future.delayed(Duration.zero)
           .then((value) async => await FirebaseAuthentication.signIn(
                   user, context)
@@ -103,23 +111,25 @@ class _AuthScreenState extends State<AuthScreen> {
     final bgImage = Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white,
-            Theme.of(context).colorScheme.secondary.withOpacity(opMain),
-            Theme.of(context).colorScheme.primary.withOpacity(opMain),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-        child: Container(
-          color: Colors.black.withOpacity(opacity),
-        ),
-      ),
+      color: Colors.grey,
+
+      // decoration: BoxDecoration(
+      //   gradient: LinearGradient(
+      //     colors: [
+      //       Colors.white,
+      //       Theme.of(context).colorScheme.secondary.withOpacity(opMain),
+      //       Theme.of(context).colorScheme.primary.withOpacity(opMain),
+      //     ],
+      //     begin: Alignment.topCenter,
+      //     end: Alignment.bottomCenter,
+      //   ),
+      // ),
+      // child: BackdropFilter(
+      //   filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+      //   child: Container(
+      //     color: Colors.black.withOpacity(opacity),
+      //   ),
+      // ),
     );
 
     return WindowsWrapper(
@@ -127,31 +137,34 @@ class _AuthScreenState extends State<AuthScreen> {
       builder: (context, cons) => Stack(
         children: [
           bgImage,
-            Visibility(
-              visible: (goodConnection  ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: deviceWidth * 0.45,
-                  height: deviceHeight,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(borderRadius),
-                      topRight: Radius.circular(borderRadius),
-                      // bottomLeft: Radius.circular(borderRadius),
-                      // bottomRight: Radius.circular(borderRadius),
-                    ),
+          Visibility(
+            visible: (goodConnection),
+            child: Align(
+              alignment: Alignment.center,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 400),
+                width:deviceWidth <1200? deviceWidth * 0.55: deviceWidth * 0.45,
+                height: _authMode == AuthMode.register
+                    ? deviceHeight * 0.95
+                    : deviceHeight * 0.8,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(borderRadius),
+                    topRight: Radius.circular(borderRadius),
+                    bottomLeft: Radius.circular(borderRadius),
+                    bottomRight: Radius.circular(borderRadius),
                   ),
-                  padding: const EdgeInsets.all(8),
-                  child: AuthScreenForm(
-                      authMode: _authMode,
-                      isLoading: _isLoading,
-                      submit: _submit),
                 ),
+                padding: const EdgeInsets.all(8),
+                child: AuthScreenForm(
+                    authMode: _authMode,
+                    isLoading: _isLoading,
+                    submit: _submit,
+                    switchAuthMode: _switchAuthMode),
               ),
             ),
-
+          ),
           if (!goodConnection) const OfflineScreen(),
         ],
       ),

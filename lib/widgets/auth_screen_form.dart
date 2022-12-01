@@ -13,9 +13,11 @@ class AuthScreenForm extends StatefulWidget {
     required this.authMode,
     required this.submit,
     required this.isLoading,
+    required this.switchAuthMode,
   }) : super(key: key);
   final AuthMode authMode;
   final Function submit;
+  final Function switchAuthMode;
   final bool isLoading;
 
   @override
@@ -88,7 +90,6 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 fit: BoxFit.cover,
               ),
             ),
-
             spacing,
             InputField(
               key: const ValueKey('email'),
@@ -343,7 +344,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                   }
                   _formKey.currentState!.save();
 
-                  widget.submit(user, _authMode);
+                  widget.submit(user);
                 },
                 child: widget.isLoading
                     ? const Text("")
@@ -364,6 +365,8 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                         ? _authMode = AuthMode.register
                         : _authMode = AuthMode.login;
                   });
+
+                  widget.switchAuthMode(_authMode);
                 },
               ),
             ),
