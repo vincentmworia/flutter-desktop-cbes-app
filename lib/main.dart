@@ -1,19 +1,20 @@
-import 'package:cbesdesktop/providers/login_user_data.dart';
-import 'package:cbesdesktop/providers/mqtt.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:provider/provider.dart';
 
 import './screens/auth_screen.dart';
+import './screens/home_screen.dart';
+import './providers/login_user_data.dart';
+import './providers/mqtt.dart';
 
 void main() async {
   runApp(const MyApp());
-/*auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);*/
+  // todo Lock orientation
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(1000, 600);
     win.minSize = initialSize;
-    // win.size = initialSize;
+    win.size = initialSize;
     win.alignment = Alignment.center;
     win.title = MyApp.appTitle;
     win.show();
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
         home: _defaultScreen,
         routes: {
           AuthScreen.routeName: (_) => const AuthScreen(),
-          // HomeScreen.routeName: (_) => const HomeScreen(),
+          HomeScreen.routeName: (_) => const HomeScreen(),
         },
         onGenerateRoute: (settings) => MaterialPageRoute(
           builder: (_) => _defaultScreen,

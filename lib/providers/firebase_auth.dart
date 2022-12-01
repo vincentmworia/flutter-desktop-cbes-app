@@ -1,24 +1,22 @@
 import 'dart:convert';
 
-// import 'package:flutter/foundation.dart';
-import 'package:cbesdesktop/models/signin.dart';
-import 'package:cbesdesktop/models/loggedin.dart';
-import 'package:cbesdesktop/providers/login_user_data.dart';
-import 'package:cbesdesktop/providers/mqtt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../models/signin.dart';
+import '../models/loggedin.dart';
 import '../models/user.dart';
 import '../private_data.dart';
 import '../models/signup.dart';
+import './login_user_data.dart';
+import './mqtt.dart';
 
 class FirebaseAuthentication {
   static Uri _actionEndpointUrl(String action) => Uri.parse(
       "https://identitytoolkit.googleapis.com/v1/accounts:${action}key=$firebaseApiKey");
 
   // todo create a refresh token after every 1 hour
-
   static String _getErrorMessage(String errorTitle) {
     var message = 'Operation failed';
 
@@ -88,7 +86,6 @@ class FirebaseAuthentication {
       message = _getErrorMessage(responseData['error']['message']);
       return message;
     }
-    print(responseData);
     final signedInUser = SignIn.fromMap(responseData);
     // todo fetch the user from the database,
     final dbResponse = await http.get(Uri.parse(
@@ -98,7 +95,8 @@ class FirebaseAuthentication {
         .then((_) => Provider.of<LoginUserData>(context, listen: false)
             .setLoggedInUser(loggedIn))
         .then((value) async =>
-            await Provider.of<MqttProvider>(context,listen: false).initializeMqttClient())
+            await Provider.of<MqttProvider>(context, listen: false)
+                .initializeMqttClient())
         .then((value) {
       switch (value) {
         case ConnectionStatus.disconnected:

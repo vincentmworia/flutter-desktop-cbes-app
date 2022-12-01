@@ -2,14 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cbesdesktop/models/heating_unit.dart';
-import 'package:cbesdesktop/providers/login_user_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:provider/provider.dart';
 
+import '../models/heating_unit.dart';
 import '../private_data.dart';
+import './login_user_data.dart';
 
 enum ConnectionStatus {
   disconnected,

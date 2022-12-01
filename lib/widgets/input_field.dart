@@ -54,15 +54,6 @@ class _InputFieldState extends State<InputField> {
         : false;
   }
 
-  OutlineInputBorder _outlinedInputBorder(Color color) => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        gapPadding: 4.0,
-        borderSide: BorderSide(
-          color: color,
-          width: 3.0,
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     final inputWidth = MediaQuery.of(context).size.width * 0.85;

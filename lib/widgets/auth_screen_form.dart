@@ -5,7 +5,7 @@ import '../models/user.dart';
 import '../screens/auth_screen.dart';
 import './input_field.dart';
 import '../helpers/custom_data.dart';
-import 'custom_check_box.dart';
+import './custom_check_box.dart';
 
 class AuthScreenForm extends StatefulWidget {
   const AuthScreenForm({
@@ -17,8 +17,6 @@ class AuthScreenForm extends StatefulWidget {
   final AuthMode authMode;
   final Function submit;
   final bool isLoading;
-
-  //todo Take the authmode
 
   @override
   State<AuthScreenForm> createState() => _AuthScreenFormState();
@@ -71,60 +69,11 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
     _passwordController.dispose();
   }
 
-  Widget _authModeText(String mode) => TextButton(
-        child: Text(
-          mode,
-          style: TextStyle(
-              color: (_authMode == AuthMode.login && mode == "Login") ||
-                      (_authMode == AuthMode.register && mode == "Register")
-                  // ? Colors.white
-                  // : Colors.white24,
-                  ? Theme.of(context).colorScheme.secondary
-                  : Colors.white,
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold),
-        ),
-        onPressed: () {
-          if (mode == "Login") {
-            setState(() {
-              _authMode = AuthMode.login;
-            });
-          }
-          if (mode == "Register") {
-            setState(() {
-              _authMode = AuthMode.register;
-            });
-          }
-          // print(mode);
-        },
-      );
-
   @override
   Widget build(BuildContext context) {
-    // print("h: ${widget.authMode}");
     final deviceWidth = MediaQuery.of(context).size.width;
-    final titleText = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Text(
-        "CBES",
-        style: Theme.of(context)
-            .textTheme
-            .headlineMedium!
-            .copyWith(color: Colors.white, letterSpacing: deviceWidth * 0.025),
-      ),
-    );
-    final toggleLoginRegister = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(child: _authModeText("Login")),
-          Expanded(child: _authModeText("Register")),
-        ],
-      ),
-    );
-
     const spacing = SizedBox(height: 20);
+
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -415,7 +364,6 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                         ? _authMode = AuthMode.register
                         : _authMode = AuthMode.login;
                   });
-                  // todo Switch page
                 },
               ),
             ),
