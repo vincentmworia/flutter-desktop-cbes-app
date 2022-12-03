@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-
 class WindowsWrapper extends StatelessWidget {
   const WindowsWrapper({
     Key? key,
-    required this.child,
+    this.child,
   }) : super(key: key);
-  final Widget child;
+  final Widget? child;
 
   static final buttonColors = WindowButtonColors(
     iconNormal: Colors.black,
@@ -32,7 +31,7 @@ class WindowsWrapper extends StatelessWidget {
         body: WindowBorder(
           color: Colors.white,
           width: 0.5,
-          child: child,
+          child: child ?? Container(),
         ),
       ),
     );

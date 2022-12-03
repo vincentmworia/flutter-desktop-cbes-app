@@ -1,7 +1,6 @@
-import 'package:cbesdesktop/providers/mqtt.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+import '../models/heating_unit.dart';
 import '../widgets/windows_wrapper.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,13 +9,20 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var heatingUnitData = HeatingUnit(
+        tank1: '23.0',
+        tank2: '22.5',
+        tank3: '26.3',
+        flow1: '11.6',
+        flow2: '4.2');
     return SafeArea(
         child: WindowsWrapper(
       child: Center(
-        child: Consumer<MqttProvider>(
-          builder: (context, value, child) =>
-              Text(value.heatingUnitData.toMap().toString()),
-        ),
+        child: Text(heatingUnitData.toMap().toString()),
+        // child: Consumer<MqttProvider>(
+        //   builder: (context, value, child) =>
+        //       Text(value.heatingUnitData.toMap().toString()),
+        // ),
       ),
     ));
   }

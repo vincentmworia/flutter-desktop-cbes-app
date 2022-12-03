@@ -68,7 +68,7 @@ class FirebaseAuthentication {
         body: json.encode({
           signedUpUser.localId: user.toMap(),
         }));
-    message = 'Registered\n${user.firstName} ${user.lastName}';
+    message = 'Registered,\n${user.firstName} ${user.lastName}';
     return message;
   }
 
@@ -108,7 +108,8 @@ class FirebaseAuthentication {
       }
     });
 
-    message = 'Welcome';
+    message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
+
     return message!;
   }
 }

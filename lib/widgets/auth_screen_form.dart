@@ -347,7 +347,9 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                   widget.submit(user);
                 },
                 child: widget.isLoading
-                    ? const Text("")
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
                     : Text(_authMode == AuthMode.login ? "Login" : "Register")),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 28.0),

@@ -43,11 +43,10 @@ class _AuthScreenState extends State<AuthScreen> {
   void _switchAuthMode(AuthMode authMode) {
     setState(() {
       _authMode = authMode;
-      print(_authMode);
     });
   }
 
-  void _submit(User user ) async {
+  void _submit(User user) async {
     setState(() {
       _isLoading = true;
     });
@@ -62,12 +61,21 @@ class _AuthScreenState extends State<AuthScreen> {
               }));
     }
     if (_authMode == AuthMode.login) {
-      Future.delayed(Duration.zero)
-          .then((value) async => await FirebaseAuthentication.signIn(
-                  user, context)
-              .then((message) async => await customDialog(context, message)))
-          .then((_) =>
-              Navigator.pushReplacementNamed(context, HomeScreen.routeName));
+      Future.delayed(Duration.zero).then((value) async =>
+          await FirebaseAuthentication.signIn(user, context)
+              .then((message) async {
+            setState(() {
+              _isLoading = false;
+            });
+            await customDialog(context, message);
+            if (message.startsWith("Welcome")) {
+              Future.delayed(Duration.zero).then((_) =>
+                  Navigator.pushReplacementNamed(
+                      context, HomeScreen.routeName));
+            }
+          }));
+      // .then((_) =>
+      //     Navigator.pushReplacementNamed(context, HomeScreen.routeName));
     }
   }
 
@@ -98,76 +106,92 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     const opMain = 0.9;
     double sigma = 10; // from 0-10
-    double opacity = 0.5; // from 0-1.0
+    double opacity = 0; // from 0-1.0
     const borderRadius = 15.0;
 
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
         _connectionStatus == ConnectivityResult.mobile ||
         _connectionStatus == ConnectivityResult.wifi;
     final deviceWidth = MediaQuery.of(context).size.width;
-    final deviceHeight =
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
 
     final bgImage = Container(
       width: double.infinity,
       height: double.infinity,
-      color: Colors.grey,
+      // color: Colors.grey,
 
-      // decoration: BoxDecoration(
-      //   gradient: LinearGradient(
-      //     colors: [
-      //       Colors.white,
-      //       Theme.of(context).colorScheme.secondary.withOpacity(opMain),
-      //       Theme.of(context).colorScheme.primary.withOpacity(opMain),
-      //     ],
-      //     begin: Alignment.topCenter,
-      //     end: Alignment.bottomCenter,
-      //   ),
-      // ),
-      // child: BackdropFilter(
-      //   filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-      //   child: Container(
-      //     color: Colors.black.withOpacity(opacity),
-      //   ),
-      // ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            Theme.of(context).colorScheme.secondary.withOpacity(opMain),
+            Theme.of(context).colorScheme.primary.withOpacity(opMain),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+        child: Container(
+          color: Colors.black.withOpacity(opacity),
+        ),
+      ),
     );
 
+    const bdRadius = BorderRadius.only(
+      topLeft: Radius.circular(borderRadius),
+      topRight: Radius.circular(borderRadius),
+      bottomLeft: Radius.circular(borderRadius),
+      bottomRight: Radius.circular(borderRadius),
+    );
     return WindowsWrapper(
-        child: LayoutBuilder(
-      builder: (context, cons) => Stack(
-        children: [
-          bgImage,
-          Visibility(
-            visible: (goodConnection),
-            child: Align(
-              alignment: Alignment.center,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 400),
-                width:deviceWidth <1200? deviceWidth * 0.55: deviceWidth * 0.45,
-                height: _authMode == AuthMode.register
-                    ? deviceHeight * 0.95
-                    : deviceHeight * 0.8,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(borderRadius),
-                    topRight: Radius.circular(borderRadius),
-                    bottomLeft: Radius.circular(borderRadius),
-                    bottomRight: Radius.circular(borderRadius),
+      child: LayoutBuilder(
+        builder: (context, cons) => Stack(
+          children: [
+            bgImage,
+            Visibility(
+              visible: (goodConnection),
+              child: Align(
+                alignment: Alignment.center,
+                child: Card(
+                  elevation: 20,
+                  shape: const RoundedRectangleBorder(borderRadius: bdRadius),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    width: deviceWidth < 1200
+                        ? deviceWidth * 0.55
+                        : deviceWidth * 0.45,
+                    height: _authMode == AuthMode.register ? 1200 : 550,
+                    decoration: BoxDecoration(
+                        color: _isLoading
+                            ? Colors.white.withOpacity(0.4)
+                            : Colors.white,
+                        borderRadius: bdRadius),
+                    padding: const EdgeInsets.all(8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AuthScreenForm(
+                          authMode: _authMode,
+                          isLoading: _isLoading,
+                          submit: _submit,
+                          switchAuthMode: _switchAuthMode),
+                    ),
                   ),
                 ),
-                padding: const EdgeInsets.all(8),
-                child: AuthScreenForm(
-                    authMode: _authMode,
-                    isLoading: _isLoading,
-                    submit: _submit,
-                    switchAuthMode: _switchAuthMode),
               ),
             ),
-          ),
-          if (!goodConnection) const OfflineScreen(),
-        ],
+            Visibility(
+              visible: _isLoading,
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              ),
+            ),
+            if (!goodConnection) const OfflineScreen(),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

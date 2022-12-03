@@ -12,11 +12,12 @@ void main() async {
   // todo Lock orientation
   doWhenWindowReady(() {
     final win = appWindow;
-    const initialSize = Size(1000, 600);
+    const initialSize = Size(1100, 600);
     win.minSize = initialSize;
-    win.size = initialSize;
+    // win.size = initialSize;
     win.alignment = Alignment.center;
     win.title = MyApp.appTitle;
+    win.maximize();
     win.show();
   });
 }
@@ -25,11 +26,16 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   static const appTitle = 'CBES DASHBOARD';
-  static const appPrimaryColor = Color(0xff00b159);
-  static const appSecondaryColor = Color(0xff000000);
+  static const appPrimaryColor = Color(0xff0b6623);
+  // static const appPrimaryColor = Color(0xff0b6623);
+  // static const appPrimaryColor = Color(0xff00b159);
+  static const appSecondaryColor2 = Color(0xff708238);
+  static const appSecondaryColor = Color(0xff8A9A5B);
+  // static const appSecondaryColor = Color(0xffcc5500);
   static const appOpacity = 0.25;
 
   static const _defaultScreen = AuthScreen();
+  // static const _defaultScreen = HomeScreen();
 
   @override
   Widget build(BuildContext context) {

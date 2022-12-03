@@ -58,7 +58,7 @@ class _InputFieldState extends State<InputField> {
   Widget build(BuildContext context) {
     final inputWidth = MediaQuery.of(context).size.width * 0.85;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
       child: TextFormField(
         initialValue: widget.initialValue,
         key: widget.key,
