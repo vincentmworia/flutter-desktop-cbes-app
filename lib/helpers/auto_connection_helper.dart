@@ -1,13 +1,20 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-Future<StreamSubscription<ConnectivityResult>?> internetChecker(
-    {required bool mounted,
-    required Function updateUi,
-    required Connectivity connectivity}) async {
+import '../providers/mqtt.dart';
+
+Future<StreamSubscription<ConnectivityResult>?> internetChecker({
+  required bool mounted,
+  required Function updateUi,
+  required Connectivity connectivity,
+  required bool reInitializationActive,
+  required BuildContext context,
+}) async {
   try {
     Future.delayed(Duration.zero)
         .then((value) async => await connectivity.checkConnectivity());
@@ -23,7 +30,7 @@ Future<StreamSubscription<ConnectivityResult>?> internetChecker(
   ConnectivityResult? tempResult;
   var reInitializeConn = false;
   StreamSubscription<ConnectivityResult> connectivitySubscription =
-      connectivity.onConnectivityChanged.listen((result) {
+      connectivity.onConnectivityChanged.listen((result) async {
     if (tempResult == null) {
       updateUi(result);
       tempResult = result;
@@ -38,7 +45,11 @@ Future<StreamSubscription<ConnectivityResult>?> internetChecker(
           (result == ConnectivityResult.ethernet ||
               result == ConnectivityResult.wifi ||
               result == ConnectivityResult.mobile)) {
-        // todo perform re-initialization of the MQTT connection
+        // todo perform re-initialization of the MQTT connection if in homepage
+        if (reInitializationActive) {
+          await Provider.of<MqttProvider>(context, listen: false)
+              .initializeMqttClient();
+        }
         reInitializeConn = false;
       }
     }

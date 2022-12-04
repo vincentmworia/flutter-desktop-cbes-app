@@ -21,9 +21,8 @@ class MqttProvider with ChangeNotifier {
 
   MqttServerClient get mqttClient => _mqttClient;
 
-  String get willTopic => _devicesClient;
-
-  String get willMessage => _devicesClientMessage;
+  String get disconnectTopic => _devicesClient;
+  String get disconnectMessage => _devicesClientMessage;
 
   HeatingUnit get heatingUnitData => _heatingUnitData!;
   HeatingUnit? _heatingUnitData;

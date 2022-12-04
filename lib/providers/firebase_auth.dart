@@ -9,6 +9,7 @@ import '../models/loggedin.dart';
 import '../models/user.dart';
 import '../private_data.dart';
 import '../models/signup.dart';
+import '../screens/auth_screen.dart';
 import './login_user_data.dart';
 import './mqtt.dart';
 
@@ -92,24 +93,39 @@ class FirebaseAuthentication {
         '$firebaseDbUrl/users/${signedInUser.localId}.json?auth=${signedInUser.idToken}'));
     final loggedIn = LoggedIn.fromMap(json.decode(dbResponse.body));
     Future.delayed(Duration.zero)
-        .then((_) => Provider.of<LoginUserData>(context, listen: false)
-            .setLoggedInUser(loggedIn))
+        .then((_) {
+          // todo check whether the user is allowed into the app,
+          // todo check the privilege code,
+          Provider.of<LoginUserData>(context, listen: false)
+              .setLoggedInUser(loggedIn);
+        })
         .then((value) async =>
             await Provider.of<MqttProvider>(context, listen: false)
                 .initializeMqttClient())
         .then((value) {
-      switch (value) {
-        case ConnectionStatus.disconnected:
-          message = "MQTT Broker Disconnected";
-          return message;
-        case ConnectionStatus.connected:
-          message = "MQTT Broker connected";
-          break;
-      }
-    });
+          switch (value) {
+            case ConnectionStatus.disconnected:
+              message = "MQTT Broker Disconnected";
+              return message;
+            case ConnectionStatus.connected:
+              message = "MQTT Broker connected";
+              break;
+          }
+        });
 
     message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
 
     return message!;
+  }
+
+  // todo logout
+  static Future<void> logout(BuildContext context) async {
+    final client = Provider.of<MqttProvider>(context, listen: false);
+    Future.delayed(Duration.zero)
+        .then((_) =>
+            client.publishMsg(client.disconnectTopic, client.disconnectMessage))
+        .then((_) => client.mqttClient.disconnect())
+        .then((_) =>
+            Navigator.pushReplacementNamed(context, AuthScreen.routeName));
   }
 }

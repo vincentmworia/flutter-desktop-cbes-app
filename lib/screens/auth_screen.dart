@@ -30,7 +30,6 @@ class _AuthScreenState extends State<AuthScreen> {
   var _authMode = AuthMode.login;
 
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
-
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
@@ -38,6 +37,32 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _connectionStatus = result;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (kDebugMode) {
+      print("AUTH INITIALIZATION");
+    }
+
+    Future.delayed(Duration.zero).then((value) async =>
+        _connectivitySubscription = await internetChecker(
+            mounted: mounted,
+            updateUi: _updateInternetState,
+            connectivity: _connectivity,
+            reInitializationActive: false,
+            context: context,
+        ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (kDebugMode) {
+      print('AUTH DISPOSED');
+    }
+    _connectivitySubscription?.cancel();
   }
 
   void _switchAuthMode(AuthMode authMode) {
@@ -80,30 +105,8 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    if (kDebugMode) {
-      print("AUTH INITIALIZATION");
-    }
-
-    Future.delayed(Duration.zero).then((value) async =>
-        _connectivitySubscription = await internetChecker(
-            mounted: mounted,
-            updateUi: _updateInternetState,
-            connectivity: _connectivity));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    if (kDebugMode) {
-      print('AUTH DISPOSED');
-    }
-    _connectivitySubscription?.cancel();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print(_connectionStatus);
     const opMain = 0.9;
     double sigma = 10; // from 0-10
     double opacity = 0; // from 0-1.0
