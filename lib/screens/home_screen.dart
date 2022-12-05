@@ -116,10 +116,15 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: Text(_pageTitle),
+          title: Text(_pageTitle.toUpperCase()),
+
           leading: Padding(
             padding: const EdgeInsets.only(left: 25),
             child: IconButton(
+              disabledColor: Colors.white,
+              color: Colors.white,
+              hoverColor: Theme.of(context).colorScheme.primary,
+              focusColor:Theme.of(context).colorScheme.primary,
               onPressed: () {
                 setState(() {
                   _showNavPlane = false;
