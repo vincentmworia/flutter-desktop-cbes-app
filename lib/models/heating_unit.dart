@@ -1,9 +1,9 @@
 class HeatingUnit {
-  final String tank1;
-  final String tank2;
-  final String tank3;
-  final String flow1;
-  final String flow2;
+  String? tank1;
+  String? tank2;
+  String? tank3;
+  String? flow1;
+  String? flow2;
 
   HeatingUnit({
     required this.tank1,
@@ -22,10 +22,10 @@ class HeatingUnit {
           flow2: heatingUnitData['Flow2'].toString());
 
   Map<String, String> toMap() => {
-        "TankT1": tank1,
-        "TankT2": tank2,
-        "TankT3": tank3,
-        "Flow1": flow1,
-        "Flow2": flow2,
+        "TankT1": tank1 ?? '0.0',
+        "TankT2": tank2 ?? '0.0',
+        "TankT3": tank3 ?? '0.0',
+        "Flow1": flow1 ?? '0.0',
+        "Flow2": flow2 ?? '0.0',
       };
 }

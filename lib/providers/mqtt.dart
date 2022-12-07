@@ -18,10 +18,12 @@ enum ConnectionStatus {
 // todo subscribe to all mqtt channels
 class MqttProvider with ChangeNotifier {
   late MqttServerClient _mqttClient;
+  static bool forceOffline = true;
 
   MqttServerClient get mqttClient => _mqttClient;
 
   String get disconnectTopic => _devicesClient;
+
   String get disconnectMessage => _devicesClientMessage;
 
   HeatingUnit get heatingUnitData => _heatingUnitData!;
@@ -103,6 +105,7 @@ class MqttProvider with ChangeNotifier {
         if (topic == "cbes/dekut/heating_unit") {
           _heatingUnitData =
               HeatingUnit.fromMap(json.decode(message) as Map<String, dynamic>);
+          // print(_heatingUnitData);
 
           notifyListeners();
         }
@@ -137,6 +140,8 @@ class MqttProvider with ChangeNotifier {
   void onDisconnected() {
     if (kDebugMode) {
       print('Disconnected');
+      forceOffline = true;
+      notifyListeners();
       // TODO ON DISCONNECTED, FORCE THE USER OFFLINE
       // Use firebase Auth to force the application to HomePage
     }

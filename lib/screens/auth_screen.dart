@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/services.dart';
+
 import '../helpers/custom_data.dart';
 import '../models/user.dart';
 import '../widgets/auth_screen_form.dart';
@@ -9,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../widgets/windows_wrapper.dart';
-import '../helpers/auto_connection_helper.dart';
 import '../providers/firebase_auth.dart';
 import './home_screen.dart';
 import './offline_screen.dart';
@@ -33,28 +34,64 @@ class _AuthScreenState extends State<AuthScreen> {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
-  void _updateInternetState(ConnectivityResult result) {
-    setState(() {
-      _connectionStatus = result;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     if (kDebugMode) {
-      print("AUTH INITIALIZATION");
+      print(" AUTH INITIALIZATION");
     }
 
-    Future.delayed(Duration.zero).then((value) async =>
-        _connectivitySubscription = await internetChecker(
-            mounted: mounted,
-            updateUi: _updateInternetState,
-            connectivity: _connectivity,
-            reInitializationActive: false,
-            context: context,
-        ));
+    try {
+      Future.delayed(Duration.zero)
+          .then((value) async => await _connectivity.checkConnectivity())
+          .then((value) => setState(() {
+                _connectionStatus = value;
+              }));
+    } on PlatformException catch (_) {
+      if (kDebugMode) {
+        print('Could n\'t check connectivity status');
+      }
+      return;
+    }
+    ConnectivityResult? tempResult;
+    // var activateReInitialization=false;
+    _connectivity.onConnectivityChanged.listen((result) {
+      tempResult ??= result;
+      if (tempResult != result) {
+        if(result ==ConnectionState.none){
+
+        }
+        _rebuildScreen(result);
+        tempResult=result;
+      }
+    });
   }
+
+  void _rebuildScreen(ConnectivityResult result) {
+    if (mounted) {
+      setState(() {
+        _connectionStatus = result;
+        print('rebuild $result');
+      });
+    }
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (kDebugMode) {
+  //     print("AUTH INITIALIZATION");
+  //   }
+  //
+  //   Future.delayed(Duration.zero).then(
+  //       (value) async => _connectivitySubscription = await internetChecker(
+  //             mounted: mounted,
+  //             updateUi: _updateInternetState,
+  //             connectivity: _connectivity,
+  //             reInitializationActive: false,
+  //             context: context,
+  //           ));
+  // }
 
   @override
   void dispose() {
@@ -79,11 +116,13 @@ class _AuthScreenState extends State<AuthScreen> {
     // print(user.autoLogin);
 
     if (_authMode == AuthMode.register) {
-      await FirebaseAuthentication.signUp(user)
-          .then((message) async => await customDialog(context, message))
-          .then((_) => setState(() {
-                _isLoading = false;
-              }));
+      // Future.delayed(const Duration(seconds: 10))
+      //     .then((value) => print('Slow internet'));
+      await FirebaseAuthentication.signUp(user).then((message) async =>
+          await customDialog(context, message)).then((_) =>
+          setState(() {
+            _isLoading = false;
+          }));
     }
     if (_authMode == AuthMode.login) {
       Future.delayed(Duration.zero).then((value) async =>
@@ -95,8 +134,10 @@ class _AuthScreenState extends State<AuthScreen> {
             await customDialog(context, message);
             if (message.startsWith("Welcome")) {
               Future.delayed(Duration.zero).then((_) =>
-                  Navigator.pushReplacementNamed(
-                      context, HomeScreen.routeName));
+                  // Navigator.pushReplacement(context,
+                  //     MaterialPageRoute(builder: (_) => const TempHomePage())));
+              Navigator.pushReplacementNamed(
+                  context, HomeScreen.routeName));
             }
           }));
       // .then((_) =>
@@ -106,7 +147,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(_connectionStatus);
     const opMain = 0.9;
     double sigma = 10; // from 0-10
     double opacity = 0; // from 0-1.0
@@ -115,6 +155,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
         _connectionStatus == ConnectivityResult.mobile ||
         _connectionStatus == ConnectivityResult.wifi;
+    // print(goodConnection);
     final deviceWidth = MediaQuery.of(context).size.width;
 
     final bgImage = Container(

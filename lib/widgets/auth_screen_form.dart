@@ -90,6 +90,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 fit: BoxFit.cover,
               ),
             ),
+
             spacing,
             InputField(
               key: const ValueKey('email'),
@@ -334,16 +335,17 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0))),
-                // onPressed: _isLoading ? () {} : _submit,
-                // onPressed: _submit,
                 onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  if (_formKey.currentState == null ||
-                      !(_formKey.currentState!.validate())) {
-                    return;
-                  }
-                  _formKey.currentState!.save();
+                  //todo
+                  // FocusScope.of(context).unfocus();
+                  // if (_formKey.currentState == null ||
+                  //     !(_formKey.currentState!.validate())) {
+                  //   return;
+                  // }
+                  // _formKey.currentState!.save();
 
+                  user.email='mworiavince@gmail.com';
+                  user.password='12345678';
                   widget.submit(user);
                 },
                 child: widget.isLoading

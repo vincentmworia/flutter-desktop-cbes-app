@@ -1,11 +1,16 @@
 import 'dart:async';
 
+import 'package:cbesdesktop/models/loggedin.dart';
+import 'package:cbesdesktop/providers/login_user_data.dart';
+import 'package:cbesdesktop/screens/auth_screen.dart';
 import 'package:cbesdesktop/screens/offline_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-import '../helpers/auto_connection_helper.dart';
+import '../providers/mqtt.dart';
 import '../widgets/nav_bar_plane.dart';
 
 import './dashboard_screen.dart';
@@ -31,33 +36,58 @@ class _HomeScreenState extends State<HomeScreen> {
   var _compressNavPlane = true;
   var _showNavPlane = true;
 
-  // ConnectivityResult _connectionStatus = ConnectivityResult.none;
-  // final Connectivity _connectivity = Connectivity();
-  // StreamSubscription<ConnectivityResult>? _connectivitySubscription;
-  //
-  // void _updateInternetState(ConnectivityResult result) {
-  //   setState(() {
-  //     _connectionStatus = result;
-  //   });
-  // }
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
     if (kDebugMode) {
       print("HOME INITIALIZATION");
-    }
+      try {
+        Future.delayed(Duration.zero)
+            .then((value) async => await _connectivity.checkConnectivity())
+            .then((value) => setState(() {
+                  _connectionStatus = value;
+                }));
 
-    _page = PageTitle.dashboard;
-// todo work on internet listener and reconnection offline/online
-    // Future.delayed(Duration.zero).then((value) async =>
-    //     _connectivitySubscription = await internetChecker(
-    //         mounted: mounted,
-    //         updateUi: _updateInternetState,
-    //         connectivity: _connectivity,
-    //         // context: context,
-    //         // reInitializationActive: true
-    //     ));
+        ConnectivityResult? prevResult;
+        var lockCode = false;
+        _connectivity.onConnectivityChanged.listen((result) async {
+          if (!lockCode) {
+            if (prevResult != result) {
+              print('df $prevResult');
+              if (prevResult == ConnectivityResult.none) {
+                if (mounted) {
+                  print('here');
+                  Navigator.pushReplacementNamed(context, AuthScreen.routeName );
+                }
+
+                // lockCode = true;
+                // await Provider.of<MqttProvider>(context, listen: false)
+                //     .initializeMqttClient();
+                // lockCode = false;
+              } else {
+                prevResult = result;
+                if (mounted) {
+                  setState(() {
+                    _connectionStatus = result;
+                    if (kDebugMode) {
+                      print('rebuild $result');
+                    }
+                  });
+                }
+              }
+            }
+          }
+        });
+      } on PlatformException catch (_) {
+        if (kDebugMode) {
+          print('Could n\'t check connectivity status');
+        }
+      }
+    }
   }
 
   @override
@@ -66,13 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
     if (kDebugMode) {
       print('HOME DISPOSED');
     }
-    // _connectivitySubscription?.cancel();
+    _connectivitySubscription?.cancel();
   }
 
   void _switchPage(PageTitle page, String title) {
     setState(() {
-      _showNavPlane = false;
-      _compressNavPlane = true;
+      // todo
+      // _showNavPlane = false;
+      // _compressNavPlane = true;
       _page = page;
       _pageTitle = title;
     });
@@ -97,34 +128,69 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
-    //     _connectionStatus == ConnectivityResult.mobile ||
-    //     _connectionStatus == ConnectivityResult.wifi;
+    final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
+        _connectionStatus == ConnectivityResult.mobile ||
+        _connectionStatus == ConnectivityResult.wifi;
 
-    // print(_connectionStatus);
-    // if (!goodConnection) {
-    //   return const SafeArea(
-    //       child: Scaffold(
-    //     body: OfflineScreen(),
-    //   ));
-    // }
-
+    print(_connectionStatus);
+    if (!goodConnection) {
+      return const SafeArea(
+          child: Scaffold(
+        body: OfflineScreen(),
+      ));
+    }
 
     const duration = Duration(milliseconds: 200);
 
+    const txtStyle = TextStyle(
+        color: Colors.white,
+        // fontSize: 16,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 3.0);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
           title: Text(_pageTitle.toUpperCase()),
-
+          actions: [
+            Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Icon(
+                  _connectionStatus == ConnectivityResult.wifi
+                      ? Icons.wifi
+                      : _connectionStatus == ConnectivityResult.mobile
+                          ? Icons.signal_cellular_alt
+                          : _connectionStatus == ConnectivityResult.ethernet
+                              ? Icons.cable
+                              : Icons.signal_cellular_0_bar,
+                  size: 30,
+                  color: Colors.white,
+                )),
+            const Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Icon(
+                  Icons.person,
+                  size: 30,
+                  color: Colors.white,
+                )),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 25),
+                child: Text(
+                  '${LoginUserData.getLoggedUser!.firstname} ${LoginUserData.getLoggedUser!.lastname}',
+                  overflow: TextOverflow.clip,
+                  style: txtStyle,
+                ),
+              ),
+            ),
+          ],
           leading: Padding(
             padding: const EdgeInsets.only(left: 25),
             child: IconButton(
               disabledColor: Colors.white,
               color: Colors.white,
               hoverColor: Theme.of(context).colorScheme.primary,
-              focusColor:Theme.of(context).colorScheme.primary,
+              focusColor: Theme.of(context).colorScheme.primary,
               onPressed: () {
                 setState(() {
                   _showNavPlane = false;
@@ -135,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     setState(() {
                       _showNavPlane = true;
                     });
-                    print(_showNavPlane);
+                    // print(_showNavPlane);
                   }
                 });
               },

@@ -89,6 +89,7 @@ class FirebaseAuthentication {
     }
     final signedInUser = SignIn.fromMap(responseData);
     // todo fetch the user from the database,
+    // TODO MAIN ERROR HANDLING
     final dbResponse = await http.get(Uri.parse(
         '$firebaseDbUrl/users/${signedInUser.localId}.json?auth=${signedInUser.idToken}'));
     final loggedIn = LoggedIn.fromMap(json.decode(dbResponse.body));
@@ -113,6 +114,7 @@ class FirebaseAuthentication {
           }
         });
 
+    Future.delayed(const Duration(seconds: 1));
     message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
 
     return message!;
@@ -121,9 +123,9 @@ class FirebaseAuthentication {
   // todo logout
   static Future<void> logout(BuildContext context) async {
     final client = Provider.of<MqttProvider>(context, listen: false);
-    Future.delayed(Duration.zero)
-        .then((_) =>
-            client.publishMsg(client.disconnectTopic, client.disconnectMessage))
+    // todo
+    // client.publishMsg(client.disconnectTopic, client.disconnectMessage);
+    Future.delayed(const Duration(seconds: 1))
         .then((_) => client.mqttClient.disconnect())
         .then((_) =>
             Navigator.pushReplacementNamed(context, AuthScreen.routeName));

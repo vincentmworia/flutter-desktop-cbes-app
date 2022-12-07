@@ -26,7 +26,7 @@ class LinearGauge extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            title,
+            title.toUpperCase(),
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
           ),
@@ -43,7 +43,10 @@ class LinearGauge extends StatelessWidget {
                 showLabels: true,
                 axisLabelStyle:
                     const TextStyle(color: Colors.white, fontSize: 10),
-                axisTrackStyle: const LinearAxisTrackStyle(color: Colors.grey ),
+                axisTrackStyle: const LinearAxisTrackStyle(color: Colors.grey),
+                // todo Tick styles
+                majorTickStyle: const LinearTickStyle(),
+                minorTickStyle: const LinearTickStyle(),
                 useRangeColorForAxis: true,
                 labelPosition: LinearLabelPosition.inside,
                 interval: 20,
@@ -70,7 +73,7 @@ class LinearGauge extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(4)),
-            padding: const EdgeInsets.all(2),
+            padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
             child: Text(
               '${value.toStringAsFixed(1)} °C',
               style: TextStyle(color: color),

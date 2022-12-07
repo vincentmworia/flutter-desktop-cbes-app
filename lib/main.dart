@@ -5,6 +5,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:provider/provider.dart';
 
 import './screens/auth_screen.dart';
+
 // export './screens/auth_screen.dart';
 import './screens/home_screen.dart';
 import './providers/login_user_data.dart';
@@ -18,7 +19,7 @@ void main() async {
     doWhenWindowReady(() {
       final win = appWindow;
 
-      win.minSize =const Size(1100, 600);
+      win.minSize = const Size(1100, 600);
       win.alignment = Alignment.center;
       win.title = MyApp.appTitle;
       win.maximize();

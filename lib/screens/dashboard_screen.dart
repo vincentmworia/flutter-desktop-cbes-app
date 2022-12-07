@@ -1,10 +1,9 @@
-import 'package:cbesdesktop/providers/mqtt.dart';
-import 'package:cbesdesktop/widgets/linear_gauge.dart';
-import 'package:cbesdesktop/widgets/radial_gauge.dart';
 import 'package:flutter/material.dart';
-import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import '../providers/mqtt.dart';
+import '../widgets/linear_gauge.dart';
+import '../widgets/radial_gauge.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -24,28 +23,28 @@ class DashboardScreen extends StatelessWidget {
                 builder: (context, mqttProv, child) => Row(
                   children: [
                     LinearGauge(
-                        title: 'Temp 1',
-                        data: mqttProv.heatingUnitData.tank1,
+                        title: 'Tank 1',
+                        data: mqttProv.heatingUnitData.tank1 ?? '0.0',
                         gaugeWidth: cons.maxWidth * 0.075),
                     LinearGauge(
-                        title: 'Temp 2',
-                        data: mqttProv.heatingUnitData.tank2,
+                        title: 'Tank 2',
+                        data: mqttProv.heatingUnitData.tank2 ?? '0.0',
                         gaugeWidth: cons.maxWidth * 0.075),
                     LinearGauge(
-                        title: 'Temp 3',
-                        data: mqttProv.heatingUnitData.tank3,
+                        title: 'Tank 3',
+                        data: mqttProv.heatingUnitData.tank3 ?? '0.0',
                         gaugeWidth: cons.maxWidth * 0.075),
                     Expanded(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         MyRadialGauge(
-                            title: 'Flow 1',
-                            data: mqttProv.heatingUnitData.flow1,
+                            title: 'Tank 1',
+                            data: mqttProv.heatingUnitData.flow1 ?? '0.0',
                             gaugeHeight: cons.maxHeight * 0.15),
                         MyRadialGauge(
-                            title: 'Flow 2',
-                            data: mqttProv.heatingUnitData.flow2,
+                            title: 'Tank 2',
+                            data: mqttProv.heatingUnitData.flow2 ?? '0.0',
                             gaugeHeight: cons.maxHeight * 0.15),
                       ],
                     ))
@@ -54,36 +53,47 @@ class DashboardScreen extends StatelessWidget {
               )),
             ],
           );
-      Widget cardView(String? title, Widget? child) => Card(
-            elevation: 10,
-            // color: Color(0xff2E8B57),
-            // color: Colors.green,
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.75),
-            shape: RoundedRectangleBorder(borderRadius: bdRadius),
-            child: SizedBox(
+      Widget cardView(String title, Widget? child) => title == 'TODO'
+          ? SizedBox(
               width: cons.maxWidth * 0.4,
               height: cons.maxHeight * 0.4,
-              child: Column(
-                children: [
-                  Container(
-                    width: cons.maxWidth * 0.2,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: bdRadius),
-                    child: Center(
-                      child: Text(
-                        title ?? 'TODO',
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            color: Theme.of(context).colorScheme.primary),
+            )
+          : Card(
+              elevation: 10,
+              // color: Color(0xff668366),
+              // color: Color(0xff668366),
+              // color: Colors.green,
+              // color: Colors.grey,
+              // color: Theme.of(context).colorScheme.primary.withOpacity(0.35),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+              // color:Theme.of(context).colorScheme.secondary,
+              shape: RoundedRectangleBorder(borderRadius: bdRadius),
+              child: SizedBox(
+                width: cons.maxWidth * 0.4,
+                height: cons.maxHeight * 0.4,
+                child: Column(
+                  children: [
+                    Container(
+                      width: cons.maxWidth * 0.2,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: bdRadius),
+                      child: Center(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              letterSpacing: 2.0,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(child: child ?? Container()),
-                ],
+                    Expanded(child: child ?? Container()),
+                  ],
+                ),
               ),
-            ),
-          );
+            );
       return SizedBox(
         width: cons.maxWidth,
         height: cons.maxHeight,
@@ -95,8 +105,8 @@ class DashboardScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  cardView('HEATING UNIT', heatingUnitCardData()),
-                  cardView('UBIBOT', null),
+                  cardView('SOLAR HEATING UNIT', heatingUnitCardData()),
+                  cardView('ENVIROMENTAL METER', null),
                 ],
               ),
             ),

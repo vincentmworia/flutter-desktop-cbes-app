@@ -38,8 +38,9 @@ class _MyRadialGaugeState extends State<MyRadialGauge> {
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: Text(
-                widget.title,
-                style: const TextStyle(fontSize: 15, color: Colors.white),
+                widget.title.toUpperCase(),
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
@@ -50,8 +51,8 @@ class _MyRadialGaugeState extends State<MyRadialGauge> {
                 speed: value,
                 // animate: true,
                 duration: const Duration(seconds: 1),
-                unitOfMeasurement: 'L/M',
-                unitOfMeasurementTextStyle: const TextStyle(fontSize: 8),
+                unitOfMeasurement: 'lpm',
+                unitOfMeasurementTextStyle: const TextStyle(fontSize: 10),
                 speedTextStyle: const TextStyle(fontSize: 15),
                 gaugeWidth: 5,
                 minMaxTextStyle: const TextStyle(fontSize: 0),
