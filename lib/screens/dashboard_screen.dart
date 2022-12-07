@@ -24,15 +24,15 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     LinearGauge(
                         title: 'Tank 1',
-                        data: mqttProv.heatingUnitData.tank1 ?? '0.0',
+                        data: mqttProv.heatingUnitData?.tank1  ,
                         gaugeWidth: cons.maxWidth * 0.075),
                     LinearGauge(
                         title: 'Tank 2',
-                        data: mqttProv.heatingUnitData.tank2 ?? '0.0',
+                        data: mqttProv.heatingUnitData?.tank2 ,
                         gaugeWidth: cons.maxWidth * 0.075),
                     LinearGauge(
                         title: 'Tank 3',
-                        data: mqttProv.heatingUnitData.tank3 ?? '0.0',
+                        data: mqttProv.heatingUnitData?.tank3  ,
                         gaugeWidth: cons.maxWidth * 0.075),
                     Expanded(
                         child: Column(
@@ -40,11 +40,11 @@ class DashboardScreen extends StatelessWidget {
                       children: [
                         MyRadialGauge(
                             title: 'Tank 1',
-                            data: mqttProv.heatingUnitData.flow1 ?? '0.0',
+                            data: mqttProv.heatingUnitData?.flow1,
                             gaugeHeight: cons.maxHeight * 0.15),
                         MyRadialGauge(
                             title: 'Tank 2',
-                            data: mqttProv.heatingUnitData.flow2 ?? '0.0',
+                            data: mqttProv.heatingUnitData?.flow2 ,
                             gaugeHeight: cons.maxHeight * 0.15),
                       ],
                     ))
@@ -106,7 +106,7 @@ class DashboardScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   cardView('SOLAR HEATING UNIT', heatingUnitCardData()),
-                  cardView('ENVIROMENTAL METER', null),
+                  cardView('ENVIRONMENT METER', null),
                 ],
               ),
             ),

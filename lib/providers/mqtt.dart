@@ -6,7 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
+import '../models/enviroment_meter.dart';
 import '../models/heating_unit.dart';
+import '../models/power_unit.dart';
 import '../private_data.dart';
 import './login_user_data.dart';
 
@@ -26,8 +28,18 @@ class MqttProvider with ChangeNotifier {
 
   String get disconnectMessage => _devicesClientMessage;
 
-  HeatingUnit get heatingUnitData => _heatingUnitData!;
+  HeatingUnit? get heatingUnitData => _heatingUnitData;
   HeatingUnit? _heatingUnitData;
+
+  EnvironmentMeter? get environmentMeterData => _environmentMeterData;
+  EnvironmentMeter? _environmentMeterData;
+
+  PowerUnit? get powerUnitData => _powerUnitData;
+  PowerUnit? _powerUnitData;
+
+  var _connStatus = ConnectionStatus.disconnected;
+
+  ConnectionStatus get connectionStatus => _connStatus;
 
   // todo set unique Id for individual devices? From Email?
 
@@ -50,8 +62,6 @@ class MqttProvider with ChangeNotifier {
   // todo If disconnected, nullify the token and forcefully logout the user
 
   Future<ConnectionStatus> initializeMqttClient() async {
-    var connectionStatus = ConnectionStatus.disconnected;
-
     _mqttClient = MqttServerClient.withPort(
         mqttHost, 'flutter_client/$deviceId', mqttPort);
     _mqttClient.secure = true;
@@ -85,15 +95,14 @@ class MqttProvider with ChangeNotifier {
       }
 
       await _mqttClient.connect();
-      connectionStatus = ConnectionStatus.connected;
     } catch (e) {
       if (kDebugMode) {
         print('\n\nException: $e');
       }
       _mqttClient.disconnect();
-      connectionStatus = ConnectionStatus.disconnected;
+      _connStatus = ConnectionStatus.disconnected;
     }
-    if (connectionStatus == ConnectionStatus.connected) {
+    if (_connStatus == ConnectionStatus.connected) {
       _mqttClient.subscribe("cbes/dekut/#", MqttQos.exactlyOnce);
 
       _mqttClient.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
@@ -102,23 +111,37 @@ class MqttProvider with ChangeNotifier {
         var message =
             MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
-        if (topic == "cbes/dekut/heating_unit") {
+        if (topic == "cbes/dekut/data/heating_unit") {
           _heatingUnitData =
               HeatingUnit.fromMap(json.decode(message) as Map<String, dynamic>);
-          // print(_heatingUnitData);
-
           notifyListeners();
         }
 
-        if (topic == "cbes/dekut/devices/#") {
+        if (topic == "cbes/dekut/data/environment_meter") {
+          _environmentMeterData = EnvironmentMeter.fromMap(
+              json.decode(message) as Map<String, dynamic>);
+          print(_environmentMeterData?.asMap());
+          notifyListeners();
+        }
+        if (topic == "cbes/dekut/data/power_unit") {
+          _powerUnitData =
+              PowerUnit.fromMap(json.decode(message) as Map<String, dynamic>);
+          print(_powerUnitData?.asMap());
+          notifyListeners();
+        }
+        if (topic.contains("cbes/dekut/devices/")) {
+          final deviceData = topic.split('/');
+          print('''${deviceData[3]} - ${deviceData[4]}
+          State: $message''');
           // todo Get all the devices status and display in the UI,
           //  Disconnected or connected,
+          // todo display online users like whatsapp
           // todo Record in firebase how long a user is logged in or logged out?
         }
       });
     }
 
-    return connectionStatus;
+    return _connStatus;
   }
 
   void publishMsg(String topic, String message) {
@@ -133,11 +156,13 @@ class MqttProvider with ChangeNotifier {
 
   void onConnected() {
     if (kDebugMode) {
+      _connStatus = ConnectionStatus.connected;
       publishMsg(_devicesClient, 'Connected');
     }
   }
 
   void onDisconnected() {
+    _connStatus = ConnectionStatus.disconnected;
     if (kDebugMode) {
       print('Disconnected');
       forceOffline = true;

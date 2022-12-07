@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cbesdesktop/models/loggedin.dart';
 import 'package:cbesdesktop/providers/login_user_data.dart';
 import 'package:cbesdesktop/screens/auth_screen.dart';
 import 'package:cbesdesktop/screens/offline_screen.dart';
@@ -8,11 +7,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/mqtt.dart';
 import '../widgets/nav_bar_plane.dart';
-
 import './dashboard_screen.dart';
 import './admin_screen.dart';
 import './heating_unit_screen.dart';
@@ -36,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _compressNavPlane = true;
   var _showNavPlane = true;
 
-  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  ConnectivityResult _connectionStatus  =ConnectivityResult.ethernet;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
@@ -57,11 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
         _connectivity.onConnectivityChanged.listen((result) async {
           if (!lockCode) {
             if (prevResult != result) {
-              print('df $prevResult');
+              // print('df $prevResult');
               if (prevResult == ConnectivityResult.none) {
                 if (mounted) {
-                  print('here');
-                  Navigator.pushReplacementNamed(context, AuthScreen.routeName );
+                  // print('here');
+                  Navigator.pushReplacementNamed(context, AuthScreen.routeName);
                 }
 
                 // lockCode = true;
@@ -132,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _connectionStatus == ConnectivityResult.mobile ||
         _connectionStatus == ConnectivityResult.wifi;
 
-    print(_connectionStatus);
+    // print(_connectionStatus);
     if (!goodConnection) {
       return const SafeArea(
           child: Scaffold(
@@ -167,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                 )),
             const Padding(
-                padding: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Icon(
                   Icons.person,
                   size: 30,
@@ -205,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 });
               },
-              icon: const Icon(Icons.menu),
+              icon: Icon(_compressNavPlane ? Icons.menu : Icons.arrow_back),
             ),
           ),
         ),

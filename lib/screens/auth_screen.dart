@@ -30,7 +30,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   var _authMode = AuthMode.login;
 
-  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 

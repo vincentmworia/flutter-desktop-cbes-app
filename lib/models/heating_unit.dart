@@ -21,11 +21,11 @@ class HeatingUnit {
           flow1: heatingUnitData['Flow1'].toString(),
           flow2: heatingUnitData['Flow2'].toString());
 
-  Map<String, String> toMap() => {
+  Map<String, String> asMap() => {
         "TankT1": tank1 ?? '0.0',
         "TankT2": tank2 ?? '0.0',
         "TankT3": tank3 ?? '0.0',
         "Flow1": flow1 ?? '0.0',
-        "Flow2": flow2 ?? '0.0',
+        "Flow2": flow2 ?? '0.0'
       };
 }

@@ -8,9 +8,9 @@ class MyRadialGauge extends StatefulWidget {
       required this.data,
       required this.gaugeHeight})
       : super(key: key);
-  final String title;
-  final double gaugeHeight;
-  final String data;
+  final String? title;
+  final double? gaugeHeight;
+  final String? data;
 
   @override
   State<MyRadialGauge> createState() => _MyRadialGaugeState();
@@ -22,7 +22,7 @@ class _MyRadialGaugeState extends State<MyRadialGauge> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<KdGaugeViewState> key = GlobalKey<KdGaugeViewState>();
-    final value = double.parse(widget.data);
+    final value = double.parse(widget.data ?? '0.0');
     Future.delayed(const Duration(seconds: 1)).then((value) {
       if (mounted) {
         setState(() => opacity = 1);
@@ -38,7 +38,7 @@ class _MyRadialGaugeState extends State<MyRadialGauge> {
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: Text(
-                widget.title.toUpperCase(),
+                widget.title == null ? '' : widget.title!.toUpperCase(),
                 style: const TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold),
               ),

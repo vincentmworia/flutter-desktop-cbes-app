@@ -114,7 +114,7 @@ class FirebaseAuthentication {
           }
         });
 
-    Future.delayed(const Duration(seconds: 1));
+    // Future.delayed(const Duration(seconds: 1));
     message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
 
     return message!;
@@ -124,8 +124,13 @@ class FirebaseAuthentication {
   static Future<void> logout(BuildContext context) async {
     final client = Provider.of<MqttProvider>(context, listen: false);
     // todo
-    // client.publishMsg(client.disconnectTopic, client.disconnectMessage);
-    Future.delayed(const Duration(seconds: 1))
+
+    Future.delayed(Duration.zero)
+        .then((_) {
+          if (client.connectionStatus == ConnectionStatus.connected) {
+            client.publishMsg(client.disconnectTopic, client.disconnectMessage);
+          }
+        })
         .then((_) => client.mqttClient.disconnect())
         .then((_) =>
             Navigator.pushReplacementNamed(context, AuthScreen.routeName));

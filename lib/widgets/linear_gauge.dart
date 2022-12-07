@@ -8,13 +8,13 @@ class LinearGauge extends StatelessWidget {
     required this.data,
     required this.gaugeWidth,
   }) : super(key: key);
-  final String title;
-  final String data;
-  final double gaugeWidth;
+  final String? title;
+  final String? data;
+  final double? gaugeWidth;
 
   @override
   Widget build(BuildContext context) {
-    final value = double.parse(data);
+    final value = double.parse(data ?? '0.0');
     final color = value < 20
         ? Colors.blue
         : value > 20 && value < 50
@@ -26,7 +26,7 @@ class LinearGauge extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            title.toUpperCase(),
+            title == null ? '' : title!.toUpperCase(),
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
           ),
@@ -73,7 +73,7 @@ class LinearGauge extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(4)),
-            padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
             child: Text(
               '${value.toStringAsFixed(1)} °C',
               style: TextStyle(color: color),
