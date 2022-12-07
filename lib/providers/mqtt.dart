@@ -21,6 +21,7 @@ enum ConnectionStatus {
 class MqttProvider with ChangeNotifier {
   late MqttServerClient _mqttClient;
   static bool forceOffline = true;
+  Timer? timer;
 
   MqttServerClient get mqttClient => _mqttClient;
 
@@ -104,7 +105,14 @@ class MqttProvider with ChangeNotifier {
     }
     if (_connStatus == ConnectionStatus.connected) {
       _mqttClient.subscribe("cbes/dekut/#", MqttQos.exactlyOnce);
-
+      var i = 0;
+      final List<Map<DateTime, HeatingUnit?>> heatingUnitGraphData = [];
+      // timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      //   if (_heatingUnitData != null) {
+      //     heatingUnitGraphData.add({DateTime.now(): _heatingUnitData});
+      //   }
+      //   print(heatingUnitGraphData);
+      // });
       _mqttClient.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
         final topic = c[0].topic;
@@ -114,6 +122,9 @@ class MqttProvider with ChangeNotifier {
         if (topic == "cbes/dekut/data/heating_unit") {
           _heatingUnitData =
               HeatingUnit.fromMap(json.decode(message) as Map<String, dynamic>);
+          heatingUnitGraphData.add({DateTime.now(): _heatingUnitData});
+          // todo record data and store it in a list periodically
+          // print(heatingUnitGraphData);
           notifyListeners();
         }
 
@@ -166,6 +177,7 @@ class MqttProvider with ChangeNotifier {
     if (kDebugMode) {
       print('Disconnected');
       forceOffline = true;
+      timer?.cancel();
       notifyListeners();
       // TODO ON DISCONNECTED, FORCE THE USER OFFLINE
       // Use firebase Auth to force the application to HomePage

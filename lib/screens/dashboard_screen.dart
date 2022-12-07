@@ -24,15 +24,15 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     LinearGauge(
                         title: 'Tank 1',
-                        data: mqttProv.heatingUnitData?.tank1  ,
+                        data: mqttProv.heatingUnitData?.tank1,
                         gaugeWidth: cons.maxWidth * 0.075),
                     LinearGauge(
                         title: 'Tank 2',
-                        data: mqttProv.heatingUnitData?.tank2 ,
+                        data: mqttProv.heatingUnitData?.tank2,
                         gaugeWidth: cons.maxWidth * 0.075),
                     LinearGauge(
                         title: 'Tank 3',
-                        data: mqttProv.heatingUnitData?.tank3  ,
+                        data: mqttProv.heatingUnitData?.tank3,
                         gaugeWidth: cons.maxWidth * 0.075),
                     Expanded(
                         child: Column(
@@ -44,7 +44,7 @@ class DashboardScreen extends StatelessWidget {
                             gaugeHeight: cons.maxHeight * 0.15),
                         MyRadialGauge(
                             title: 'Tank 2',
-                            data: mqttProv.heatingUnitData?.flow2 ,
+                            data: mqttProv.heatingUnitData?.flow2,
                             gaugeHeight: cons.maxHeight * 0.15),
                       ],
                     ))
@@ -59,14 +59,15 @@ class DashboardScreen extends StatelessWidget {
               height: cons.maxHeight * 0.4,
             )
           : Card(
-              elevation: 10,
+              elevation: 20,
+              shadowColor: Theme.of(context).colorScheme.primary,
               // color: Color(0xff668366),
               // color: Color(0xff668366),
               // color: Colors.green,
               // color: Colors.grey,
               // color: Theme.of(context).colorScheme.primary.withOpacity(0.35),
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
               // color:Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
               shape: RoundedRectangleBorder(borderRadius: bdRadius),
               child: SizedBox(
                 width: cons.maxWidth * 0.4,

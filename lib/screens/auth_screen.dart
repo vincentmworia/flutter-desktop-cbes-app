@@ -37,6 +37,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    // todo Check whether autologin is activated,
+    //  todo if so, directly move to the dashboard screen
     if (kDebugMode) {
       print(" AUTH INITIALIZATION");
     }
@@ -58,11 +60,9 @@ class _AuthScreenState extends State<AuthScreen> {
     _connectivity.onConnectivityChanged.listen((result) {
       tempResult ??= result;
       if (tempResult != result) {
-        if(result ==ConnectionState.none){
-
-        }
+        if (result == ConnectionState.none) {}
         _rebuildScreen(result);
-        tempResult=result;
+        tempResult = result;
       }
     });
   }
@@ -118,11 +118,11 @@ class _AuthScreenState extends State<AuthScreen> {
     if (_authMode == AuthMode.register) {
       // Future.delayed(const Duration(seconds: 10))
       //     .then((value) => print('Slow internet'));
-      await FirebaseAuthentication.signUp(user).then((message) async =>
-          await customDialog(context, message)).then((_) =>
-          setState(() {
-            _isLoading = false;
-          }));
+      await FirebaseAuthentication.signUp(user)
+          .then((message) async => await customDialog(context, message))
+          .then((_) => setState(() {
+                _isLoading = false;
+              }));
     }
     if (_authMode == AuthMode.login) {
       Future.delayed(Duration.zero).then((value) async =>
@@ -136,8 +136,8 @@ class _AuthScreenState extends State<AuthScreen> {
               Future.delayed(Duration.zero).then((_) =>
                   // Navigator.pushReplacement(context,
                   //     MaterialPageRoute(builder: (_) => const TempHomePage())));
-              Navigator.pushReplacementNamed(
-                  context, HomeScreen.routeName));
+                  Navigator.pushReplacementNamed(
+                      context, HomeScreen.routeName));
             }
           }));
       // .then((_) =>
