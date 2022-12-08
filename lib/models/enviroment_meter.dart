@@ -2,7 +2,7 @@ class EnvironmentMeter {
   String? temperature;
   String? humidity;
   String? lux;
-  String? status;
+  bool? status;
   String? usage;
 
   EnvironmentMeter(
@@ -13,8 +13,8 @@ class EnvironmentMeter {
         temperature: environmentMeter['temperature'].toString(),
         humidity: environmentMeter['humidity'].toString(),
         lux: environmentMeter['lux'].toString(),
-        status: environmentMeter['lux'].toString(),
-        usage: environmentMeter['lux'].toString(),
+        status: environmentMeter['status'] == 1 ? true : false,
+        usage: environmentMeter['usage'].toString(),
       );
 
   Map<String, dynamic> asMap() => {

@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cbesdesktop/models/graph_axis.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -38,6 +40,12 @@ class MqttProvider with ChangeNotifier {
   PowerUnit? get powerUnitData => _powerUnitData;
   PowerUnit? _powerUnitData;
 
+  final List<GraphAxis> temp1GraphData = [];
+  final List<GraphAxis> temp2GraphData = [];
+  final List<GraphAxis> temp3GraphData = [];
+  final List<GraphAxis> flow1GraphData = [];
+  final List<GraphAxis> flow2GraphData = [];
+
   var _connStatus = ConnectionStatus.disconnected;
 
   ConnectionStatus get connectionStatus => _connStatus;
@@ -61,6 +69,10 @@ class MqttProvider with ChangeNotifier {
   static const String _devicesClientMessage = 'Disconnected Well';
 
   // todo If disconnected, nullify the token and forcefully logout the user
+
+  String _duration(DateTime time) =>
+      DateFormat('HH:mm').format(/*time.subtract(Duration(minutes: delay))*/
+          time);
 
   Future<ConnectionStatus> initializeMqttClient() async {
     _mqttClient = MqttServerClient.withPort(
@@ -105,13 +117,23 @@ class MqttProvider with ChangeNotifier {
     }
     if (_connStatus == ConnectionStatus.connected) {
       _mqttClient.subscribe("cbes/dekut/#", MqttQos.exactlyOnce);
-      var i = 0;
-      final List<Map<DateTime, HeatingUnit?>> heatingUnitGraphData = [];
-      // timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+
+      // timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       //   if (_heatingUnitData != null) {
-      //     heatingUnitGraphData.add({DateTime.now(): _heatingUnitData});
+      //     final time = DateTime.now();
+      //     temp1GraphData.add(GraphAxis(
+      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
+      //     temp2GraphData.add(GraphAxis(
+      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
+      //     temp3GraphData.add(GraphAxis(
+      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
+      //     flow1GraphData.add(GraphAxis(
+      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
+      //     flow2GraphData.add(GraphAxis(
+      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
+      //     notifyListeners();
       //   }
-      //   print(heatingUnitGraphData);
+      //   // print(heatingUnitGraphData);
       // });
       _mqttClient.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
@@ -122,9 +144,19 @@ class MqttProvider with ChangeNotifier {
         if (topic == "cbes/dekut/data/heating_unit") {
           _heatingUnitData =
               HeatingUnit.fromMap(json.decode(message) as Map<String, dynamic>);
-          heatingUnitGraphData.add({DateTime.now(): _heatingUnitData});
-          // todo record data and store it in a list periodically
-          // print(heatingUnitGraphData);
+          if (_heatingUnitData != null) {
+            final time = DateTime.now();
+            temp1GraphData.add(GraphAxis(
+                _duration(time), double.parse(_heatingUnitData!.tank1!)));
+            temp2GraphData.add(GraphAxis(
+                _duration(time), double.parse(_heatingUnitData!.tank2!)));
+            temp3GraphData.add(GraphAxis(
+                _duration(time), double.parse(_heatingUnitData!.tank3!)));
+            flow1GraphData.add(GraphAxis(
+                _duration(time), double.parse(_heatingUnitData!.flow1!)));
+            flow2GraphData.add(GraphAxis(
+                _duration(time), double.parse(_heatingUnitData!.flow2!)));
+          }
           notifyListeners();
         }
 

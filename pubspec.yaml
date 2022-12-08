@@ -19,6 +19,8 @@ dependencies:
   charts_flutter: ^0.12.0
   syncfusion_flutter_gauges: ^20.3.59
   kdgaugeview: ^1.0.4
+  intl: ^0.17.0
+  syncfusion_flutter_charts: ^20.3.60
 
 dev_dependencies:
   flutter_test:

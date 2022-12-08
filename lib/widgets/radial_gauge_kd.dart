@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 
+import '../helpers/global_data.dart';
+
 class KdRadialGauge extends StatefulWidget {
   const KdRadialGauge(
       {Key? key,
@@ -73,7 +75,7 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
                 // baseGaugeColor: Colors.white,
                 fractionDigits: 1,
 
-                alertColorArray: const [Colors.blue, Colors.orange, Colors.red],
+                alertColorArray:const [lowColor, mediumColor,highColor],
                 alertSpeedArray: const [0, 15, 30],
               ),
             ),

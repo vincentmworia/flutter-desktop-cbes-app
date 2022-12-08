@@ -1,3 +1,4 @@
+import 'package:cbesdesktop/helpers/global_data.dart';
 import 'package:cbesdesktop/widgets/radial_gauge_kd.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -13,10 +14,10 @@ class SyncfusionRadialGauge extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = double.parse(data);
     final color = value < 20
-        ? Colors.blue
+        ? lowColor
         : value > 20 && value < 50
-            ? Colors.orange
-            : Colors.red;
+            ? mediumColor
+            : highColor;
     return SfRadialGauge(
       title: GaugeTitle(
         text: title,
@@ -39,8 +40,9 @@ class SyncfusionRadialGauge extends StatelessWidget {
             majorTickStyle:
                 MajorTickStyle(color: Theme.of(context).colorScheme.primary),
             minorTicksPerInterval: 5.0,
-            minorTickStyle:
-                MinorTickStyle(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
+            minorTickStyle: MinorTickStyle(
+                color:
+                    Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
             pointers: <GaugePointer>[
               MarkerPointer(
                 value: value,

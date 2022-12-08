@@ -1,10 +1,10 @@
-import 'package:cbesdesktop/providers/mqtt.dart';
-import 'package:cbesdesktop/widgets/linear_gauge.dart';
-import 'package:cbesdesktop/widgets/radial_gauge_kd.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/radial_gauge_sf.dart';
+import '../widgets/linear_gauge.dart';
+import '../widgets/tank_graph.dart';
+import '../providers/mqtt.dart';
 
 class HeatingUnitScreen extends StatelessWidget {
   const HeatingUnitScreen({Key? key}) : super(key: key);
@@ -101,7 +101,8 @@ class HeatingUnitScreen extends StatelessWidget {
                           .toList());
                 },
               ),
-              graphParams: Container()),
+              // todo Add the resolution to the title
+              graphParams:const TankGraph()),
           const VerticalDivider(),
           _parameterView(
               context: context,
@@ -137,14 +138,13 @@ class HeatingUnitScreen extends StatelessWidget {
                                   child: SyncfusionRadialGauge(
                                     title: e['title']!,
                                     data: e['data']!,
-
                                   ),
                                 ),
                               ))
                           .toList());
                 },
               ),
-              graphParams: Container()),
+              graphParams:const TankGraph()),
         ],
       );
     });

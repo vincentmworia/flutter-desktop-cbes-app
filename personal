@@ -1,4 +1,5 @@
 {
+"status":1,
   "device_mode": "Line Mode",
   "time": "2022-12-06 15:24:12",
   "ac_voltage": 234,
@@ -14,6 +15,7 @@
   "output_voltage": 234,
   "output_frequency": 49.9
 }
+
 
 {
   "status": 1,

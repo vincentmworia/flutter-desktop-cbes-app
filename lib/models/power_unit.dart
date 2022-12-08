@@ -1,4 +1,5 @@
 class PowerUnit {
+  bool? status;
   String? deviceMode;
   String? time;
   String? acVoltage;
@@ -15,6 +16,7 @@ class PowerUnit {
   String? outputFrequency;
 
   PowerUnit({
+    required this.status,
     required this.deviceMode,
     required this.time,
     required this.acVoltage,
@@ -32,6 +34,7 @@ class PowerUnit {
   });
 
   static PowerUnit fromMap(Map<String, dynamic> powerUnitData) => PowerUnit(
+        status: powerUnitData['status'] == 1 ? true : false,
         deviceMode: powerUnitData['device_mode'],
         time: powerUnitData['time'],
         acVoltage: powerUnitData['ac_voltage'].toString(),
@@ -50,19 +53,20 @@ class PowerUnit {
       );
 
   Map<String, dynamic> asMap() => {
-        "device_mode": "Line Mode",
-        "time": "2022-12-06 15:24:12",
-        "ac_voltage": 234.0,
-        "ac_frequency": 49.9,
-        "pv_input_voltage": 245.0,
-        "pv_input_power": 0,
-        "output_apparent_power": 0.0,
-        "output_active_power": 0.0,
-        "battery_voltage": 27.0,
-        "battery_capacity": 100,
-        "charging_current": 0.0,
-        "battery_discharge_current": 0.0,
-        "output_voltage": 234.0,
-        "output_frequency": 49.9,
+        "status": status,
+        "device_mode": deviceMode,
+        "time": time,
+        "ac_voltage":acVoltage,
+        "ac_frequency": acFrequency,
+        "pv_input_voltage":  pvInputVoltage,
+        "pv_input_power": pvInputPower,
+        "output_apparent_power":outputActivePower,
+        "output_active_power": outputActivePower,
+        "battery_voltage": batteryVoltage,
+        "battery_capacity": batteryCapacity,
+        "charging_current": chargingCurrent,
+        "battery_discharge_current": batteryDischargeCurrent,
+        "output_voltage": outputVoltage,
+        "output_frequency": outputFrequency,
       };
 }

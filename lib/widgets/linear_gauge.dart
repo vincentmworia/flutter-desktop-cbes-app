@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../helpers/global_data.dart';
+
 class LinearGauge extends StatelessWidget {
   const LinearGauge({
     Key? key,
@@ -16,10 +18,10 @@ class LinearGauge extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = double.parse(data ?? '0.0');
     final color = value < 20
-        ? Colors.blue
+        ? lowColor
         : value > 20 && value < 50
-            ? Colors.orange
-            : Colors.red;
+            ? mediumColor
+            : highColor;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

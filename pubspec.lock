@@ -209,7 +209,7 @@ packages:
     source: hosted
     version: "4.0.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
@@ -365,14 +365,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      sha256: ac81cbde74468f9ad9931e1aa81cd9a9452b315ceb1f6a708c1c718bf566939e
+      url: "https://pub.dev"
+    source: hosted
+    version: "20.3.60"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: c38cb76853bb6f0f77cc5b1318f602bb2acbd71196053696c2b27c0b95e20641
+      sha256: "62191310045683672145c7fb5d0e5f9417f1cae875c60c10633c9617b808b75c"
       url: "https://pub.dev"
     source: hosted
-    version: "20.3.59"
+    version: "20.3.60"
   syncfusion_flutter_gauges:
     dependency: "direct main"
     description:
