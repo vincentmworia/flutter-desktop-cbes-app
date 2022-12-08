@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 
-class MyRadialGauge extends StatefulWidget {
-  const MyRadialGauge(
+class KdRadialGauge extends StatefulWidget {
+  const KdRadialGauge(
       {Key? key,
       required this.title,
       required this.data,
@@ -11,12 +11,14 @@ class MyRadialGauge extends StatefulWidget {
   final String? title;
   final double? gaugeHeight;
   final String? data;
+  static const minValue = 0.0;
+  static const maxValue = 50.0;
 
   @override
-  State<MyRadialGauge> createState() => _MyRadialGaugeState();
+  State<KdRadialGauge> createState() => _KdRadialGaugeState();
 }
 
-class _MyRadialGaugeState extends State<MyRadialGauge> {
+class _KdRadialGaugeState extends State<KdRadialGauge> {
   var opacity = 0.0;
 
   @override
@@ -39,27 +41,34 @@ class _MyRadialGaugeState extends State<MyRadialGauge> {
               padding: const EdgeInsets.all(3.0),
               child: Text(
                 widget.title == null ? '' : widget.title!.toUpperCase(),
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
               child: KdGaugeView(
                 key: key,
-                minSpeed: 0,
-                maxSpeed: 50,
+                minSpeed:KdRadialGauge.minValue,
+                maxSpeed: KdRadialGauge.maxValue,
                 speed: value,
                 // animate: true,
                 duration: const Duration(seconds: 1),
                 unitOfMeasurement: 'lpm',
-                unitOfMeasurementTextStyle: const TextStyle(fontSize: 10),
-                speedTextStyle: const TextStyle(fontSize: 15),
+                unitOfMeasurementTextStyle: TextStyle(
+                  fontSize: 10,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                speedTextStyle: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 gaugeWidth: 5,
-                minMaxTextStyle: const TextStyle(fontSize: 0),
-                innerCirclePadding: 10,
+                minMaxTextStyle: const TextStyle(fontSize: 0 ),
+                innerCirclePadding: 5,
                 // inactiveGaugeColor: Colors.red,
-                subDivisionCircleColors: Colors.white12,
-                divisionCircleColors: Colors.white12,
+                // subDivisionCircleColors: Theme.of(context).colorScheme.primary,
+                // divisionCircleColors:Theme.of(context).colorScheme.primary,
                 // activeGaugeColor: Colors.black,
                 // baseGaugeColor: Colors.white,
                 fractionDigits: 1,

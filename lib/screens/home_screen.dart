@@ -22,6 +22,23 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   static const routeName = '/home_screen';
 
+  static String pageTitle(PageTitle page) {
+    switch (page) {
+      case PageTitle.dashboard:
+        return "Dashboard";
+      case PageTitle.heatingUnit:
+        return "Heating Unit";
+      case PageTitle.ubibot:
+        return "Ubibot";
+      case PageTitle.powerUnit:
+        return "Power Unit";
+      case PageTitle.admin:
+        return "Monitor Logins";
+      case PageTitle.settings:
+        return "Settings";
+    }
+  }
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -32,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _compressNavPlane = true;
   var _showNavPlane = true;
 
-  ConnectivityResult _connectionStatus  =ConnectivityResult.ethernet;
+  ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
@@ -98,8 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void _switchPage(PageTitle page, String title) {
     setState(() {
       // todo
-      // _showNavPlane = false;
-      // _compressNavPlane = true;
+      _showNavPlane = false;
+      _compressNavPlane = true;
       _page = page;
       _pageTitle = title;
     });
@@ -108,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _pageWidget(PageTitle page) {
     switch (page) {
       case PageTitle.dashboard:
-        return const DashboardScreen();
+        return DashboardScreen(switchDashboardPage: _switchPage);
       case PageTitle.heatingUnit:
         return const HeatingUnitScreen();
       case PageTitle.ubibot:

@@ -27,8 +27,9 @@ class LinearGauge extends StatelessWidget {
         children: [
           Text(
             title == null ? '' : title!.toUpperCase(),
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold),
           ),
           Expanded(
             child: SizedBox(
@@ -41,12 +42,14 @@ class LinearGauge extends StatelessWidget {
                 animateAxis: true,
                 animateRange: true,
                 showLabels: true,
-                axisLabelStyle:
-                    const TextStyle(color: Colors.white, fontSize: 10),
+                axisLabelStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.primary, fontSize: 10),
                 axisTrackStyle: const LinearAxisTrackStyle(color: Colors.grey),
                 // todo Tick styles
-                majorTickStyle: const LinearTickStyle(),
-                minorTickStyle: const LinearTickStyle(),
+                majorTickStyle: LinearTickStyle(
+                    color: Theme.of(context).colorScheme.primary),
+                minorTickStyle: LinearTickStyle(
+                    color: Theme.of(context).colorScheme.primary),
                 useRangeColorForAxis: true,
                 labelPosition: LinearLabelPosition.inside,
                 interval: 20,

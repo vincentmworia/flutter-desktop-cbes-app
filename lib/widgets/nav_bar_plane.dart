@@ -14,23 +14,6 @@ class NavBarPlane extends StatefulWidget {
 }
 
 class _NavBarPlaneState extends State<NavBarPlane> {
-  String _pageTitle(PageTitle page) {
-    switch (page) {
-      case PageTitle.dashboard:
-        return "Dashboard";
-      case PageTitle.heatingUnit:
-        return "Heating Unit";
-      case PageTitle.ubibot:
-        return "Ubibot";
-      case PageTitle.powerUnit:
-        return "Power Unit";
-      case PageTitle.admin:
-        return "Monitor Logins";
-      case PageTitle.settings:
-        return "Settings";
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -48,7 +31,7 @@ class _NavBarPlaneState extends State<NavBarPlane> {
             _activePage = page;
           });
 
-          widget.switchPage(page, _pageTitle(page));
+          widget.switchPage(page, HomeScreen.pageTitle(page));
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +42,7 @@ class _NavBarPlaneState extends State<NavBarPlane> {
               color: _activePage == page ? activeClr : inactiveClr,
             ),
             Text(
-              _pageTitle(page),
+              HomeScreen.pageTitle(page),
               style: TextStyle(
                 color: _activePage == page ? activeClr : inactiveClr,
               ),
