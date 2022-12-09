@@ -1,6 +1,6 @@
-import 'package:cbesdesktop/providers/firebase_auth.dart';
 import 'package:flutter/material.dart';
- 
+
+import '../providers/firebase_auth.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -11,7 +11,7 @@ class SettingsScreen extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(fixedSize: const Size(175, 100)),
         onPressed: () {
-       FirebaseAuthentication.logout(context);
+          FirebaseAuthentication.logout(context);
         },
         child: const Text('Logout'),
       ),

@@ -1,5 +1,6 @@
-import 'package:cbesdesktop/models/loggedin.dart';
 import 'package:flutter/foundation.dart';
+
+import '../models/logged_in.dart';
 
 class LoginUserData with ChangeNotifier {
   LoggedIn? _loggedInUser;

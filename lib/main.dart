@@ -5,8 +5,6 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:provider/provider.dart';
 
 import './screens/auth_screen.dart';
-
-// export './screens/auth_screen.dart';
 import './screens/home_screen.dart';
 import './providers/login_user_data.dart';
 import './providers/mqtt.dart';
@@ -18,8 +16,7 @@ void main() async {
   if (Platform.isWindows) {
     doWhenWindowReady(() {
       final win = appWindow;
-
-      win.minSize = const Size(1100, 600);
+      win.minSize = const Size(1000, 600);
       win.alignment = Alignment.center;
       win.title = MyApp.appTitle;
       win.maximize();
@@ -33,18 +30,9 @@ class MyApp extends StatelessWidget {
 
   static const appTitle = 'CBES DASHBOARD';
   static const appPrimaryColor = Color(0xff0b6623);
-
-  // static const appPrimaryColor = Color(0xff0b6623);
-  // static const appPrimaryColor = Color(0xff00b159);
   static const appSecondaryColor2 = Color(0xff708238);
   static const appSecondaryColor = Color(0xff8A9A5B);
-
-  // static const appSecondaryColor = Color(0xffcc5500);
-  static const appOpacity = 0.25;
-
   static const _defaultScreen = AuthScreen();
-
-  // static const _defaultScreen = HomeScreen();
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/services.dart';
 
@@ -10,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../widgets/windows_wrapper.dart';
 import '../providers/firebase_auth.dart';
 import './home_screen.dart';
 import './offline_screen.dart';
@@ -27,7 +25,6 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   var _isLoading = false;
-
   var _authMode = AuthMode.login;
 
   ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
@@ -56,7 +53,6 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
     ConnectivityResult? tempResult;
-    // var activateReInitialization=false;
     _connectivity.onConnectivityChanged.listen((result) {
       tempResult ??= result;
       if (tempResult != result) {
@@ -71,27 +67,9 @@ class _AuthScreenState extends State<AuthScreen> {
     if (mounted) {
       setState(() {
         _connectionStatus = result;
-        print('rebuild $result');
       });
     }
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   if (kDebugMode) {
-  //     print("AUTH INITIALIZATION");
-  //   }
-  //
-  //   Future.delayed(Duration.zero).then(
-  //       (value) async => _connectivitySubscription = await internetChecker(
-  //             mounted: mounted,
-  //             updateUi: _updateInternetState,
-  //             connectivity: _connectivity,
-  //             reInitializationActive: false,
-  //             context: context,
-  //           ));
-  // }
 
   @override
   void dispose() {
@@ -112,36 +90,44 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _isLoading = true;
     });
-    // Use provider to get the status of autologin, Use shared preferences api to autologin
-    // print(user.autoLogin);
-
     if (_authMode == AuthMode.register) {
-      // Future.delayed(const Duration(seconds: 10))
-      //     .then((value) => print('Slow internet'));
-      await FirebaseAuthentication.signUp(user)
-          .then((message) async => await customDialog(context, message))
-          .then((_) => setState(() {
-                _isLoading = false;
-              }));
+      // todo LOGIN LASTING FOR LONG
+      Timer.run(() {
+        Future.delayed(const Duration(seconds: 1)).then((value) {
+          print('STOP LOGIN PROCESS');
+        });
+      });
+      // todo try catch this
+      try {
+        await FirebaseAuthentication.signUp(user)
+            .then((message) async => await customDialog(context, message))
+            .then((_) => setState(() {
+                  _isLoading = false;
+                }));
+      } catch (e) {
+        await customDialog(context, 'Signing Up Failed');
+      }
     }
     if (_authMode == AuthMode.login) {
-      Future.delayed(Duration.zero).then((value) async =>
-          await FirebaseAuthentication.signIn(user, context)
-              .then((message) async {
-            setState(() {
-              _isLoading = false;
-            });
-            await customDialog(context, message);
-            if (message.startsWith("Welcome")) {
-              Future.delayed(Duration.zero).then((_) =>
-                  // Navigator.pushReplacement(context,
-                  //     MaterialPageRoute(builder: (_) => const TempHomePage())));
-                  Navigator.pushReplacementNamed(
-                      context, HomeScreen.routeName));
-            }
-          }));
-      // .then((_) =>
-      //     Navigator.pushReplacementNamed(context, HomeScreen.routeName));
+      try {
+        Future.delayed(Duration.zero).then((value) async =>
+            await FirebaseAuthentication.signIn(user, context)
+                .then((message) async {
+              setState(() {
+                _isLoading = false;
+              });
+              await customDialog(context, message);
+              if (message.startsWith("Welcome")) {
+                Future.delayed(Duration.zero).then((_) =>
+                    Navigator.pushReplacementNamed(
+                        context, HomeScreen.routeName));
+              }
+            }));
+      } catch (e) {
+        // todo, If user is not allowed in the app, throw the error too
+        Future.delayed(Duration.zero)
+            .then((value) async => await customDialog(context, 'Login Failed'));
+      }
     }
   }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-class WindowssWrapper extends StatelessWidget {
-  const WindowssWrapper({
+class WindowsWrapper extends StatelessWidget {
+  const WindowsWrapper({
     Key? key,
     this.child,
   }) : super(key: key);

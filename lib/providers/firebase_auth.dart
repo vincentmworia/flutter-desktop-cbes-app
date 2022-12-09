@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../models/signin.dart';
-import '../models/loggedin.dart';
+import '../models/logged_in.dart';
 import '../models/user.dart';
 import '../private_data.dart';
 import '../models/signup.dart';
@@ -60,7 +60,6 @@ class FirebaseAuthentication {
     }
     final signedUpUser = SignUp.fromMap(responseData);
     user.localId = signedUpUser.localId;
-    // todo user.autologin=false
     user.allowed = allowUserFalse;
     user.privilege = userGuest;
 
@@ -93,30 +92,27 @@ class FirebaseAuthentication {
     final dbResponse = await http.get(Uri.parse(
         '$firebaseDbUrl/users/${signedInUser.localId}.json?auth=${signedInUser.idToken}'));
     final loggedIn = LoggedIn.fromMap(json.decode(dbResponse.body));
-    Future.delayed(Duration.zero)
-        .then((_) {
-          // todo check whether the user is allowed into the app,
-          // todo check the privilege code,
-          Provider.of<LoginUserData>(context, listen: false)
-              .setLoggedInUser(loggedIn);
-        })
-        .then((value) async =>
-            await Provider.of<MqttProvider>(context, listen: false)
-                .initializeMqttClient())
-        .then((value) {
-          switch (value) {
-            case ConnectionStatus.disconnected:
-              message = "MQTT Broker Disconnected";
-              return message;
-            case ConnectionStatus.connected:
-              message = "MQTT Broker connected";
-              break;
-          }
-        });
-
-    // Future.delayed(const Duration(seconds: 1));
-    message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
-
+    final loginMessage = await Future.delayed(Duration.zero).then((_) {
+      // todo check whether the user is allowed into the app,
+      // todo check the privilege code,
+      Provider.of<LoginUserData>(context, listen: false)
+          .setLoggedInUser(loggedIn);
+      if (loggedIn.allowed != allowUserTrue) {
+        return false;
+      }
+      return true;
+    }).then((loginMqtt) async {
+      if (loginMqtt) {
+        await Provider.of<MqttProvider>(context, listen: false)
+            .initializeMqttClient();
+        message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
+        return message;
+      } else {
+        message = '${loggedIn.email} is not authorized  by the admin';
+        return message;
+      }
+    });
+    message = loginMessage!;
     return message!;
   }
 

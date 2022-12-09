@@ -1,11 +1,7 @@
-import 'package:cbesdesktop/screens/home_screen.dart';
-import 'package:cbesdesktop/widgets/dashboard_screen_heating_unit_consumer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/mqtt.dart';
-import '../widgets/linear_gauge.dart';
-import '../widgets/radial_gauge_kd.dart';
+import './home_screen.dart';
+import '../widgets/dashboard_screen_heating_unit_consumer.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key, required this.switchDashboardPage})
@@ -14,9 +10,6 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return const Center(
-    //   child: Text("Dashboard Screen"),
-    // );
     return LayoutBuilder(builder: (builder, cons) {
       final bdRadius = BorderRadius.circular(10);
 

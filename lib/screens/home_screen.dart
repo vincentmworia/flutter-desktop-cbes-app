@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:cbesdesktop/providers/login_user_data.dart';
-import 'package:cbesdesktop/screens/auth_screen.dart';
-import 'package:cbesdesktop/screens/offline_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../providers/login_user_data.dart';
+import './auth_screen.dart';
+import './offline_screen.dart';
 import '../widgets/nav_bar_plane.dart';
 import './dashboard_screen.dart';
 import './admin_screen.dart';
@@ -163,10 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-
-
           title: Text(_pageTitle.toUpperCase()),
-
           actions: [
             Padding(
                 padding: const EdgeInsets.only(right: 10),

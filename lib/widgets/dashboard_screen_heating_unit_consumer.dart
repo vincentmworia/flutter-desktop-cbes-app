@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/mqtt.dart';
-import 'linear_gauge.dart';
-import 'radial_gauge_kd.dart';
+import './linear_gauge.dart';
+import './radial_gauge_kd.dart';
 
 class DashboardScreenHeatingUnitConsumer extends StatelessWidget {
   const DashboardScreenHeatingUnitConsumer(

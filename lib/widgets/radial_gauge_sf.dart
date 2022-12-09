@@ -1,7 +1,8 @@
-import 'package:cbesdesktop/helpers/global_data.dart';
-import 'package:cbesdesktop/widgets/radial_gauge_kd.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import '../helpers/global_data.dart';
+import './radial_gauge_kd.dart';
 
 class SyncfusionRadialGauge extends StatelessWidget {
   const SyncfusionRadialGauge(
@@ -24,7 +25,7 @@ class SyncfusionRadialGauge extends StatelessWidget {
         textStyle: const TextStyle(
             fontSize: 18, letterSpacing: 2.0, fontWeight: FontWeight.w600),
       ),
-      animationDuration: 2000,
+      animationDuration: 4000,
       enableLoadingAnimation: true,
       axes: <RadialAxis>[
         RadialAxis(

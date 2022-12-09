@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cbesdesktop/models/graph_axis.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
-import '../models/enviroment_meter.dart';
+import '../models/environment_meter.dart';
+import '../models/graph_axis.dart';
 import '../models/heating_unit.dart';
 import '../models/power_unit.dart';
 import '../private_data.dart';
@@ -22,7 +22,6 @@ enum ConnectionStatus {
 // todo subscribe to all mqtt channels
 class MqttProvider with ChangeNotifier {
   late MqttServerClient _mqttClient;
-  static bool forceOffline = true;
   Timer? timer;
 
   MqttServerClient get mqttClient => _mqttClient;
@@ -161,19 +160,19 @@ class MqttProvider with ChangeNotifier {
         if (topic == "cbes/dekut/data/environment_meter") {
           _environmentMeterData = EnvironmentMeter.fromMap(
               json.decode(message) as Map<String, dynamic>);
-          print(_environmentMeterData?.asMap());
           notifyListeners();
         }
         if (topic == "cbes/dekut/data/power_unit") {
           _powerUnitData =
               PowerUnit.fromMap(json.decode(message) as Map<String, dynamic>);
-          print(_powerUnitData?.asMap());
           notifyListeners();
         }
         if (topic.contains("cbes/dekut/devices/")) {
           final deviceData = topic.split('/');
-          print('''${deviceData[3]} - ${deviceData[4]}
+          if (kDebugMode) {
+            print('''${deviceData[3]} - ${deviceData[4]}
           State: $message''');
+          }
           // todo Get all the devices status and display in the UI,
           //  Disconnected or connected,
           // todo display online users like whatsapp
@@ -206,7 +205,6 @@ class MqttProvider with ChangeNotifier {
     _connStatus = ConnectionStatus.disconnected;
     if (kDebugMode) {
       print('Disconnected');
-      forceOffline = true;
       timer?.cancel();
       notifyListeners();
       // TODO ON DISCONNECTED, FORCE THE USER OFFLINE
