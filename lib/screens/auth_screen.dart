@@ -147,9 +147,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const opMain = 0.9;
-    double sigma = 10; // from 0-10
-    double opacity = 0; // from 0-1.0
     const borderRadius = 15.0;
 
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
@@ -167,17 +164,11 @@ class _AuthScreenState extends State<AuthScreen> {
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            Theme.of(context).colorScheme.secondary.withOpacity(opMain),
-            Theme.of(context).colorScheme.primary.withOpacity(opMain),
+            Theme.of(context).colorScheme.secondary,
+            Theme.of(context).colorScheme.primary,
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-        child: Container(
-          color: Colors.black.withOpacity(opacity),
         ),
       ),
     );
@@ -188,52 +179,54 @@ class _AuthScreenState extends State<AuthScreen> {
       bottomLeft: Radius.circular(borderRadius),
       bottomRight: Radius.circular(borderRadius),
     );
-    return WindowsWrapper(
-      child: LayoutBuilder(
-        builder: (context, cons) => Stack(
-          children: [
-            bgImage,
-            Visibility(
-              visible: (goodConnection),
-              child: Align(
-                alignment: Alignment.center,
-                child: Card(
-                  elevation: 20,
-                  shape: const RoundedRectangleBorder(borderRadius: bdRadius),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
-                    width: deviceWidth < 1200
-                        ? deviceWidth * 0.55
-                        : deviceWidth * 0.45,
-                    height: _authMode == AuthMode.register ? 1200 : 550,
-                    decoration: BoxDecoration(
-                        color: _isLoading
-                            ? Colors.white.withOpacity(0.4)
-                            : Colors.white,
-                        borderRadius: bdRadius),
-                    padding: const EdgeInsets.all(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AuthScreenForm(
-                          authMode: _authMode,
-                          isLoading: _isLoading,
-                          submit: _submit,
-                          switchAuthMode: _switchAuthMode),
+    return SafeArea(
+      child: Scaffold(
+        body: LayoutBuilder(
+          builder: (context, cons) => Stack(
+            children: [
+              bgImage,
+              Visibility(
+                visible: (goodConnection),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Card(
+                    elevation: 20,
+                    shape: const RoundedRectangleBorder(borderRadius: bdRadius),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      width: deviceWidth < 1200
+                          ? deviceWidth * 0.55
+                          : deviceWidth * 0.45,
+                      height: _authMode == AuthMode.register ? 1200 : 550,
+                      decoration: BoxDecoration(
+                          color: _isLoading
+                              ? Colors.white.withOpacity(0.4)
+                              : Colors.white,
+                          borderRadius: bdRadius),
+                      padding: const EdgeInsets.all(8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AuthScreenForm(
+                            authMode: _authMode,
+                            isLoading: _isLoading,
+                            submit: _submit,
+                            switchAuthMode: _switchAuthMode),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: _isLoading,
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              Visibility(
+                visible: _isLoading,
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                ),
               ),
-            ),
-            if (!goodConnection) const OfflineScreen(),
-          ],
+              if (!goodConnection) const OfflineScreen(),
+            ],
+          ),
         ),
       ),
     );

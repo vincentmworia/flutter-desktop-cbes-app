@@ -33,22 +33,31 @@ class _NavBarPlaneState extends State<NavBarPlane> {
 
           widget.switchPage(page, HomeScreen.pageTitle(page));
         },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: _activePage == page ? activeClr : inactiveClr,
-            ),
-            Text(
-              HomeScreen.pageTitle(page),
-              style: TextStyle(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 1),
+          height: MediaQuery.of(context).size.height * 0.125,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
                 color: _activePage == page ? activeClr : inactiveClr,
               ),
-            ),
-            const SizedBox(height: 30),
-          ],
+              Expanded(
+                child: Text(
+                  HomeScreen.pageTitle(page),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
+                  style: TextStyle(
+                    // fontSize: 1,
+                    color: _activePage == page ? activeClr : inactiveClr,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
         ));
   }
 

@@ -14,7 +14,7 @@ import './admin_screen.dart';
 import './heating_unit_screen.dart';
 import './settings_screen.dart';
 import './power_unit_screen.dart';
-import './ubibot_screen.dart';
+import './environment_meter_screen.dart';
 
 enum PageTitle { dashboard, heatingUnit, ubibot, powerUnit, admin, settings }
 
@@ -27,13 +27,13 @@ class HomeScreen extends StatefulWidget {
       case PageTitle.dashboard:
         return "Dashboard";
       case PageTitle.heatingUnit:
-        return "Heating Unit";
+        return "Solar Heating Unit";
       case PageTitle.ubibot:
-        return "Ubibot";
+        return "Environment Meter";
       case PageTitle.powerUnit:
         return "Power Unit";
       case PageTitle.admin:
-        return "Monitor Logins";
+        return "Admin Screen";
       case PageTitle.settings:
         return "Settings";
     }
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   PageTitle _page = PageTitle.dashboard;
   String _pageTitle = 'Dashboard';
   var _compressNavPlane = true;
-  var _showNavPlane = true;
+  var _showNavPlane = false;
 
   ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
   final Connectivity _connectivity = Connectivity();
@@ -163,8 +163,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          elevation: 0,
+
+
           title: Text(_pageTitle.toUpperCase()),
+
           actions: [
             Padding(
                 padding: const EdgeInsets.only(right: 10),
@@ -226,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             AnimatedContainer(
               duration: duration,
-              width: _compressNavPlane ? 0 : 100,
+              width: _compressNavPlane ? 0 : 110,
               height: double.infinity,
               color: Theme.of(context).colorScheme.primary.withOpacity(0.99),
               child: Visibility(

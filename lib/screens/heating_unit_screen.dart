@@ -55,6 +55,9 @@ class HeatingUnitScreen extends StatelessWidget {
         ),
       );
 
+  static const temperatureTitle = 'Temperature';
+  static const flowTitle = 'Flow Rate';
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, cons) {
@@ -65,7 +68,7 @@ class HeatingUnitScreen extends StatelessWidget {
               context: context,
               width: cons.maxWidth,
               height: cons.maxHeight,
-              title: 'TEMPERATURE',
+              title: temperatureTitle,
               valueParams: Consumer<MqttProvider>(
                 builder: (context, mqttProv, child) {
                   final List<Map<String, String>> heatingUnitData = [
@@ -102,13 +105,13 @@ class HeatingUnitScreen extends StatelessWidget {
                 },
               ),
               // todo Add the resolution to the title
-              graphParams:const TankGraph()),
+              graphParams: const TankGraph(title: temperatureTitle)),
           const VerticalDivider(),
           _parameterView(
               context: context,
               width: cons.maxWidth,
               height: cons.maxHeight,
-              title: 'FLOW RATE',
+              title: flowTitle,
               valueParams: Consumer<MqttProvider>(
                 builder: (context, mqttProv, child) {
                   final List<Map<String, String>> heatingUnitData = [
@@ -144,7 +147,10 @@ class HeatingUnitScreen extends StatelessWidget {
                           .toList());
                 },
               ),
-              graphParams:const TankGraph()),
+              graphParams: const TankGraph(
+                title: flowTitle,
+              )),
+          // graphParams:const TankGraph()),
         ],
       );
     });

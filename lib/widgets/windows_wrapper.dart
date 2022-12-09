@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-class WindowsWrapper extends StatelessWidget {
-  const WindowsWrapper({
+class WindowssWrapper extends StatelessWidget {
+  const WindowssWrapper({
     Key? key,
     this.child,
   }) : super(key: key);
@@ -28,11 +28,7 @@ class WindowsWrapper extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: WindowBorder(
-          color: Colors.white,
-          width: 0.5,
-          child: child ?? Container(),
-        ),
+        body: child ?? Container()
       ),
     );
   }

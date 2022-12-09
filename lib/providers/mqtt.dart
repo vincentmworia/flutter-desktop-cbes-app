@@ -71,7 +71,7 @@ class MqttProvider with ChangeNotifier {
   // todo If disconnected, nullify the token and forcefully logout the user
 
   String _duration(DateTime time) =>
-      DateFormat('HH:mm').format(/*time.subtract(Duration(minutes: delay))*/
+      DateFormat('HH:mm:ss').format(/*time.subtract(Duration(minutes: delay))*/
           time);
 
   Future<ConnectionStatus> initializeMqttClient() async {
@@ -117,24 +117,35 @@ class MqttProvider with ChangeNotifier {
     }
     if (_connStatus == ConnectionStatus.connected) {
       _mqttClient.subscribe("cbes/dekut/#", MqttQos.exactlyOnce);
+      void removeFirstElement(List list) {
+        if (list.length >= 61) {
+          list.removeAt(0);
+        }
+      }
 
-      // timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      //   if (_heatingUnitData != null) {
-      //     final time = DateTime.now();
-      //     temp1GraphData.add(GraphAxis(
-      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
-      //     temp2GraphData.add(GraphAxis(
-      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
-      //     temp3GraphData.add(GraphAxis(
-      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
-      //     flow1GraphData.add(GraphAxis(
-      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
-      //     flow2GraphData.add(GraphAxis(
-      //         _duration(time), double.parse(_heatingUnitData!.tank1!)));
-      //     notifyListeners();
-      //   }
-      //   // print(heatingUnitGraphData);
-      // });
+      // todo change the duration dynamically on request from the client
+      timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+        if (_heatingUnitData != null) {
+          removeFirstElement(temp1GraphData);
+          removeFirstElement(temp2GraphData);
+          removeFirstElement(temp3GraphData);
+          removeFirstElement(flow1GraphData);
+          removeFirstElement(flow2GraphData);
+
+          final time = DateTime.now();
+          temp1GraphData.add(GraphAxis(
+              _duration(time), double.parse(_heatingUnitData!.tank1!)));
+          temp2GraphData.add(GraphAxis(
+              _duration(time), double.parse(_heatingUnitData!.tank2!)));
+          temp3GraphData.add(GraphAxis(
+              _duration(time), double.parse(_heatingUnitData!.tank3!)));
+          flow1GraphData.add(GraphAxis(
+              _duration(time), double.parse(_heatingUnitData!.flow1!)));
+          flow2GraphData.add(GraphAxis(
+              _duration(time), double.parse(_heatingUnitData!.flow2!)));
+        }
+        notifyListeners();
+      });
       _mqttClient.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
         final topic = c[0].topic;
@@ -144,19 +155,6 @@ class MqttProvider with ChangeNotifier {
         if (topic == "cbes/dekut/data/heating_unit") {
           _heatingUnitData =
               HeatingUnit.fromMap(json.decode(message) as Map<String, dynamic>);
-          if (_heatingUnitData != null) {
-            final time = DateTime.now();
-            temp1GraphData.add(GraphAxis(
-                _duration(time), double.parse(_heatingUnitData!.tank1!)));
-            temp2GraphData.add(GraphAxis(
-                _duration(time), double.parse(_heatingUnitData!.tank2!)));
-            temp3GraphData.add(GraphAxis(
-                _duration(time), double.parse(_heatingUnitData!.tank3!)));
-            flow1GraphData.add(GraphAxis(
-                _duration(time), double.parse(_heatingUnitData!.flow1!)));
-            flow2GraphData.add(GraphAxis(
-                _duration(time), double.parse(_heatingUnitData!.flow2!)));
-          }
           notifyListeners();
         }
 
