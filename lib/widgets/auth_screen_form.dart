@@ -336,16 +336,13 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0))),
                 onPressed: () {
-                  //todo
-                  // FocusScope.of(context).unfocus();
-                  // if (_formKey.currentState == null ||
-                  //     !(_formKey.currentState!.validate())) {
-                  //   return;
-                  // }
-                  // _formKey.currentState!.save();
+                  FocusScope.of(context).unfocus();
+                  if (_formKey.currentState == null ||
+                      !(_formKey.currentState!.validate())) {
+                    return;
+                  }
+                  _formKey.currentState!.save();
 
-                  user.email='mworiavince@gmail.com';
-                  user.password='12345678';
                   widget.submit(user);
                 },
                 child: widget.isLoading

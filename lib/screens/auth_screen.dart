@@ -138,7 +138,6 @@ class _AuthScreenState extends State<AuthScreen> {
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
         _connectionStatus == ConnectivityResult.mobile ||
         _connectionStatus == ConnectivityResult.wifi;
-    // print(goodConnection);
     final deviceWidth = MediaQuery.of(context).size.width;
 
     final bgImage = Container(
