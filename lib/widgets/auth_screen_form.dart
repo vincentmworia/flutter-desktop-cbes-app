@@ -86,7 +86,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'images/logo1.PNG',
+                'images/cbes_logo.PNG',
                 fit: BoxFit.cover,
               ),
             ),

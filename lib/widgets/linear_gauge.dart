@@ -17,9 +17,9 @@ class LinearGauge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final value = double.parse(data ?? '0.0');
-    final color = value < 20
+    final color = value < 25
         ? lowColor
-        : value > 20 && value < 50
+        : value > 25 && value < 55
             ? mediumColor
             : highColor;
 

@@ -36,6 +36,7 @@ class _NavBarPlaneState extends State<NavBarPlane> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 1),
           height: MediaQuery.of(context).size.height * 0.125,
+          width: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,8 +67,8 @@ class _NavBarPlaneState extends State<NavBarPlane> {
     final List<Map<PageTitle, IconData>> planeData = [
       {PageTitle.dashboard: Icons.dashboard},
       {PageTitle.heatingUnit: Icons.heat_pump},
+      {PageTitle.environmentMeter: Icons.device_thermostat},
       {PageTitle.powerUnit: Icons.power_input},
-      {PageTitle.ubibot: Icons.device_thermostat},
       {PageTitle.admin: Icons.admin_panel_settings},
       {PageTitle.settings: Icons.settings}
     ];

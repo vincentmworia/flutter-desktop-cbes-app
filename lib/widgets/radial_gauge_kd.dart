@@ -8,11 +8,13 @@ class KdRadialGauge extends StatefulWidget {
       {Key? key,
       required this.title,
       required this.data,
-      required this.gaugeHeight})
+      required this.gaugeHeight,
+      required this.units})
       : super(key: key);
   final String? title;
   final double? gaugeHeight;
   final String? data;
+  final String units;
   static const minValue = 0.0;
   static const maxValue = 50.0;
 
@@ -25,6 +27,13 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
 
   @override
   Widget build(BuildContext context) {
+    // final unit = widget.title!.toLowerCase().contains('flow')
+    //     ? 'lpm'
+    //     : widget.title!.toLowerCase().contains('illuminance')
+    //         ? 'lux'
+    //         : widget.title!.toLowerCase().contains('humidity')
+    //             ? '%'
+    //             : '°C';
     final GlobalKey<KdGaugeViewState> key = GlobalKey<KdGaugeViewState>();
     final value = double.parse(widget.data ?? '0.0');
     Future.delayed(const Duration(seconds: 1)).then((value) {
@@ -51,12 +60,12 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
             Expanded(
               child: KdGaugeView(
                 key: key,
-                minSpeed:KdRadialGauge.minValue,
+                minSpeed: KdRadialGauge.minValue,
                 maxSpeed: KdRadialGauge.maxValue,
                 speed: value,
                 // animate: true,
                 duration: const Duration(seconds: 1),
-                unitOfMeasurement: 'lpm',
+                unitOfMeasurement: widget.units,
                 unitOfMeasurementTextStyle: TextStyle(
                   fontSize: 10,
                   color: Theme.of(context).colorScheme.primary,
@@ -66,7 +75,7 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 gaugeWidth: 5,
-                minMaxTextStyle: const TextStyle(fontSize: 0 ),
+                minMaxTextStyle: const TextStyle(fontSize: 0),
                 innerCirclePadding: 5,
                 // inactiveGaugeColor: Colors.red,
                 // subDivisionCircleColors: Theme.of(context).colorScheme.primary,
@@ -75,7 +84,7 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
                 // baseGaugeColor: Colors.white,
                 fractionDigits: 1,
 
-                alertColorArray:const [lowColor, mediumColor,highColor],
+                alertColorArray: const [lowColor, mediumColor, highColor],
                 alertSpeedArray: const [0, 15, 30],
               ),
             ),

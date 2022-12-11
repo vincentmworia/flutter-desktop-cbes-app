@@ -2,45 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../helpers/global_data.dart';
-import './radial_gauge_kd.dart';
 
 class SyncfusionRadialGauge extends StatelessWidget {
   const SyncfusionRadialGauge(
-      {Key? key, required this.title, required this.data})
+      {Key? key,
+      required this.title,
+      required this.data,
+      required this.minValue,
+      required this.maxValue,
+      required this.range1Value,
+      required this.range2Value,
+      required this.units})
       : super(key: key);
   final String title;
+  final String units;
   final String data;
+  final double minValue;
+  final double maxValue;
+  final double range1Value;
+  final double range2Value;
 
   @override
   Widget build(BuildContext context) {
     final value = double.parse(data);
-    final color = value < 20
+    final color = value < range1Value
         ? lowColor
-        : value > 20 && value < 50
+        : value > range1Value && value < range2Value
             ? mediumColor
             : highColor;
     return SfRadialGauge(
       title: GaugeTitle(
-        text: title,
-        textStyle: const TextStyle(
-            fontSize: 18, letterSpacing: 2.0, fontWeight: FontWeight.w600),
+        text: title.toUpperCase(),
+        textStyle: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold),
       ),
       animationDuration: 4000,
       enableLoadingAnimation: true,
       axes: <RadialAxis>[
         RadialAxis(
-            minimum: KdRadialGauge.minValue,
-            maximum: KdRadialGauge.maxValue,
+            minimum: minValue,
+            maximum: maxValue,
             startAngle: 140,
             endAngle: 40,
-            interval: 10,
+            interval: maxValue/10,
             useRangeColorForAxis: true,
             axisLabelStyle:
                 GaugeTextStyle(color: Theme.of(context).colorScheme.primary),
             labelOffset: 10,
             majorTickStyle:
                 MajorTickStyle(color: Theme.of(context).colorScheme.primary),
-            minorTicksPerInterval: 5.0,
+            minorTicksPerInterval: 5,
             minorTickStyle: MinorTickStyle(
                 color:
                     Theme.of(context).colorScheme.secondary.withOpacity(0.5)),
@@ -68,7 +80,7 @@ class SyncfusionRadialGauge extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                     child: Text(
-                      '$data\tlpm',
+                      '$data\t$units',
                       // child: Text('$data °C',
                       style: TextStyle(
                         fontSize: 16,

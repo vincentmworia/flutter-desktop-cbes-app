@@ -16,7 +16,7 @@ import './settings_screen.dart';
 import './power_unit_screen.dart';
 import './environment_meter_screen.dart';
 
-enum PageTitle { dashboard, heatingUnit, ubibot, powerUnit, admin, settings }
+enum PageTitle { dashboard, heatingUnit, environmentMeter, powerUnit, admin, settings }
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class HomeScreen extends StatefulWidget {
         return "Dashboard";
       case PageTitle.heatingUnit:
         return "Solar Heating Unit";
-      case PageTitle.ubibot:
+      case PageTitle.environmentMeter:
         return "Environment Meter";
       case PageTitle.powerUnit:
         return "Power Unit";
@@ -128,8 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return DashboardScreen(switchDashboardPage: _switchPage);
       case PageTitle.heatingUnit:
         return const HeatingUnitScreen();
-      case PageTitle.ubibot:
-        return const UbibotScreen();
+      case PageTitle.environmentMeter:
+        return const EnvironmentMeterScreen();
       case PageTitle.powerUnit:
         return const PowerUnitScreen();
       case PageTitle.admin:

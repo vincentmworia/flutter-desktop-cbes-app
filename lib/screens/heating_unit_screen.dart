@@ -141,6 +141,11 @@ class HeatingUnitScreen extends StatelessWidget {
                                   child: SyncfusionRadialGauge(
                                     title: e['title']!,
                                     data: e['data']!,
+                                    minValue: 0.0,
+                                    maxValue: 50.0,
+                                    range1Value: 13.0,
+                                    range2Value: 35.0,
+                                    units: 'lpm',
                                   ),
                                 ),
                               ))

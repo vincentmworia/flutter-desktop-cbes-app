@@ -35,11 +35,11 @@ class DashboardScreenHeatingUnitConsumer extends StatelessWidget {
                 KdRadialGauge(
                     title: 'Tank 1',
                     data: mqttProv.heatingUnitData?.flow1,
-                    gaugeHeight: height * 0.15),
+                    gaugeHeight: height * 0.15,units: 'lpm'),
                 KdRadialGauge(
                     title: 'Tank 2',
                     data: mqttProv.heatingUnitData?.flow2,
-                    gaugeHeight: height * 0.15),
+                    gaugeHeight: height * 0.15,units: 'lpm'),
               ],
             ))
           ],

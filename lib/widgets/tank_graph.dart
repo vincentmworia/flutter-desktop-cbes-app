@@ -21,10 +21,12 @@ class TankGraph extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Consumer<MqttProvider>(
         builder: (_, mqttProv, ___) => SfCartesianChart(
+
+
           enableAxisAnimation: true,
           primaryXAxis: CategoryAxis(title: AxisTitle(text: "Time (min)")),
           // todo
-          plotAreaBackgroundImage: const AssetImage('images/site11.PNG'),
+          plotAreaBackgroundImage: const AssetImage('images/site.PNG'),
           primaryYAxis: NumericAxis(
             title: AxisTitle(
                 text: title == HeatingUnitScreen.temperatureTitle

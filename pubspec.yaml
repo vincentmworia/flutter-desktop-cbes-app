@@ -1,5 +1,6 @@
 name: cbesdesktop
-description: CENTER FOR BIOMAS AND ENERGY CENTER (CBES) Desktop Application for controlling and monitoring the Research Center parameters
+description: CENTER FOR BIOMAS AND ENERGY CENTER (CBES) Desktop Application
+  for controlling and monitoring the Research Center parameters
 
 version: 1.0.0+1
 
@@ -21,6 +22,7 @@ dependencies:
   kdgaugeview: ^1.0.4
   intl: ^0.17.0
   syncfusion_flutter_charts: ^20.3.60
+  flutter_launcher_icons: ^0.11.0
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +33,8 @@ flutter:
   uses-material-design: true
   assets:
     - images/
+
+flutter_icons:
+  windows:
+    generate: true
+    image_path: "icon.ico"
