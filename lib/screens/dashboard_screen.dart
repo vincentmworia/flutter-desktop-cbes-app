@@ -16,15 +16,15 @@ class DashboardScreen extends StatelessWidget {
       final bdRadius = BorderRadius.circular(10);
       Widget cardView(String title, Widget? child) => GestureDetector(
             onDoubleTap: () {
-              if (title == 'SOLAR HEATING UNIT') {
+              if (title == HomeScreen.pageTitle(PageTitle.heatingUnit)) {
                 switchDashboardPage(PageTitle.heatingUnit,
                     HomeScreen.pageTitle(PageTitle.heatingUnit));
               }
-              if (title == 'ENVIRONMENT METER') {
+              if (title == HomeScreen.pageTitle(PageTitle.environmentMeter)) {
                 switchDashboardPage(PageTitle.environmentMeter,
                     HomeScreen.pageTitle(PageTitle.environmentMeter));
               }
-              if (title == 'POWER UNIT') {
+              if (title == HomeScreen.pageTitle(PageTitle.powerUnit)) {
                 switchDashboardPage(PageTitle.powerUnit,
                     HomeScreen.pageTitle(PageTitle.powerUnit));
               }
@@ -75,13 +75,13 @@ class DashboardScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   cardView(
-                      'SOLAR HEATING UNIT',
+                      'Solar Heating Unit',
                       DashboardScreenHeatingUnitConsumer(
                         width: cons.maxWidth,
                         height: cons.maxHeight,
                       )),
                   cardView(
-                      'ENVIRONMENT METER',
+                      'Environment Meter',
                       DashboardScreenEnvironmentMeterConsumer(
                         width: cons.maxWidth,
                         height: cons.maxHeight,
@@ -94,11 +94,12 @@ class DashboardScreen extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(cons.maxHeight * 0.05),
                   child: cardView(
-                      'POWER UNIT',
-                      DashboardScreenPowerUnitConsumer(
-                        width: cons.maxWidth,
-                        height: cons.maxHeight,
-                      )),
+                    'Power Unit',
+                    DashboardScreenPowerUnitConsumer(
+                      width: cons.maxWidth,
+                      height: cons.maxHeight,
+                    ),
+                  ),
                 )),
           ],
         ),

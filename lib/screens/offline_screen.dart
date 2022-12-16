@@ -1,42 +1,48 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class OfflineScreen extends StatelessWidget {
   const OfflineScreen({Key? key}) : super(key: key);
 
+  static const sigma=0.0;
   @override
   Widget build(BuildContext context) {
-
-    const opMain = 0.9;
     return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
-
-          gradient: LinearGradient(
-            colors: [
-              Colors.white,
-              Theme.of(context).colorScheme.secondary.withOpacity(opMain),
-              Theme.of(context).colorScheme.primary.withOpacity(opMain),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('Images/site1.jpg'), fit: BoxFit.cover)),
+        child: ClipRRect(
+            child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+          child: Container(
+            alignment: Alignment.center,
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.75),
+            child: Text(
+                    "OFFLINE",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  letterSpacing: MediaQuery.of(context).size.width * 0.035,
+                  fontSize:  MediaQuery.of(context).size.width * 0.075,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
-
-          // image: DecorationImage(image: AssetImage('Images/home3.jpg'),fit: BoxFit.cover)
-      ),
-      child: Center(
-        child: Text(
-          "OFFLINE",
-          style: TextStyle(
-              color: Colors.white,
-              letterSpacing: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.025,
-              fontWeight: FontWeight.bold,
-              fontSize: 100.0),
-        ),
-      ),
-    );
+          // Center(
+          //   child: BackdropFilter(
+          //     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5,),
+          //     child: Text(
+          //       "OFFLINE",
+          //       style: TextStyle(
+          //           color: Colors.white,
+          //           letterSpacing: MediaQuery.of(context).size.width * 0.025,
+          //           fontWeight: FontWeight.bold,
+          //           fontSize: 100.0),
+          //     ),
+          //   ),
+          // ),
+        )));
   }
 }

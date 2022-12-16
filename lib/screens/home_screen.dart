@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +17,14 @@ import './settings_screen.dart';
 import './power_unit_screen.dart';
 import './environment_meter_screen.dart';
 
-enum PageTitle { dashboard, heatingUnit, environmentMeter, powerUnit, admin, settings }
+enum PageTitle {
+  dashboard,
+  heatingUnit,
+  environmentMeter,
+  powerUnit,
+  admin,
+  settings
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -49,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _compressNavPlane = true;
   var _showNavPlane = false;
 
+  static const sigma = 0.0;
   ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
@@ -66,33 +75,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 }));
 
         ConnectivityResult? prevResult;
-        var lockCode = false;
         _connectivity.onConnectivityChanged.listen((result) async {
-          if (!lockCode) {
-            if (prevResult != result) {
-              // print('df $prevResult');
-              if (prevResult == ConnectivityResult.none) {
-                if (mounted) {
-                  // print('here');
-                  Navigator.pushReplacementNamed(context, AuthScreen.routeName);
-                }
-
-                // lockCode = true;
-                // await Provider.of<MqttProvider>(context, listen: false)
-                //     .initializeMqttClient();
-                // lockCode = false;
-              } else {
-                prevResult = result;
-                if (mounted) {
-                  setState(() {
-                    _connectionStatus = result;
-                    if (kDebugMode) {
-                      print('rebuild $result');
-                    }
-                  });
-                }
-              }
-            }
+          if (prevResult != result && mounted) {
+            Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+            // if (prevResult == ConnectivityResult.none && mounted) {
+            //   Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+            // } else {
+            //   prevResult = result;
+            //   if (mounted) {
+            //     setState(() {
+            //       _connectionStatus = result;
+            //     });
+            //   }
+            // }
           }
         });
       } on PlatformException catch (_) {
@@ -163,7 +158,24 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_pageTitle.toUpperCase()),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.asset(
+                  'images/cbes_logo2.PNG',
+                  fit: BoxFit.cover,
+                  width: 40,
+                  // height: 50,
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Text(_pageTitle),
+            ],
+          ),
           actions: [
             Padding(
                 padding: const EdgeInsets.only(right: 10),
@@ -221,27 +233,49 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        body: Row(
+        backgroundColor: Colors.white,
+        body: Stack(
+          alignment: Alignment.center,
           children: [
-            AnimatedContainer(
-              duration: duration,
-              width: _compressNavPlane ? 0 : 110,
-              height: double.infinity,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.99),
-              child: Visibility(
-                visible: _showNavPlane,
-                child: NavBarPlane(
-                  switchPage: _switchPage,
-                  pageTitle: _page,
+            Container(
+                width: MediaQuery.of(context).size.width * 0.85,
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('Images/Logo.ico'),
+                        fit: BoxFit.cover)),
+                child: ClipRRect(
+                    child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Colors.white.withOpacity(0.85),
+                  ),
+                ))),
+            Row(
+              children: [
+                AnimatedContainer(
+                  duration: duration,
+                  width: _compressNavPlane ? 0 : 110,
+                  height: double.infinity,
+                  color:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.99),
+                  child: Visibility(
+                    visible: _showNavPlane,
+                    child: NavBarPlane(
+                      switchPage: _switchPage,
+                      pageTitle: _page,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Expanded(
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: _pageWidget(_page),
-              ),
+                Expanded(
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: _pageWidget(_page),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

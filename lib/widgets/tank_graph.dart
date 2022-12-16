@@ -24,9 +24,9 @@ class TankGraph extends StatelessWidget {
 
 
           enableAxisAnimation: true,
-          primaryXAxis: CategoryAxis(title: AxisTitle(text: "Time (min)")),
+          primaryXAxis: CategoryAxis(title: AxisTitle(text: "Time")),
           // todo
-          plotAreaBackgroundImage: const AssetImage('images/site.PNG'),
+          plotAreaBackgroundImage: const AssetImage('images/solar_graph_background.PNG'),
           primaryYAxis: NumericAxis(
             title: AxisTitle(
                 text: title == HeatingUnitScreen.temperatureTitle
@@ -51,9 +51,10 @@ class TankGraph extends StatelessWidget {
                     StepAreaSeries
                     */
             SplineSeries<GraphAxis, String>(
+
               name: title == HeatingUnitScreen.temperatureTitle
-                  ? "Temp 1"
-                  : "Flow 1",
+                  ? "Tank 1"
+                  : "Flow\n(To Solar\nHeater)",
               xAxisName: "Time (min)",
               yAxisName: title == HeatingUnitScreen.temperatureTitle
                   ? "Temp (°C)"
@@ -72,8 +73,8 @@ class TankGraph extends StatelessWidget {
             ),
             SplineSeries<GraphAxis, String>(
               name: title == HeatingUnitScreen.temperatureTitle
-                  ? "Temp 2"
-                  : "Flow 2",
+                  ? "Tank 2"
+                  : "Flow\n(To Heat\nExchanger)",
               xAxisName: "Time (min)",
               yAxisName: title == HeatingUnitScreen.temperatureTitle
                   ? "Temp (°C)"
@@ -92,7 +93,7 @@ class TankGraph extends StatelessWidget {
             ),
             if (title == HeatingUnitScreen.temperatureTitle)
               SplineSeries<GraphAxis, String>(
-                name: "Temp 3",
+                name: "Tank 3",
                 xAxisName: "Time (min)",
                 yAxisName: "Temp (°C)",
                 dataSource: mqttProv.temp3GraphData,

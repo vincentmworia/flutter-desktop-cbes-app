@@ -37,4 +37,4 @@ flutter:
 flutter_icons:
   windows:
     generate: true
-    image_path: "icon.ico"
+    image_path: "images/logo4.PNG"

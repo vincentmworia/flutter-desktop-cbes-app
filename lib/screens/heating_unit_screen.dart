@@ -116,11 +116,11 @@ class HeatingUnitScreen extends StatelessWidget {
                 builder: (context, mqttProv, child) {
                   final List<Map<String, String>> heatingUnitData = [
                     {
-                      'title': 'Flow 1',
+                      'title': 'Flow S.H',
                       'data': mqttProv.heatingUnitData?.flow1 ?? '0.0'
                     },
                     {
-                      'title': 'Flow 2',
+                      'title': 'Flow H.E',
                       'data': mqttProv.heatingUnitData?.flow2 ?? '0.0'
                     },
                   ];
