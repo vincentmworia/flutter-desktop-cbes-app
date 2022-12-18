@@ -195,20 +195,15 @@ class MqttProvider with ChangeNotifier {
   }
 
   void onConnected() {
-    if (kDebugMode) {
-      _connStatus = ConnectionStatus.connected;
-      publishMsg(_devicesClient, 'Connected');
-    }
+    _connStatus = ConnectionStatus.connected;
+    publishMsg(_devicesClient, 'Connected');
   }
 
   void onDisconnected() {
     _connStatus = ConnectionStatus.disconnected;
-    if (kDebugMode) {
-      print('Disconnected');
-      timer?.cancel();
-      notifyListeners();
-      // TODO ON DISCONNECTED, FORCE THE USER OFFLINE
-      // Use firebase Auth to force the application to HomePage
-    }
+    timer?.cancel();
+    notifyListeners();
+    // TODO ON DISCONNECTED, FORCE THE USER OFFLINE
+    // Use firebase Auth to force the application to HomePage
   }
 }

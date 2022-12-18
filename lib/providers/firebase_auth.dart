@@ -1,19 +1,15 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/signin.dart';
+import '../models/signIn.dart';
 import '../models/logged_in.dart';
 import '../models/user.dart';
 import '../private_data.dart';
-import '../models/signup.dart';
+import '../models/signUp.dart';
 import '../screens/auth_screen.dart';
-import '../widgets/custom_check_box.dart';
 import './login_user_data.dart';
 import './mqtt.dart';
 
@@ -85,19 +81,12 @@ class FirebaseAuthentication {
     String? message;
     http.Response? response;
     try {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('1')));
       response = await http.post(_actionEndpointUrl("signInWithPassword?"),
           body: json.encode({
             "email": user.email!,
             "password": user.password!,
             "returnSecureToken": true,
           }));
-
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('2')));
       final responseData = json.decode(response.body) as Map<String, dynamic>;
       if (responseData['error'] != null) {
         message = _getErrorMessage(responseData['error']['message']);
@@ -107,29 +96,21 @@ class FirebaseAuthentication {
       final signedInUser = SignIn.fromMap(responseData);
       final dbResponse = await http.get(Uri.parse(
           '$firebaseDbUrl/users/${signedInUser.localId}.json?auth=${signedInUser.idToken}'));
-
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('3')));
       final loggedIn = LoggedIn.fromMap(json.decode(dbResponse.body));
       message = await Future.delayed(Duration.zero).then((_) {
         Provider.of<LoginUserData>(context, listen: false)
             .setLoggedInUser(loggedIn);
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(json.decode(dbResponse.body))));
+            SnackBar(content: Text(json.decode(dbResponse.body).toString())));
         if (loggedIn.allowed != allowUserTrue) {
           return false;
         }
         return true;
       }).then((loginMqtt) async {
         if (loginMqtt) {
-          final mq = await Provider.of<MqttProvider>(context, listen: false)
+          await Provider.of<MqttProvider>(context, listen: false)
               .initializeMqttClient();
-
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(mq.toString())));
           // Future.delayed(Duration.zero).then((_) async {
           //   if (Provider.of<RememberMeBnState>(context, listen: false)
           //       .bnState) {
