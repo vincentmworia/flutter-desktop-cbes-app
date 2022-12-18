@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomCheckBox extends StatefulWidget {
   const CustomCheckBox({Key? key}) : super(key: key);
@@ -15,13 +16,27 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
     return Checkbox(
         fillColor: checkValue
             ? null
-            : MaterialStateColor.resolveWith((_) => Theme.of(context).colorScheme.secondary),
+            : MaterialStateColor.resolveWith(
+                (_) => Theme.of(context).colorScheme.secondary),
         value: checkValue,
         activeColor: Theme.of(context).colorScheme.primary,
         onChanged: (newVal) {
           setState(() {
-            checkValue = newVal!;
+            Provider.of<RememberMeBnState>(context, listen: false)
+                .setBnState(newVal!);
+            checkValue = newVal;
           });
         });
+  }
+}
+
+class RememberMeBnState with ChangeNotifier {
+  var _bnState = false;
+
+  bool get bnState => _bnState;
+
+  void setBnState(bool buttonState) {
+    _bnState = buttonState;
+    notifyListeners();
   }
 }

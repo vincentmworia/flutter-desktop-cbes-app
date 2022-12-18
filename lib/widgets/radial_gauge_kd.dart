@@ -47,6 +47,7 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
       child: SizedBox(
         height: widget.gaugeHeight,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(3.0),

@@ -4,7 +4,6 @@ class LoggedIn {
   final String phoneNumber;
   final String firstname;
   final String lastname;
-  final String password;
   final String privilege;
   final String allowed;
 
@@ -14,7 +13,6 @@ class LoggedIn {
       required this.phoneNumber,
       required this.firstname,
       required this.lastname,
-      required this.password,
       required this.privilege,
       required this.allowed});
 
@@ -25,7 +23,6 @@ class LoggedIn {
           phoneNumber: loggedInUser['phoneNumber'],
           firstname: loggedInUser['firstname'],
           lastname: loggedInUser['lastname'],
-          password: loggedInUser['password'],
           privilege: loggedInUser['privilege'],
           allowed: loggedInUser['allowed']);
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cbesdesktop/widgets/custom_check_box.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => LoginUserData()),
         ChangeNotifierProvider(create: (_) => MqttProvider()),
+        ChangeNotifierProvider(create: (_) => RememberMeBnState()),
       ],
       child: MaterialApp(
         title: appTitle,

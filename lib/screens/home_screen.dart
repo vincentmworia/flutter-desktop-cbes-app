@@ -57,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
   var _compressNavPlane = true;
   var _showNavPlane = false;
 
-  static const sigma = 0.0;
   ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
@@ -136,17 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
-        _connectionStatus == ConnectivityResult.mobile ||
-        _connectionStatus == ConnectivityResult.wifi;
+    // final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
+    //     _connectionStatus == ConnectivityResult.mobile ||
+    //     _connectionStatus == ConnectivityResult.wifi;
 
     // print(_connectionStatus);
-    if (!goodConnection) {
-      return const SafeArea(
-          child: Scaffold(
-        body: OfflineScreen(),
-      ));
-    }
+    // if (!goodConnection) {
+    //   return const SafeArea(
+    //       child: Scaffold(
+    //     body: OfflineScreen(),
+    //   ));
+    // }
 
     const duration = Duration(milliseconds: 200);
 
@@ -161,13 +160,19 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Image.asset(
-                  'images/cbes_logo2.PNG',
-                  fit: BoxFit.cover,
-                  width: 40,
-                  // height: 50,
+              GestureDetector(
+                onDoubleTap: () {
+                  _switchPage(PageTitle.dashboard,
+                      HomeScreen.pageTitle(PageTitle.dashboard));
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.asset(
+                    'images/cbes_logo2.PNG',
+                    fit: BoxFit.cover,
+                    width: 40,
+                    // height: 50,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -245,12 +250,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         image: AssetImage('Images/Logo.ico'),
                         fit: BoxFit.cover)),
                 child: ClipRRect(
-                    child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-                  child: Container(
-                    alignment: Alignment.center,
-                    color: Colors.white.withOpacity(0.85),
-                  ),
+                    child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white.withOpacity(0.9),
                 ))),
             Row(
               children: [

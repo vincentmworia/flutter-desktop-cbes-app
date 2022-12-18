@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/signin.dart';
 import '../models/logged_in.dart';
@@ -10,6 +13,7 @@ import '../models/user.dart';
 import '../private_data.dart';
 import '../models/signup.dart';
 import '../screens/auth_screen.dart';
+import '../widgets/custom_check_box.dart';
 import './login_user_data.dart';
 import './mqtt.dart';
 
@@ -47,72 +51,105 @@ class FirebaseAuthentication {
 
   static Future<String> signUp(User user) async {
     String? message;
-    final response = await http.post(_actionEndpointUrl("signUp?"),
-        body: json.encode({
-          "email": user.email!,
-          "password": user.password!,
-          "returnSecureToken": true,
-        }));
-    final responseData = json.decode(response.body) as Map<String, dynamic>;
-    if (responseData['error'] != null) {
-      message = _getErrorMessage(responseData['error']['message']);
+    try {
+      final response = await http.post(_actionEndpointUrl("signUp?"),
+          body: json.encode({
+            "email": user.email!,
+            "password": user.password!,
+            "returnSecureToken": true,
+          }));
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
+      if (responseData['error'] != null) {
+        message = _getErrorMessage(responseData['error']['message']);
+        return message;
+      }
+      final signedUpUser = SignUp.fromMap(responseData);
+      user.localId = signedUpUser.localId;
+      user.allowed = allowUserFalse;
+      user.privilege = userGuest;
+
+      await http.patch(
+          Uri.parse('$firebaseDbUrl/users.json?auth=${signedUpUser.idToken}'),
+          body: json.encode({
+            signedUpUser.localId: user.toMap(),
+          }));
+      message = 'Registered,\n${user.firstName} ${user.lastName}';
+    } catch (e) {
+      message = e.toString();
       return message;
     }
-    final signedUpUser = SignUp.fromMap(responseData);
-    user.localId = signedUpUser.localId;
-    user.allowed = allowUserFalse;
-    user.privilege = userGuest;
-
-    await http.patch(
-        Uri.parse('$firebaseDbUrl/users.json?auth=${signedUpUser.idToken}'),
-        body: json.encode({
-          signedUpUser.localId: user.toMap(),
-        }));
-    message = 'Registered,\n${user.firstName} ${user.lastName}';
     return message;
   }
 
   static Future<String> signIn(User user, BuildContext context) async {
     String? message;
-    final response = await http.post(_actionEndpointUrl("signInWithPassword?"),
-        body: json.encode({
-          "email": user.email!,
-          "password": user.password!,
-          "returnSecureToken": true,
-        }));
+    http.Response? response;
+    try {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('1')));
+      response = await http.post(_actionEndpointUrl("signInWithPassword?"),
+          body: json.encode({
+            "email": user.email!,
+            "password": user.password!,
+            "returnSecureToken": true,
+          }));
 
-    final responseData = json.decode(response.body) as Map<String, dynamic>;
-    if (responseData['error'] != null) {
-      message = _getErrorMessage(responseData['error']['message']);
-      return message;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('2')));
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
+      if (responseData['error'] != null) {
+        message = _getErrorMessage(responseData['error']['message']);
+        return message;
+      }
+
+      final signedInUser = SignIn.fromMap(responseData);
+      final dbResponse = await http.get(Uri.parse(
+          '$firebaseDbUrl/users/${signedInUser.localId}.json?auth=${signedInUser.idToken}'));
+
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('3')));
+      final loggedIn = LoggedIn.fromMap(json.decode(dbResponse.body));
+      message = await Future.delayed(Duration.zero).then((_) {
+        Provider.of<LoginUserData>(context, listen: false)
+            .setLoggedInUser(loggedIn);
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(json.decode(dbResponse.body))));
+        if (loggedIn.allowed != allowUserTrue) {
+          return false;
+        }
+        return true;
+      }).then((loginMqtt) async {
+        if (loginMqtt) {
+          final mq = await Provider.of<MqttProvider>(context, listen: false)
+              .initializeMqttClient();
+
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(mq.toString())));
+          // Future.delayed(Duration.zero).then((_) async {
+          //   if (Provider.of<RememberMeBnState>(context, listen: false)
+          //       .bnState) {
+          //     print('Saving user');
+          //     final prefs = await SharedPreferences.getInstance();
+          //
+          //     await prefs.setString('loggedInUser', json.encode(user.toMap()));
+          //   }
+          // });
+          message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
+          return message;
+        } else {
+          message = '${loggedIn.email} is not authorized  by the admin';
+          return message;
+        }
+      });
+    } catch (e) {
+      message = e.toString();
+      return message ?? 'Login error';
     }
-    final signedInUser = SignIn.fromMap(responseData);
-    // todo fetch the user from the database,
-    // TODO MAIN ERROR HANDLING
-    final dbResponse = await http.get(Uri.parse(
-        '$firebaseDbUrl/users/${signedInUser.localId}.json?auth=${signedInUser.idToken}'));
-    final loggedIn = LoggedIn.fromMap(json.decode(dbResponse.body));
-    final loginMessage = await Future.delayed(Duration.zero).then((_) {
-      // todo check whether the user is allowed into the app,
-      // todo check the privilege code,
-      Provider.of<LoginUserData>(context, listen: false)
-          .setLoggedInUser(loggedIn);
-      if (loggedIn.allowed != allowUserTrue) {
-        return false;
-      }
-      return true;
-    }).then((loginMqtt) async {
-      if (loginMqtt) {
-        await Provider.of<MqttProvider>(context, listen: false)
-            .initializeMqttClient();
-        message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
-        return message;
-      } else {
-        message = '${loggedIn.email} is not authorized  by the admin';
-        return message;
-      }
-    });
-    message = loginMessage!;
     return message!;
   }
 
@@ -120,6 +157,10 @@ class FirebaseAuthentication {
   static Future<void> logout(BuildContext context) async {
     final client = Provider.of<MqttProvider>(context, listen: false);
     // todo
+    // final prefs = await SharedPreferences.getInstance();
+    // if(prefs.containsKey('loggedInUser')){
+    //   await prefs.remove('loggedInUser');
+    // }
 
     Future.delayed(Duration.zero)
         .then((_) {

@@ -63,6 +63,7 @@ class TankGraph extends StatelessWidget {
                   ? mqttProv.temp1GraphData
                   : mqttProv.flow1GraphData,
               color: graph1Color,
+
               xValueMapper: (GraphAxis data, _) => data.x,
               yValueMapper: (GraphAxis data, _) => data.y,
               // todo???

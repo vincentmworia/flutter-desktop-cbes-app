@@ -21,7 +21,6 @@ class User {
     this.autoLogin,
   });
 
-
   static User fromMap(Map<String, dynamic> user) => User(
         localId: user['localId'] as String,
         email: user['email'] as String,
@@ -33,15 +32,13 @@ class User {
         allowed: user['allowed'] as String,
       );
 
-
-
   Map<String, dynamic> toMap() => {
         "localId": localId,
         "email": email,
         "phoneNumber": phoneNumber,
         "firstname": firstName,
         "lastname": lastName,
-        "password": password,
+        // "password": password,
         "privilege": privilege,
         "allowed": allowed,
       };

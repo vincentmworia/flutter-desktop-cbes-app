@@ -35,7 +35,7 @@ class DashboardScreen extends StatelessWidget {
               color: Colors.white.withOpacity(0.65),
               shape: RoundedRectangleBorder(borderRadius: bdRadius),
               child: SizedBox(
-                width: title == 'POWER UNIT'
+                width: title == 'Power Unit'
                     ? cons.maxWidth * 0.875
                     : cons.maxWidth * 0.4,
                 height: cons.maxHeight * 0.425,

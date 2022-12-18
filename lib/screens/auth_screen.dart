@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:cbesdesktop/models/logged_in.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/custom_data.dart';
 import '../models/user.dart';
+import '../providers/login_user_data.dart';
 import '../widgets/auth_screen_form.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +30,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   var _isLoading = false;
+  var init = true;
   var _authMode = AuthMode.login;
 
   ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
@@ -70,6 +76,26 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     }
   }
+  //
+  // @override
+  // void didChangeDependencies() async {
+  //   super.didChangeDependencies();
+  //   if (init) {
+  //     final prefs = await SharedPreferences.getInstance();
+  //     if (prefs.containsKey('loggedInUser')) {
+  //       final loggedIn = prefs.getString('loggedInUser');
+  //
+  //       Future.delayed(Duration.zero).then((_) {
+  //
+  //         Provider.of<LoginUserData>(context, listen: false)
+  //             .setLoggedInUser(LoggedIn.fromMap(json.decode(loggedIn!)));
+  //         Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+  //       });
+  //     }
+  //
+  //     init = false;
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -133,6 +159,12 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //
+    if (_connectionStatus == ConnectivityResult.none) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
     const borderRadius = 15.0;
 
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
@@ -143,8 +175,6 @@ class _AuthScreenState extends State<AuthScreen> {
     final bgImage = Container(
       width: double.infinity,
       height: double.infinity,
-      // color: Colors.grey,
-
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -170,33 +200,30 @@ class _AuthScreenState extends State<AuthScreen> {
           builder: (context, cons) => Stack(
             children: [
               bgImage,
-              Visibility(
-                visible: (goodConnection),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Card(
-                    elevation: 20,
-                    shape: const RoundedRectangleBorder(borderRadius: bdRadius),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
-                      width: deviceWidth < 1200
-                          ? deviceWidth * 0.55
-                          : deviceWidth * 0.45,
-                      height: _authMode == AuthMode.register ? 1200 : 550,
-                      decoration: BoxDecoration(
-                          color: _isLoading
-                              ? Colors.white.withOpacity(0.4)
-                              : Colors.white,
-                          borderRadius: bdRadius),
-                      padding: const EdgeInsets.all(8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: AuthScreenForm(
-                            authMode: _authMode,
-                            isLoading: _isLoading,
-                            submit: _submit,
-                            switchAuthMode: _switchAuthMode),
-                      ),
+              Align(
+                alignment: Alignment.center,
+                child: Card(
+                  elevation: 20,
+                  shape: const RoundedRectangleBorder(borderRadius: bdRadius),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    width: deviceWidth < 1200
+                        ? deviceWidth * 0.55
+                        : deviceWidth * 0.45,
+                    height: _authMode == AuthMode.register ? 1200 : 550,
+                    decoration: BoxDecoration(
+                        color: _isLoading
+                            ? Colors.white.withOpacity(0.4)
+                            : Colors.white,
+                        borderRadius: bdRadius),
+                    padding: const EdgeInsets.all(8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AuthScreenForm(
+                          authMode: _authMode,
+                          isLoading: _isLoading,
+                          submit: _submit,
+                          switchAuthMode: _switchAuthMode),
                     ),
                   ),
                 ),
@@ -209,7 +236,24 @@ class _AuthScreenState extends State<AuthScreen> {
                   color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
                 ),
               ),
-              if (!goodConnection) const OfflineScreen(),
+              if (!goodConnection)
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                  child: Center(
+                    child: Text(
+                      "OFFLINE",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing:
+                              MediaQuery.of(context).size.width * 0.035,
+                          fontSize: MediaQuery.of(context).size.width * 0.075,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

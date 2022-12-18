@@ -1,3 +1,4 @@
+import 'package:cbesdesktop/helpers/global_data.dart';
 import 'package:cbesdesktop/widgets/radial_gauge_kd.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,151 +17,143 @@ class DashboardScreenPowerUnitConsumer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Consumer<MqttProvider>(
         builder: (context, mqttProv, child) {
-          final List<Map<String, dynamic>> environmentData = [
+          final List<Map<String, dynamic>> powerUnitData = [
             {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'titleMain': 'Grid Ac',
+              'title1': 'Voltage',
+              'data1': '${mqttProv.powerUnitData?.acVoltage ?? '0.0'} V',
+              'title2': 'Frequency',
+              'data2': '${mqttProv.powerUnitData?.acFrequency ?? '0.0'} Hz',
             },
             {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'titleMain': 'Solar Pv',
+              'title1': 'Voltage',
+              'data1': '${mqttProv.powerUnitData?.pvInputVoltage ?? '0.0'} V',
+              'title2': 'Power',
+              'data2': '${mqttProv.powerUnitData?.pvInputPower ?? '0.0'} W',
             },
             {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'titleMain': 'Battery',
+              'title1': 'Voltage',
+              'data1': '${mqttProv.powerUnitData?.batteryVoltage ?? '0.0'} V',
+              'title2': 'Capacity',
+              'data2': '${mqttProv.powerUnitData?.batteryCapacity ?? '0.0'} V',
+              'title3': 'Charging',
+              'data3': '${mqttProv.powerUnitData?.batteryVoltage ?? '0.0'} A',
+              'title4': 'Discharge',
+              'data4': '${mqttProv.powerUnitData?.batteryCapacity ?? '0.0'} A',
             },
             {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-          ];
-          final List<Map<String, dynamic>> powerUnitData2 = [
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
-            },
-            {
-              'title': 'Temperature',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'titleMain': 'Output',
+              'title1': 'Apparent',
+              'data1':
+                  '${mqttProv.powerUnitData?.outputApparentPower ?? '0.0'} W',
+              'title2': 'Active',
+              'data2':
+                  '${mqttProv.powerUnitData?.outputActivePower ?? '0.0'} W',
+              'title3': 'Voltage',
+              'data3': '${mqttProv.powerUnitData?.outputVoltage ?? '0.0'} V',
+              'title4': 'Frequency',
+              'data4': '${mqttProv.powerUnitData?.outputFrequency ?? '0.0'} Hz',
             },
           ];
           // todo RENDER THE TEXTS FROM MQTT
+
+          Widget powerUnitItemData(String title, String data) => Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      data,
+                      style: const TextStyle(
+                        color: mediumColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+          Widget powerUnitItem(
+                  {required String titleMain,
+                  required String title1,
+                  required String data1,
+                  required String title2,
+                  required String data2,
+                  String? title3,
+                  String? data3,
+                  String? title4,
+                  String? data4}) =>
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                width: title3 == null ? width / 8 : width / 4,
+                height: 120,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      titleMain,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          letterSpacing: 3.0),
+                    ),
+                    Row(
+                      children: [
+                        powerUnitItemData(title1, data1),
+                        powerUnitItemData(title2, data2),
+                        if (title3 != null && data3 != null)
+                          powerUnitItemData(title3, data3),
+                        if (title4 != null && data4 != null)
+                          powerUnitItemData(title4, data4),
+                      ],
+                    ),
+                  ],
+                ),
+              );
           return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: environmentData
-                  .map(
-                    (e) => Expanded(
-                        child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: SizedBox(
-                              width: 30,
-                              height: height,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                // todo
-                                children: [
-                                  // Expanded(
-                                  //   child: KdRadialGauge(
-                                  //       title: 'Power',
-                                  //       data: mqttProv.heatingUnitData?.flow1,
-                                  //       gaugeHeight: height * 0.15,units: 'lpm'),
-                                  // ),
-                                  // Expanded(
-                                  //   child: KdRadialGauge(
-                                  //       title: 'Tank 1',
-                                  //       data: mqttProv.heatingUnitData?.flow1,
-                                  //       gaugeHeight: height * 0.15,units: 'lpm'),
-                                  // ),
-                                ],
-                              ),
-                            ))),
-                  )
-                  .toList());
+              children: [
+                ...powerUnitData
+                    .map((e) => powerUnitItem(
+                          titleMain: e['titleMain'],
+                          title1: e['title1'],
+                          data1: e['data1'],
+                          title2: e['title2'],
+                          data2: e['data2'],
+                          title3: e['title3'],
+                          data3: e['data3'],
+                          title4: e['title4'],
+                          data4: e['data4'],
+                        ))
+                    .toList(),
+              ]
+              // powerUnitData12
+              //     .map(
+              //       (e) => Expanded(
+              //           child: Padding(
+              //               padding: const EdgeInsets.all(10.0),
+              //               child: KdRadialGauge(
+              //                   title: e['title'],
+              //                   data: e['data'],
+              //                   gaugeHeight: height * 0.25,
+              //                   units: e['units']))),
+              //     )
+              //     .toList(),
+              );
         },
       );
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:crypt/crypt.dart';
+import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../screens/auth_screen.dart';
@@ -279,7 +281,8 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 return null;
               },
               onSaved: (value) {
-                user.password = value!;
+                user.password =value!;
+                // user.password = Crypt.sha256(value!).toString() ;
               },
             ),
             if ((_authMode == AuthMode.register))
@@ -309,22 +312,22 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 },
               ),
             // todo remember me logic
-            spacing,
-            if (_authMode == AuthMode.login && deviceWidth > 750)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text("Remember Me",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w300)),
-                    const CustomCheckBox()
-                  ],
-                ),
-              ),
+            // spacing,
+            // if (_authMode == AuthMode.login && deviceWidth > 750)
+            //   Padding(
+            //     padding: const EdgeInsets.symmetric(horizontal: 28.0),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.end,
+            //       children: <Widget>[
+            //         Text("Remember Me",
+            //             style: TextStyle(
+            //                 color: Theme.of(context).colorScheme.secondary,
+            //                 fontSize: 16.0,
+            //                 fontWeight: FontWeight.w300)),
+            //         const CustomCheckBox()
+            //       ],
+            //     ),
+            //   ),
             spacing,
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
