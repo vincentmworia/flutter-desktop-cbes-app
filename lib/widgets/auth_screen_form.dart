@@ -326,6 +326,8 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
             //     ),
             //   ),
             spacing,
+            spacing,
+            spacing,
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize:

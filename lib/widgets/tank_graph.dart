@@ -39,7 +39,7 @@ class TankGraph extends StatelessWidget {
   static const graph1Color = Colors.red;
   static const graph2Color = Colors.blue;
   static const graph3Color = Colors.orange;
-  static const opacity=0.45;
+  static const opacity = 0.45;
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +47,42 @@ class TankGraph extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Consumer<MqttProvider>(
         builder: (_, mqttProv, ___) => SfCartesianChart(
-          enableAxisAnimation: true,
-          primaryXAxis: CategoryAxis(title: AxisTitle(text: "Time")),
+          enableAxisAnimation: false,
+          primaryXAxis: CategoryAxis(
+              title: AxisTitle(text: "Time"), placeLabelsNearAxisLine: true),
           // todo
+
+          trackballBehavior: TrackballBehavior(
+            // markerSettings: TrackballMarkerSettings(),
+            activationMode: ActivationMode.singleTap,
+            enable: true,
+            lineColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+            tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
+            tooltipAlignment: ChartAlignment.far,
+            shouldAlwaysShow: true,
+            // builder: (context, trackballDetails) => Container(width: 50,height: 50,c,),
+          ),
+
+          tooltipBehavior: TooltipBehavior(
+            enable: true,
+            activationMode: ActivationMode.singleTap,
+          ),
+
           plotAreaBackgroundImage:
               const AssetImage('images/graph_background.PNG'),
           primaryYAxis: NumericAxis(
             title: AxisTitle(text: axisTitle),
           ),
-          // todo title?
-          // title: ChartTitle(text: title),
           legend: Legend(
             isVisible: true,
+            orientation: LegendItemOrientation.horizontal,
+            alignment: ChartAlignment.center,
+            isResponsive: true,
+            position: LegendPosition.bottom
+            // offset: Offset(0,80),
+            // title: LegendTitle()
           ),
           // Enable tooltip
-          tooltipBehavior: TooltipBehavior(enable: true),
           series: <ChartSeries>[
             if (area1Title != null)
               SplineAreaSeries<GraphAxis, String>(
@@ -115,12 +136,13 @@ class TankGraph extends StatelessWidget {
             if (area1Title == null)
               SplineSeries<GraphAxis, String>(
                 name: spline1Title,
+
+                // enableTooltip: true,
+                // markerSettings: TrackballMarkerSettings(color: green),
                 xAxisName: "Time (min)",
                 yAxisName: spline1Title,
-                // todo Fetch appropriate data
                 dataSource: spline1DataSource ?? [],
                 color: graph1Color,
-
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,
                 dataLabelSettings: const DataLabelSettings(

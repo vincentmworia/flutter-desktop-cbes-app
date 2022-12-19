@@ -117,6 +117,9 @@ class FirebaseAuthentication {
       });
     } catch (e) {
       message = e.toString();
+      if (message != null && message!.contains('identity')) {
+        message = 'Please check your internet connection';
+      }
       return message ?? 'Login error';
     }
     return message!;
@@ -125,6 +128,7 @@ class FirebaseAuthentication {
   // todo logout
   static Future<void> logout(BuildContext context) async {
     final client = Provider.of<MqttProvider>(context, listen: false);
+    Provider.of<LoginUserData>(context, listen: false).resetLoggedInUser();
     // todo
     // final prefs = await SharedPreferences.getInstance();
     // if(prefs.containsKey('loggedInUser')){
@@ -133,8 +137,10 @@ class FirebaseAuthentication {
 
     Future.delayed(Duration.zero)
         .then((_) {
-          if (client.connectionStatus == ConnectionStatus.connected) {
-            client.publishMsg(client.disconnectTopic, client.disconnectMessage);
+          if (client.connectionStatus == ConnectionStatus.connected &&
+              client.disconnectTopic != null) {
+            client.publishMsg(
+                client.disconnectTopic!, client.disconnectMessage);
           }
         })
         .then((_) => client.mqttClient.disconnect())

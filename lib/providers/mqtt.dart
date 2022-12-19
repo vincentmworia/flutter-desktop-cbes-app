@@ -26,9 +26,9 @@ class MqttProvider with ChangeNotifier {
 
   MqttServerClient get mqttClient => _mqttClient;
 
-  String get disconnectTopic => _devicesClient;
+  String? get disconnectTopic => _devicesClient;
 
-  String get disconnectMessage => _devicesClientMessage;
+  String get disconnectMessage => "Disconnected-$_loginTime";
 
   HeatingUnit? get heatingUnitData => _heatingUnitData;
   HeatingUnit? _heatingUnitData;
@@ -71,13 +71,15 @@ class MqttProvider with ChangeNotifier {
                       ? "Linux"
                       : "Unknown Operating System";
 
-  static final userData = LoginUserData.getLoggedUser!;
-  static final String deviceId =
-      '&${userData.email}&${userData.firstname}&${userData.lastname}';
+  //
+  // static final String deviceId =
+  //     '&${ LoginUserData.getLoggedUser!.email}&${ LoginUserData.getLoggedUser!.firstname}&${ LoginUserData.getLoggedUser!.lastname}';
 
   // static final String _devicesClient = 'cbes/dekut/devices/$platform/${json.encode(LoginUserData.getLoggedUser?.asMqttMap())}';
-  static final String _devicesClient = 'cbes/dekut/devices/$platform/$deviceId';
-  static const String _devicesClientMessage = 'Disconnected';
+
+  String? _deviceId;
+  String? _devicesClient;
+  DateTime? _loginTime;
 
   // todo If disconnected, nullify the token and forcefully logout the user
 
@@ -86,8 +88,12 @@ class MqttProvider with ChangeNotifier {
           time);
 
   Future<ConnectionStatus> initializeMqttClient() async {
+    _deviceId =
+        '&${LoginUserData.getLoggedUser!.email}&${LoginUserData.getLoggedUser!.firstname}&${LoginUserData.getLoggedUser!.lastname}';
+    _devicesClient = 'cbes/dekut/devices/$platform/$_deviceId';
+
     _mqttClient = MqttServerClient.withPort(
-        mqttHost, 'flutter_client/$deviceId', mqttPort);
+        mqttHost, 'flutter_client/$_deviceId', mqttPort);
     _mqttClient.secure = true;
     _mqttClient.securityContext = SecurityContext.defaultContext;
     _mqttClient.keepAlivePeriod = 20;
@@ -101,8 +107,8 @@ class MqttProvider with ChangeNotifier {
 
     final connMessage = MqttConnectMessage()
         .authenticateAs(mqttUsername, mqttPassword)
-        .withWillTopic(_devicesClient)
-        .withWillMessage('Disconnected')
+        .withWillTopic(_devicesClient!)
+        .withWillMessage('DisconnectedHard-$_loginTime')
         .withWillRetain()
         .startClean()
         .withWillQos(MqttQos.exactlyOnce);
@@ -127,13 +133,13 @@ class MqttProvider with ChangeNotifier {
     if (_connStatus == ConnectionStatus.connected) {
       _mqttClient.subscribe("cbes/dekut/#", MqttQos.exactlyOnce);
       void removeFirstElement(List list) {
-        if (list.length >= 61) {
+        if (list.length >= 370) {
           list.removeAt(0);
         }
       }
 
       // todo change the duration dynamically on request from the client
-      timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      timer = Timer.periodic(const Duration(seconds: 10), (timer) {
         if (_heatingUnitData != null) {
           removeFirstElement(temp1GraphData);
           removeFirstElement(temp2GraphData);
@@ -224,7 +230,8 @@ class MqttProvider with ChangeNotifier {
 
   void onConnected() {
     _connStatus = ConnectionStatus.connected;
-    publishMsg(_devicesClient, 'Connected');
+    _loginTime = DateTime.now();
+    publishMsg(_devicesClient!, 'Connected-$_loginTime');
   }
 
   void onDisconnected() {

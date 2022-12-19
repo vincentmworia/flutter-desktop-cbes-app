@@ -62,8 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (kDebugMode) {
-      print("HOME INITIALIZATION");
+      if (kDebugMode) {
+        print("HOME INITIALIZATION");
+      }
       try {
         Future.delayed(Duration.zero)
             .then((value) async => await _connectivity.checkConnectivity())
@@ -75,16 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _connectivity.onConnectivityChanged.listen((result) async {
           if (prevResult != result && mounted) {
             Navigator.pushReplacementNamed(context, AuthScreen.routeName);
-            // if (prevResult == ConnectivityResult.none && mounted) {
-            //   Navigator.pushReplacementNamed(context, AuthScreen.routeName);
-            // } else {
-            //   prevResult = result;
-            //   if (mounted) {
-            //     setState(() {
-            //       _connectionStatus = result;
-            //     });
-            //   }
-            // }
           }
         });
       } on PlatformException catch (_) {
@@ -92,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
           print('Could n\'t check connectivity status');
         }
       }
-    }
+
   }
 
   @override
@@ -250,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ClipRRect(
                     child: Container(
                   alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.85),
+                  color: Colors.white.withOpacity(0.8),
                 ))),
             Row(
               children: [

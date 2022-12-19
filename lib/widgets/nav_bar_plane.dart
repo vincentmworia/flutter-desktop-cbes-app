@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../screens/home_screen.dart';
+import '../private_data.dart';
+import '../providers/login_user_data.dart';
 
 class NavBarPlane extends StatefulWidget {
   const NavBarPlane(
@@ -62,14 +64,24 @@ class _NavBarPlaneState extends State<NavBarPlane> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<PageTitle, IconData>> planeData = [
-      {PageTitle.dashboard: Icons.dashboard},
-      {PageTitle.heatingUnit: Icons.heat_pump},
-      {PageTitle.environmentMeter: Icons.device_thermostat},
-      {PageTitle.powerUnit: Icons.power_input},
-      {PageTitle.admin: Icons.admin_panel_settings},
-      {PageTitle.settings: Icons.settings}
-    ];
+    final List<Map<PageTitle, IconData>> planeData =
+        LoginUserData.getLoggedUser!.privilege == userSuperAdmin ||
+                LoginUserData.getLoggedUser!.privilege == userAdmin
+            ? [
+                {PageTitle.dashboard: Icons.dashboard},
+                {PageTitle.heatingUnit: Icons.heat_pump},
+                {PageTitle.environmentMeter: Icons.device_thermostat},
+                {PageTitle.powerUnit: Icons.power_input},
+                {PageTitle.admin: Icons.admin_panel_settings},
+                {PageTitle.settings: Icons.settings}
+              ]
+            : [
+                {PageTitle.dashboard: Icons.dashboard},
+                {PageTitle.heatingUnit: Icons.heat_pump},
+                {PageTitle.environmentMeter: Icons.device_thermostat},
+                {PageTitle.powerUnit: Icons.power_input},
+                {PageTitle.settings: Icons.settings}
+              ];
     return SizedBox(
       width: double.infinity,
       height: double.infinity,

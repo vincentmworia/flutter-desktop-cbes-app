@@ -150,9 +150,11 @@ class HeatingUnitScreen extends StatelessWidget {
                 ),
                 graphParams: TankGraph(
                   axisTitle: "Flow (lpm)",
-                  spline1Title: "Flow\n(To Solar\nHeater)",
+                  spline1Title: "Flow (To Solar Heater)",
+                  // spline1Title: "Flow\n(To Solar\nHeater)",
                   spline1DataSource: mqttProv.flow1GraphData,
-                  spline2Title: "Flow\n(To Heat\nExchanger)",
+                  spline2Title: "Flow (To Heat Exchanger)",
+                  // spline2Title: "Flow\n(To Heat\nExchanger)",
                   spline2DataSource: mqttProv.flow2GraphData,
                 )),
             // graphParams:const TankGraph()),
