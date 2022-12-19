@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/radial_gauge_sf.dart';
-import '../widgets/linear_gauge.dart';
 import '../widgets/tank_graph.dart';
 import '../providers/mqtt.dart';
 

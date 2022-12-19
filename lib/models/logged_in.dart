@@ -25,10 +25,4 @@ class LoggedIn {
       privilege: loggedInUser['privilege'],
       allowed: loggedInUser['allowed']);
 
-  Map<String, dynamic> asMqttMap() => {
-        'email': email,
-        'phoneNumber': phoneNumber,
-        'firstname': firstname,
-        'lastname': lastname,
-      };
 }

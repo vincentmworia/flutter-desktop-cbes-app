@@ -1,10 +1,8 @@
-import 'package:cbesdesktop/helpers/global_data.dart';
-import 'package:cbesdesktop/widgets/radial_gauge_kd.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/mqtt.dart';
-import './radial_gauge_sf.dart';
+import '../helpers/global_data.dart';
 
 class DashboardScreenPowerUnitConsumer extends StatelessWidget {
   const DashboardScreenPowerUnitConsumer(

@@ -27,13 +27,6 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
 
   @override
   Widget build(BuildContext context) {
-    // final unit = widget.title!.toLowerCase().contains('flow')
-    //     ? 'lpm'
-    //     : widget.title!.toLowerCase().contains('illuminance')
-    //         ? 'lux'
-    //         : widget.title!.toLowerCase().contains('humidity')
-    //             ? '%'
-    //             : '°C';
     final GlobalKey<KdGaugeViewState> key = GlobalKey<KdGaugeViewState>();
     final value = double.parse(widget.data ?? '0.0');
     Future.delayed(const Duration(seconds: 1)).then((value) {

@@ -153,14 +153,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
-  crypt:
-    dependency: "direct main"
-    description:
-      name: crypt
-      sha256: c12682393cc6aae221e278692d8a433e188db2064b7de5daa253fd62ccfa096f
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.1"
   crypto:
     dependency: transitive
     description:
@@ -348,10 +340,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt_client
-      sha256: cac8478bb686c9557d1743dd6caaaa5945875006b2c87927b5592f14edba1be1
+      sha256: "802f08b312eaf91848d149da4fc4643e57fcee304edefbc61486ea7b662a4621"
       url: "https://pub.dev"
     source: hosted
-    version: "9.7.2"
+    version: "9.7.3"
   nested:
     dependency: transitive
     description:
@@ -444,10 +436,10 @@ packages:
     dependency: "direct main"
     description:
       name: provider
-      sha256: e1e7413d70444ea3096815a60fe5da1b11bda8a9dc4769252cc82c53536f8bcc
+      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.4"
+    version: "6.0.5"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -553,26 +545,26 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: ac81cbde74468f9ad9931e1aa81cd9a9452b315ceb1f6a708c1c718bf566939e
+      sha256: "7b73b87a54cd7d7fde54c0ef19581df569a7c268490172cf529ea6050378d702"
       url: "https://pub.dev"
     source: hosted
-    version: "20.3.60"
+    version: "20.3.61"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "62191310045683672145c7fb5d0e5f9417f1cae875c60c10633c9617b808b75c"
+      sha256: e403c4ce9a723d6d187e36b521388d227f9e34ee8ff366f7140cfe7f872a56d0
       url: "https://pub.dev"
     source: hosted
-    version: "20.3.60"
+    version: "20.3.61"
   syncfusion_flutter_gauges:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_gauges
-      sha256: d9cf1d87a975c5b986ab2cf0eae7f5a06f4fc2aafae8fa391cc77fbba1789861
+      sha256: eefffe13c3cec8c79a1b42b05129dce2eba4b9d3a7cd670a28ebb00c246da86e
       url: "https://pub.dev"
     source: hosted
-    version: "20.3.59"
+    version: "20.3.61"
   term_glyph:
     dependency: transitive
     description:
@@ -609,10 +601,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: ca121dbbadb3e43b449053feab0cdf3f2bff93b107cacf0290e3d29f717374b6
+      sha256: c9ebe7ee4ab0c2194e65d3a07d8c54c5d00bb001b76081c4a04cdb8448b59e46
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.2"
+    version: "3.1.3"
   xdg_directories:
     dependency: transitive
     description:

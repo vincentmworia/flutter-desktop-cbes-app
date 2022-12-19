@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Image.asset(
-                    'images/cbes_logo.PNG',
+                    'images/cbes_logo_cropped.PNG',
                     fit: BoxFit.cover,
                     width: 40,
                     // height: 50,
@@ -245,12 +245,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('Images/Logo.ico'),
+                        image: AssetImage('Images/cbes_logo_main.PNG'),
                         fit: BoxFit.cover)),
                 child: ClipRRect(
                     child: Container(
                   alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withOpacity(0.85),
                 ))),
             Row(
               children: [

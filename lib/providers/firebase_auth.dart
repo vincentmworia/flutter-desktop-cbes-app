@@ -108,15 +108,6 @@ class FirebaseAuthentication {
         if (loginMqtt) {
           await Provider.of<MqttProvider>(context, listen: false)
               .initializeMqttClient();
-          // Future.delayed(Duration.zero).then((_) async {
-          //   if (Provider.of<RememberMeBnState>(context, listen: false)
-          //       .bnState) {
-          //     print('Saving user');
-          //     final prefs = await SharedPreferences.getInstance();
-          //
-          //     await prefs.setString('loggedInUser', json.encode(user.toMap()));
-          //   }
-          // });
           message = 'Welcome,\n${loggedIn.firstname} ${loggedIn.lastname}';
           return message;
         } else {

@@ -1,13 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:crypt/crypt.dart';
-import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../screens/auth_screen.dart';
 import './input_field.dart';
 import '../helpers/custom_data.dart';
-import './custom_check_box.dart';
 
 class AuthScreenForm extends StatefulWidget {
   const AuthScreenForm({
@@ -88,7 +85,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'images/cbes_logo_2.PNG',
+                'images/cbes_logo_main.PNG',
                 fit: BoxFit.cover,
               ),
             ),

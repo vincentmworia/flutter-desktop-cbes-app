@@ -1,22 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:cbesdesktop/models/logged_in.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../helpers/custom_data.dart';
-import '../models/user.dart';
-import '../providers/login_user_data.dart';
-import '../widgets/auth_screen_form.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../providers/firebase_auth.dart';
+import '../models/user.dart';
+import '../widgets/auth_screen_form.dart';
+import '../helpers/custom_data.dart';
 import './home_screen.dart';
-import './offline_screen.dart';
 
 enum AuthMode { login, register }
 
@@ -76,6 +69,7 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     }
   }
+
   //
   // @override
   // void didChangeDependencies() async {

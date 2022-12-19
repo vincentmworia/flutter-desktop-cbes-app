@@ -23,7 +23,6 @@ dependencies:
   intl: ^0.17.0
   syncfusion_flutter_charts: ^20.3.60
   flutter_launcher_icons: ^0.11.0
-  crypt: ^4.2.1
   shared_preferences: ^2.0.15
 
 dev_dependencies:
@@ -39,4 +38,4 @@ flutter:
 flutter_icons:
   windows:
     generate: true
-    image_path: "images/logo4.PNG"
+    image_path: "images/logo_2.PNG"
