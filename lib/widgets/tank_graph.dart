@@ -39,6 +39,7 @@ class TankGraph extends StatelessWidget {
   static const graph1Color = Colors.red;
   static const graph2Color = Colors.blue;
   static const graph3Color = Colors.orange;
+  static const opacity=0.45;
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +65,13 @@ class TankGraph extends StatelessWidget {
           series: <ChartSeries>[
             if (area1Title != null)
               SplineAreaSeries<GraphAxis, String>(
-                name: spline1Title,
+                name: area1Title,
                 xAxisName: "Time (min)",
-                yAxisName: spline1Title,
+                yAxisName: area1Title,
                 // todo Fetch appropriate data
-                dataSource: spline1DataSource ?? [],
-                color: graph1Color,
+                dataSource: area1DataSource ?? [],
+                color: graph3Color.withOpacity(opacity),
+                // color: graph3Color.withOpacity(opacity*2),
 
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,
@@ -78,14 +80,14 @@ class TankGraph extends StatelessWidget {
                   labelPosition: ChartDataLabelPosition.inside,
                 ),
               ),
-            if (area1Title != null)
+            if (area2Title != null)
               SplineAreaSeries<GraphAxis, String>(
-                name: spline1Title,
+                name: area2Title,
                 xAxisName: "Time (min)",
-                yAxisName: spline1Title,
+                yAxisName: area2Title,
                 // todo Fetch appropriate data
-                dataSource: spline1DataSource ?? [],
-                color: graph1Color,
+                dataSource: area2DataSource ?? [],
+                color: graph2Color.withOpacity(opacity),
 
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,
@@ -94,14 +96,14 @@ class TankGraph extends StatelessWidget {
                   labelPosition: ChartDataLabelPosition.inside,
                 ),
               ),
-            if (area1Title != null)
-              SplineAreaSeries<GraphAxis, String>(
-                name: spline1Title,
+            if (area3Title != null)
+              SplineSeries<GraphAxis, String>(
+                name: area3Title,
                 xAxisName: "Time (min)",
-                yAxisName: spline1Title,
+                yAxisName: area3Title,
                 // todo Fetch appropriate data
-                dataSource: spline1DataSource ?? [],
-                color: graph1Color,
+                dataSource: area3DataSource ?? [],
+                color: graph1Color.withOpacity(opacity),
 
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,

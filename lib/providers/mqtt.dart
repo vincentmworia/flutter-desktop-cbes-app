@@ -71,8 +71,11 @@ class MqttProvider with ChangeNotifier {
                       ? "Linux"
                       : "Unknown Operating System";
 
+  static final userData = LoginUserData.getLoggedUser!;
   static final String deviceId =
-      json.encode(LoginUserData.getLoggedUser?.asMqttMap());
+      '&${userData.email}&${userData.firstname}&${userData.lastname}';
+
+  // static final String _devicesClient = 'cbes/dekut/devices/$platform/${json.encode(LoginUserData.getLoggedUser?.asMqttMap())}';
   static final String _devicesClient = 'cbes/dekut/devices/$platform/$deviceId';
   static const String _devicesClientMessage = 'Disconnected';
 
