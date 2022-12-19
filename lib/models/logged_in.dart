@@ -16,13 +16,19 @@ class LoggedIn {
       required this.privilege,
       required this.allowed});
 
-  static LoggedIn fromMap(Map<String, dynamic> loggedInUser) =>
-      LoggedIn(
-          localId: loggedInUser['localId'],
-          email: loggedInUser['email'],
-          phoneNumber: loggedInUser['phoneNumber'],
-          firstname: loggedInUser['firstname'],
-          lastname: loggedInUser['lastname'],
-          privilege: loggedInUser['privilege'],
-          allowed: loggedInUser['allowed']);
+  static LoggedIn fromMap(Map<String, dynamic> loggedInUser) => LoggedIn(
+      localId: loggedInUser['localId'],
+      email: loggedInUser['email'],
+      phoneNumber: loggedInUser['phoneNumber'],
+      firstname: loggedInUser['firstname'],
+      lastname: loggedInUser['lastname'],
+      privilege: loggedInUser['privilege'],
+      allowed: loggedInUser['allowed']);
+
+  Map<String, dynamic> asMqttMap() => {
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'firstname': firstname,
+        'lastname': lastname,
+      };
 }

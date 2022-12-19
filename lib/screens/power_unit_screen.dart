@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/radial_gauge_sf.dart';
-import '../widgets/linear_gauge.dart';
 import '../widgets/tank_graph.dart';
 import '../providers/mqtt.dart';
 
@@ -15,6 +14,27 @@ class PowerUnitScreen extends StatelessWidget {
   static const illuminanceTitle = 'Illuminance';
 
   static final bdRadius = BorderRadius.circular(10);
+  static const Map<String, dynamic> voltageData = {
+    'minValue': 0.0,
+    'maxValue': 500.0,
+    'range1Value': 200.0,
+    'range2Value': 265.0,
+    'units': 'V',
+  };
+  static const Map<String, dynamic> frequencyData = {
+    'minValue': 0.0,
+    'maxValue': 100.0,
+    'range1Value': 45.0,
+    'range2Value': 55.0,
+    'units': 'Hz',
+  };
+  static const Map<String, dynamic> powerData = {
+    'units': 'W',
+    'minValue': 0.0,
+    'maxValue': 100.0,
+    'range1Value': 25.0,
+    'range2Value': 55.0,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -24,88 +44,56 @@ class PowerUnitScreen extends StatelessWidget {
           final List<Map<String, dynamic>> environmentMeterData1 = [
             {
               'title': 'Grid Voltage',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'data': mqttProv.powerUnitData?.acVoltage ?? '0.0',
+              ...voltageData
             },
             {
-              'title': 'Humidity',
-              'units': '%',
-              'data': mqttProv.environmentMeterData?.humidity ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'title': 'Grid Frequency',
+              'data': mqttProv.powerUnitData?.acFrequency ?? '0.0',
+              ...frequencyData
             },
             {
-              'title': 'Illuminance',
-              'units': 'lux',
-              'data': mqttProv.environmentMeterData?.illuminance ?? '0.0',
+              'title': 'Battery Voltage',
+              'units': 'V',
+              'data': mqttProv.powerUnitData?.batteryVoltage ?? '0.0',
               'minValue': 0.0,
-              'maxValue': 500.0,
-              'range1Value': 100.0,
-              'range2Value': 250.0,
+              'maxValue': 100.0,
+              'range1Value': 35.0,
+              'range2Value': 65.0,
             },
           ];
           final List<Map<String, dynamic>> environmentMeterData2 = [
             {
-              'title': 'Grid Voltage',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'title': 'Pv Voltage',
+              'data': mqttProv.powerUnitData?.pvInputVoltage ?? '0.0',
+              ...voltageData
             },
             {
-              'title': 'Humidity',
-              'units': '%',
-              'data': mqttProv.environmentMeterData?.humidity ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'title': 'Pv Power',
+              'data': mqttProv.powerUnitData?.pvInputPower ?? '0.0',
+              ...powerData
             },
             {
-              'title': 'Illuminance',
-              'units': 'lux',
-              'data': mqttProv.environmentMeterData?.illuminance ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 500.0,
-              'range1Value': 100.0,
-              'range2Value': 250.0,
+              'title': 'Output Apparent Power',
+              'data': mqttProv.powerUnitData?.outputApparentPower ?? '0.0',
+              ...powerData
             },
           ];
           final List<Map<String, dynamic>> environmentMeterData3 = [
             {
-              'title': 'Grid Voltage',
-              'units': '°C',
-              'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'title': 'Output Voltage',
+              'data': mqttProv.powerUnitData?.outputVoltage ?? '0.0',
+              ...voltageData
             },
             {
-              'title': 'Humidity',
-              'units': '%',
-              'data': mqttProv.environmentMeterData?.humidity ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              'title': 'Output Frequency',
+              'data': mqttProv.powerUnitData?.outputFrequency ?? '0.0',
+              ...frequencyData
             },
             {
-              'title': 'Illuminance',
-              'units': 'lux',
-              'data': mqttProv.environmentMeterData?.illuminance ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 500.0,
-              'range1Value': 100.0,
-              'range2Value': 250.0,
+              'title': 'Output Active Power',
+              'data': mqttProv.powerUnitData?.outputActivePower ?? '0.0',
+              ...powerData
             },
           ];
           return Row(
@@ -118,10 +106,11 @@ class PowerUnitScreen extends StatelessWidget {
                     children: environmentMeterData1
                         .map((e) => Card(
                               elevation: 8,
-                              shadowColor: Theme.of(context).colorScheme.primary,
+                              shadowColor:
+                                  Theme.of(context).colorScheme.primary,
                               color: Colors.white.withOpacity(0.65),
-                              shape:
-                                  RoundedRectangleBorder(borderRadius: bdRadius),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: bdRadius),
                               child: SizedBox(
                                 width: cons.maxWidth * _pageRatio * 0.7,
                                 height: cons.maxHeight * _pageRatio,
@@ -145,10 +134,11 @@ class PowerUnitScreen extends StatelessWidget {
                     children: environmentMeterData2
                         .map((e) => Card(
                               elevation: 8,
-                              shadowColor: Theme.of(context).colorScheme.primary,
+                              shadowColor:
+                                  Theme.of(context).colorScheme.primary,
                               color: Colors.white.withOpacity(0.65),
-                              shape:
-                                  RoundedRectangleBorder(borderRadius: bdRadius),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: bdRadius),
                               child: SizedBox(
                                 width: cons.maxWidth * _pageRatio * 0.7,
                                 height: cons.maxHeight * _pageRatio,
@@ -172,10 +162,11 @@ class PowerUnitScreen extends StatelessWidget {
                     children: environmentMeterData3
                         .map((e) => Card(
                               elevation: 8,
-                              shadowColor: Theme.of(context).colorScheme.primary,
+                              shadowColor:
+                                  Theme.of(context).colorScheme.primary,
                               color: Colors.white.withOpacity(0.65),
-                              shape:
-                                  RoundedRectangleBorder(borderRadius: bdRadius),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: bdRadius),
                               child: SizedBox(
                                 width: cons.maxWidth * _pageRatio * 0.7,
                                 height: cons.maxHeight * _pageRatio,
@@ -192,16 +183,15 @@ class PowerUnitScreen extends StatelessWidget {
                             ))
                         .toList()),
               ),
-
               Expanded(
                 child: TankGraph(
-                  axisTitle: "Illuminance (lux)",
-                  spline1Title: "Illuminance",
-                  spline1DataSource: mqttProv.illuminanceGraphData,
-                  spline2Title: null,
-                  spline2DataSource: null,
-                  spline3Title: null,
-                  spline3DataSource: null,
+                  axisTitle: "Voltage (V)",
+                  area1Title: "Grid Voltage",
+                  area1DataSource: mqttProv.gridVoltageGraphData,
+                  area2Title: "Pv Voltage",
+                  area2DataSource: mqttProv.pvVoltageGraphData,
+                  area3Title: "Output Voltage",
+                  area3DataSource: mqttProv.outputVoltageGraphData,
                 ),
               ),
             ],

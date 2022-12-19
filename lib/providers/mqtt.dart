@@ -49,6 +49,10 @@ class MqttProvider with ChangeNotifier {
   final List<GraphAxis> humidityGraphData = [];
   final List<GraphAxis> illuminanceGraphData = [];
 
+  final List<GraphAxis> gridVoltageGraphData = [];
+  final List<GraphAxis> pvVoltageGraphData = [];
+  final List<GraphAxis> outputVoltageGraphData = [];
+
   var _connStatus = ConnectionStatus.disconnected;
 
   ConnectionStatus get connectionStatus => _connStatus;
@@ -67,9 +71,10 @@ class MqttProvider with ChangeNotifier {
                       ? "Linux"
                       : "Unknown Operating System";
 
-  static final String deviceId = LoginUserData.getLoggedUser!.email;
+  static final String deviceId =
+      json.encode(LoginUserData.getLoggedUser?.asMqttMap());
   static final String _devicesClient = 'cbes/dekut/devices/$platform/$deviceId';
-  static const String _devicesClientMessage = 'Disconnected Well';
+  static const String _devicesClientMessage = 'Disconnected';
 
   // todo If disconnected, nullify the token and forcefully logout the user
 
@@ -87,16 +92,14 @@ class MqttProvider with ChangeNotifier {
     _mqttClient.onDisconnected = onDisconnected;
     // _mqttClient.onSubscribed = onSubscribed;
     // _mqttClient.onUnsubscribed = onUnsubscribed;
-    // _mqttClient.onSubscribed = onSubscribed;
     // _mqttClient.onSubscribeFail = onSubscribeFail;
     // _mqttClient.pongCallback = pong;
-
     _mqttClient.keepAlivePeriod = 60;
 
     final connMessage = MqttConnectMessage()
         .authenticateAs(mqttUsername, mqttPassword)
         .withWillTopic(_devicesClient)
-        .withWillMessage('Disconnected Unexpected')
+        .withWillMessage('Disconnected')
         .withWillRetain()
         .startClean()
         .withWillQos(MqttQos.exactlyOnce);
@@ -137,6 +140,9 @@ class MqttProvider with ChangeNotifier {
           removeFirstElement(temperatureGraphData);
           removeFirstElement(humidityGraphData);
           removeFirstElement(illuminanceGraphData);
+          removeFirstElement(gridVoltageGraphData);
+          removeFirstElement(pvVoltageGraphData);
+          removeFirstElement(outputVoltageGraphData);
 
           final time = DateTime.now();
           temp1GraphData.add(GraphAxis(
@@ -155,6 +161,12 @@ class MqttProvider with ChangeNotifier {
               _duration(time), double.parse(_environmentMeterData!.humidity!)));
           illuminanceGraphData.add(GraphAxis(_duration(time),
               double.parse(_environmentMeterData!.illuminance!)));
+          gridVoltageGraphData.add(GraphAxis(
+              _duration(time), double.parse(_powerUnitData!.acVoltage!)));
+          pvVoltageGraphData.add(GraphAxis(
+              _duration(time), double.parse(_powerUnitData!.pvInputVoltage!)));
+          outputVoltageGraphData.add(GraphAxis(
+              _duration(time), double.parse(_powerUnitData!.outputVoltage!)));
         }
         notifyListeners();
       });

@@ -1,11 +1,8 @@
-import 'package:cbesdesktop/screens/environment_meter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../providers/mqtt.dart';
-import '../screens/heating_unit_screen.dart';
-
 import '../models/graph_axis.dart';
 
 class TankGraph extends StatelessWidget {
@@ -18,6 +15,12 @@ class TankGraph extends StatelessWidget {
     this.spline2DataSource,
     this.spline3Title,
     this.spline3DataSource,
+    this.area1Title,
+    this.area1DataSource,
+    this.area2Title,
+    this.area2DataSource,
+    this.area3Title,
+    this.area3DataSource,
   }) : super(key: key);
   final String axisTitle;
   final String? spline1Title;
@@ -26,6 +29,12 @@ class TankGraph extends StatelessWidget {
   final List<GraphAxis>? spline2DataSource;
   final String? spline3Title;
   final List<GraphAxis>? spline3DataSource;
+  final String? area1Title;
+  final List<GraphAxis>? area1DataSource;
+  final String? area2Title;
+  final List<GraphAxis>? area2DataSource;
+  final String? area3Title;
+  final List<GraphAxis>? area3DataSource;
 
   static const graph1Color = Colors.red;
   static const graph2Color = Colors.blue;
@@ -53,31 +62,71 @@ class TankGraph extends StatelessWidget {
           // Enable tooltip
           tooltipBehavior: TooltipBehavior(enable: true),
           series: <ChartSeries>[
-            /*
-                    AreaSeries
-                    LineSeries
-                    ColumnSeries
-                    BubbleSeries
-                    SplineSeries
-                    SplineAreaSeries
-                    StepAreaSeries
-                    */
-            SplineSeries<GraphAxis, String>(
-              name: spline1Title,
-              xAxisName: "Time (min)",
-              yAxisName: spline1Title,
-              // todo Fetch appropriate data
-              dataSource: spline1DataSource ?? [],
-              color: graph1Color,
+            if (area1Title != null)
+              SplineAreaSeries<GraphAxis, String>(
+                name: spline1Title,
+                xAxisName: "Time (min)",
+                yAxisName: spline1Title,
+                // todo Fetch appropriate data
+                dataSource: spline1DataSource ?? [],
+                color: graph1Color,
 
-              xValueMapper: (GraphAxis data, _) => data.x,
-              yValueMapper: (GraphAxis data, _) => data.y,
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: false,
-                labelPosition: ChartDataLabelPosition.inside,
+                xValueMapper: (GraphAxis data, _) => data.x,
+                yValueMapper: (GraphAxis data, _) => data.y,
+                dataLabelSettings: const DataLabelSettings(
+                  isVisible: false,
+                  labelPosition: ChartDataLabelPosition.inside,
+                ),
               ),
-            ),
-            if (spline2Title != null)
+            if (area1Title != null)
+              SplineAreaSeries<GraphAxis, String>(
+                name: spline1Title,
+                xAxisName: "Time (min)",
+                yAxisName: spline1Title,
+                // todo Fetch appropriate data
+                dataSource: spline1DataSource ?? [],
+                color: graph1Color,
+
+                xValueMapper: (GraphAxis data, _) => data.x,
+                yValueMapper: (GraphAxis data, _) => data.y,
+                dataLabelSettings: const DataLabelSettings(
+                  isVisible: false,
+                  labelPosition: ChartDataLabelPosition.inside,
+                ),
+              ),
+            if (area1Title != null)
+              SplineAreaSeries<GraphAxis, String>(
+                name: spline1Title,
+                xAxisName: "Time (min)",
+                yAxisName: spline1Title,
+                // todo Fetch appropriate data
+                dataSource: spline1DataSource ?? [],
+                color: graph1Color,
+
+                xValueMapper: (GraphAxis data, _) => data.x,
+                yValueMapper: (GraphAxis data, _) => data.y,
+                dataLabelSettings: const DataLabelSettings(
+                  isVisible: false,
+                  labelPosition: ChartDataLabelPosition.inside,
+                ),
+              ),
+            if (area1Title == null)
+              SplineSeries<GraphAxis, String>(
+                name: spline1Title,
+                xAxisName: "Time (min)",
+                yAxisName: spline1Title,
+                // todo Fetch appropriate data
+                dataSource: spline1DataSource ?? [],
+                color: graph1Color,
+
+                xValueMapper: (GraphAxis data, _) => data.x,
+                yValueMapper: (GraphAxis data, _) => data.y,
+                dataLabelSettings: const DataLabelSettings(
+                  isVisible: false,
+                  labelPosition: ChartDataLabelPosition.inside,
+                ),
+              ),
+            if (area1Title == null && spline2Title != null)
               SplineSeries<GraphAxis, String>(
                 name: spline2Title,
                 xAxisName: "Time (min)",
@@ -91,7 +140,7 @@ class TankGraph extends StatelessWidget {
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,
               ),
-            if (spline3Title != null)
+            if (area1Title == null && spline3Title != null)
               SplineSeries<GraphAxis, String>(
                 name: spline3Title,
                 xAxisName: "Time (min)",
@@ -112,3 +161,13 @@ class TankGraph extends StatelessWidget {
     );
   }
 }
+
+/*
+                    AreaSeries
+                    LineSeries
+                    ColumnSeries
+                    BubbleSeries
+                    SplineSeries
+                    SplineAreaSeries
+                    StepAreaSeries
+                    */

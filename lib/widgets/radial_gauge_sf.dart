@@ -32,7 +32,8 @@ class SyncfusionRadialGauge extends StatelessWidget {
             : highColor;
     return SfRadialGauge(
       title: GaugeTitle(
-        text: title.toUpperCase(),
+        text: title ,
+        // text: title.toUpperCase(),
         textStyle: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold),
