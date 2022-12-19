@@ -117,12 +117,6 @@ class _AuthScreenState extends State<AuthScreen> {
       _isLoading = true;
     });
     if (_authMode == AuthMode.register) {
-      // todo LOGIN LASTING FOR LONG
-      Timer.run(() {
-        Future.delayed(const Duration(seconds: 1)).then((value) {
-          print('STOP LOGIN PROCESS');
-        });
-      });
       // todo try catch this
       try {
         await FirebaseAuthentication.signUp(user)
@@ -150,7 +144,6 @@ class _AuthScreenState extends State<AuthScreen> {
               }
             }));
       } catch (e) {
-        // todo, If user is not allowed in the app, throw the error too
         Future.delayed(Duration.zero)
             .then((value) async => await customDialog(context, 'Login Failed'));
       }
@@ -159,7 +152,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //
     if (_connectionStatus == ConnectivityResult.none) {
       setState(() {
         _isLoading = false;

@@ -45,6 +45,10 @@ class MqttProvider with ChangeNotifier {
   final List<GraphAxis> flow1GraphData = [];
   final List<GraphAxis> flow2GraphData = [];
 
+  final List<GraphAxis> temperatureGraphData = [];
+  final List<GraphAxis> humidityGraphData = [];
+  final List<GraphAxis> illuminanceGraphData = [];
+
   var _connStatus = ConnectionStatus.disconnected;
 
   ConnectionStatus get connectionStatus => _connStatus;
@@ -130,6 +134,9 @@ class MqttProvider with ChangeNotifier {
           removeFirstElement(temp3GraphData);
           removeFirstElement(flow1GraphData);
           removeFirstElement(flow2GraphData);
+          removeFirstElement(temperatureGraphData);
+          removeFirstElement(humidityGraphData);
+          removeFirstElement(illuminanceGraphData);
 
           final time = DateTime.now();
           temp1GraphData.add(GraphAxis(
@@ -142,6 +149,12 @@ class MqttProvider with ChangeNotifier {
               _duration(time), double.parse(_heatingUnitData!.flow1!)));
           flow2GraphData.add(GraphAxis(
               _duration(time), double.parse(_heatingUnitData!.flow2!)));
+          temperatureGraphData.add(GraphAxis(_duration(time),
+              double.parse(_environmentMeterData!.temperature!)));
+          humidityGraphData.add(GraphAxis(
+              _duration(time), double.parse(_environmentMeterData!.humidity!)));
+          illuminanceGraphData.add(GraphAxis(_duration(time),
+              double.parse(_environmentMeterData!.illuminance!)));
         }
         notifyListeners();
       });

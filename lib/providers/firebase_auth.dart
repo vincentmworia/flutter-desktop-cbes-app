@@ -100,9 +100,6 @@ class FirebaseAuthentication {
       message = await Future.delayed(Duration.zero).then((_) {
         Provider.of<LoginUserData>(context, listen: false)
             .setLoggedInUser(loggedIn);
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(json.decode(dbResponse.body).toString())));
         if (loggedIn.allowed != allowUserTrue) {
           return false;
         }

@@ -65,17 +65,18 @@ class DashboardScreenPowerUnitConsumer extends StatelessWidget {
                   children: [
                     Text(
                       data,
+                      overflow: TextOverflow.fade,
                       style: const TextStyle(
-                        color: mediumColor,
+                        color: highColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                        fontSize: 18,
                       ),
                     ),
                     Text(
                       title,
+                      overflow: TextOverflow.fade,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
-                        // fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
@@ -126,8 +127,7 @@ class DashboardScreenPowerUnitConsumer extends StatelessWidget {
               );
           return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ...powerUnitData
+              children:  powerUnitData
                     .map((e) => powerUnitItem(
                           titleMain: e['titleMain'],
                           title1: e['title1'],
@@ -140,7 +140,6 @@ class DashboardScreenPowerUnitConsumer extends StatelessWidget {
                           data4: e['data4'],
                         ))
                     .toList(),
-              ]
               // powerUnitData12
               //     .map(
               //       (e) => Expanded(

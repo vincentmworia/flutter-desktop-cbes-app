@@ -44,6 +44,7 @@ class DashboardScreen extends StatelessWidget {
                     Container(
                       width: cons.maxWidth * 0.2,
                       height: 40,
+
                       decoration: BoxDecoration(
                           color: Colors.white, borderRadius: bdRadius),
                       child: Center(

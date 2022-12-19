@@ -61,103 +61,104 @@ class HeatingUnitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, cons) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _parameterView(
-              context: context,
-              width: cons.maxWidth,
-              height: cons.maxHeight,
-              title: temperatureTitle,
-              valueParams: Consumer<MqttProvider>(
-                builder: (context, mqttProv, child) {
-                  final List<Map<String, String>> heatingUnitData = [
-                    {
-                      'title': 'Tank 1',
-                      'data': mqttProv.heatingUnitData?.tank1 ?? '0.0'
-                    },
-                    {
-                      'title': 'Tank 2',
-                      'data': mqttProv.heatingUnitData?.tank2 ?? '0.0'
-                    },
-                    {
-                      'title': 'Tank 3',
-                      'data': mqttProv.heatingUnitData?.tank3 ?? '0.0'
-                    },
-                  ];
+      return Consumer<MqttProvider>(builder: (context, mqttProv, child) {
+        final List<Map<String, String>> heatingUnitData = [
+          {'title': 'Tank 1', 'data': mqttProv.heatingUnitData?.tank1 ?? '0.0'},
+          {'title': 'Tank 2', 'data': mqttProv.heatingUnitData?.tank2 ?? '0.0'},
+          {'title': 'Tank 3', 'data': mqttProv.heatingUnitData?.tank3 ?? '0.0'},
+        ];
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _parameterView(
+                context: context,
+                width: cons.maxWidth,
+                height: cons.maxHeight,
+                title: temperatureTitle,
+                valueParams: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: heatingUnitData
+                        .map((e) => Card(
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              color: Colors.white.withOpacity(0.85),
+                              shadowColor:
+                                  Theme.of(context).colorScheme.primary,
+                              child: LinearGauge(
+                                  title: e['title'],
+                                  data: e['data'],
+                                  gaugeWidth: cons.maxWidth * 0.075),
+                            ))
+                        .toList()),
 
-                  return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: heatingUnitData
-                          .map((e) => Card(
-                                elevation: 8,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                color: Colors.white.withOpacity(0.85),
-                                shadowColor:
-                                    Theme.of(context).colorScheme.primary,
-                                child: LinearGauge(
-                                    title: e['title'],
-                                    data: e['data'],
-                                    gaugeWidth: cons.maxWidth * 0.075),
-                              ))
-                          .toList());
-                },
-              ),
-              // todo Add the resolution to the title
-              graphParams: const TankGraph(title: temperatureTitle)),
-          const VerticalDivider(),
-          _parameterView(
-              context: context,
-              width: cons.maxWidth,
-              height: cons.maxHeight,
-              title: flowTitle,
-              valueParams: Consumer<MqttProvider>(
-                builder: (context, mqttProv, child) {
-                  final List<Map<String, String>> heatingUnitData = [
-                    {
-                      'title': 'Flow S.H',
-                      'data': mqttProv.heatingUnitData?.flow1 ?? '0.0'
-                    },
-                    {
-                      'title': 'Flow H.E',
-                      'data': mqttProv.heatingUnitData?.flow2 ?? '0.0'
-                    },
-                  ];
-
-                  return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: heatingUnitData
-                          .map((e) => Card(
-                                elevation: 8,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                color: Colors.white.withOpacity(0.85),
-                                shadowColor:
-                                    Theme.of(context).colorScheme.primary,
-                                child: SizedBox(
-                                  width: 175,
-                                  height: double.infinity,
-                                  child: SyncfusionRadialGauge(
-                                    title: e['title']!,
-                                    data: e['data']!,
-                                    minValue: 0.0,
-                                    maxValue: 50.0,
-                                    range1Value: 13.0,
-                                    range2Value: 35.0,
-                                    units: 'lpm',
-                                  ),
-                                ),
-                              ))
-                          .toList());
-                },
-              ),
-              graphParams: const TankGraph(
+                // todo Add the resolution to the title
+                graphParams: TankGraph(
+                  axisTitle: "Temp (°C)",
+                  spline1DataSource: mqttProv.temp1GraphData,
+                  spline1Title: "Tank 1",
+                  spline2DataSource: mqttProv.temp2GraphData,
+                  spline2Title: "Tank 2",
+                  spline3DataSource: mqttProv.temp3GraphData,
+                  spline3Title: "Tank 3",
+                )),
+            const VerticalDivider(),
+            _parameterView(
+                context: context,
+                width: cons.maxWidth,
+                height: cons.maxHeight,
                 title: flowTitle,
-              )),
-          // graphParams:const TankGraph()),
-        ],
-      );
+                valueParams: Consumer<MqttProvider>(
+                  builder: (context, mqttProv, child) {
+                    final List<Map<String, String>> heatingUnitData = [
+                      {
+                        'title': 'Flow S.H',
+                        'data': mqttProv.heatingUnitData?.flow1 ?? '0.0'
+                      },
+                      {
+                        'title': 'Flow H.E',
+                        'data': mqttProv.heatingUnitData?.flow2 ?? '0.0'
+                      },
+                    ];
+
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: heatingUnitData
+                            .map((e) => Card(
+                                  elevation: 8,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  color: Colors.white.withOpacity(0.85),
+                                  shadowColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  child: SizedBox(
+                                    width: 175,
+                                    height: double.infinity,
+                                    child: SyncfusionRadialGauge(
+                                      title: e['title']!,
+                                      data: e['data']!,
+                                      minValue: 0.0,
+                                      maxValue: 50.0,
+                                      range1Value: 13.0,
+                                      range2Value: 35.0,
+                                      units: 'lpm',
+                                    ),
+                                  ),
+                                ))
+                            .toList());
+                  },
+                ),
+                graphParams: TankGraph(
+                  axisTitle: "Flow (lpm)",
+                  spline1Title: "Flow\n(To Solar\nHeater)",
+                  spline1DataSource: mqttProv.flow1GraphData,
+                  spline2Title: "Flow\n(To Heat\nExchanger)",
+                  spline2DataSource: mqttProv.flow2GraphData,
+                )),
+            // graphParams:const TankGraph()),
+          ],
+        );
+      });
     });
   }
 }

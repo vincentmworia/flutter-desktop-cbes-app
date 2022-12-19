@@ -1,18 +1,18 @@
 class EnvironmentMeter {
   String? temperature;
   String? humidity;
-  String? lux;
+  String? illuminance;
   bool? status;
   String? usage;
 
   EnvironmentMeter(
-      {this.temperature, this.humidity, this.lux, this.status, this.usage});
+      {this.temperature, this.humidity, this.illuminance, this.status, this.usage});
 
   static EnvironmentMeter fromMap(Map<String, dynamic> environmentMeter) =>
       EnvironmentMeter(
         temperature: environmentMeter['temperature'].toString(),
         humidity: environmentMeter['humidity'].toString(),
-        lux: environmentMeter['lux'].toString(),
+        illuminance: environmentMeter['lux'].toString(),
         status: environmentMeter['status'] == 1 ? true : false,
         usage: environmentMeter['usage'].toString(),
       );
@@ -20,8 +20,8 @@ class EnvironmentMeter {
   Map<String, dynamic> asMap() => {
         "temperature": temperature ?? '0.0',
         "humidity": humidity ?? '0.0',
-        "lux": lux ?? '0.0',
-        "status": lux ?? '0.0',
-        "usage": lux ?? '0.0'
+        "lux": illuminance ?? '0.0',
+        "status": illuminance ?? '0.0',
+        "usage": illuminance ?? '0.0'
       };
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/services.dart';
 
 import '../providers/login_user_data.dart';
 import './auth_screen.dart';
-import './offline_screen.dart';
 import '../widgets/nav_bar_plane.dart';
 import './dashboard_screen.dart';
 import './admin_screen.dart';
@@ -168,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: Image.asset(
-                    'images/cbes_logo2.PNG',
+                    'images/cbes_logo.PNG',
                     fit: BoxFit.cover,
                     width: 40,
                     // height: 50,
