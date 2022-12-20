@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/dashboard_screen_environment_meter_consumer.dart';
 import '../widgets/dashboard_screen_power_unit_consumer.dart';
-import './home_screen.dart';
 import '../widgets/dashboard_screen_heating_unit_consumer.dart';
+import './home_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key, required this.switchDashboardPage})

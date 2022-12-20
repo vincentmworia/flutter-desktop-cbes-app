@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -35,9 +34,6 @@ class _AuthScreenState extends State<AuthScreen> {
     super.initState();
     // todo Check whether autologin is activated,
     //  todo if so, directly move to the dashboard screen
-    if (kDebugMode) {
-      print(" AUTH INITIALIZATION");
-    }
 
     try {
       Future.delayed(Duration.zero)
@@ -46,9 +42,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 _connectionStatus = value;
               }));
     } on PlatformException catch (_) {
-      if (kDebugMode) {
-        print('Could n\'t check connectivity status');
-      }
       return;
     }
     ConnectivityResult? tempResult;
@@ -70,33 +63,9 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  //
-  // @override
-  // void didChangeDependencies() async {
-  //   super.didChangeDependencies();
-  //   if (init) {
-  //     final prefs = await SharedPreferences.getInstance();
-  //     if (prefs.containsKey('loggedInUser')) {
-  //       final loggedIn = prefs.getString('loggedInUser');
-  //
-  //       Future.delayed(Duration.zero).then((_) {
-  //
-  //         Provider.of<LoginUserData>(context, listen: false)
-  //             .setLoggedInUser(LoggedIn.fromMap(json.decode(loggedIn!)));
-  //         Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-  //       });
-  //     }
-  //
-  //     init = false;
-  //   }
-  // }
-
   @override
   void dispose() {
     super.dispose();
-    if (kDebugMode) {
-      print('AUTH DISPOSED');
-    }
     _connectivitySubscription?.cancel();
   }
 

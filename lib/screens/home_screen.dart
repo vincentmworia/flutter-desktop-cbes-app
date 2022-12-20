@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -62,36 +61,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-      if (kDebugMode) {
-        print("HOME INITIALIZATION");
-      }
-      try {
-        Future.delayed(Duration.zero)
-            .then((value) async => await _connectivity.checkConnectivity())
-            .then((value) => setState(() {
-                  _connectionStatus = value;
-                }));
+    try {
+      Future.delayed(Duration.zero)
+          .then((value) async => await _connectivity.checkConnectivity())
+          .then((value) => setState(() {
+                _connectionStatus = value;
+              }));
 
-        ConnectivityResult? prevResult;
-        _connectivity.onConnectivityChanged.listen((result) async {
-          if (prevResult != result && mounted) {
-            Navigator.pushReplacementNamed(context, AuthScreen.routeName);
-          }
-        });
-      } on PlatformException catch (_) {
-        if (kDebugMode) {
-          print('Could n\'t check connectivity status');
+      ConnectivityResult? prevResult;
+      _connectivity.onConnectivityChanged.listen((result) async {
+        if (prevResult != result && mounted) {
+          Navigator.pushReplacementNamed(context, AuthScreen.routeName);
         }
-      }
-
+      });
+    } on PlatformException catch (_) {}
   }
 
   @override
   void dispose() {
     super.dispose();
-    if (kDebugMode) {
-      print('HOME DISPOSED');
-    }
     _connectivitySubscription?.cancel();
   }
 

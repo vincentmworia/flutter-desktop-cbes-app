@@ -88,7 +88,6 @@ class EnvironmentMeterScreen extends StatelessWidget {
                       spline2DataSource: mqttProv.humidityGraphData,
                     ),
                   ),
-                  // todo illuminance
                   Expanded(
                     child: TankGraph(
                       axisTitle: "Illuminance (lux)",

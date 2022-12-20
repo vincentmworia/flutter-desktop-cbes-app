@@ -79,6 +79,7 @@ class PowerUnitScreen extends StatelessWidget {
               ...powerData
             },
           ];
+
           final List<Map<String, dynamic>> environmentMeterData3 = [
             {
               'title': 'Output Voltage',
@@ -96,6 +97,7 @@ class PowerUnitScreen extends StatelessWidget {
               ...powerData
             },
           ];
+          // todo add Battery Capacity data
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

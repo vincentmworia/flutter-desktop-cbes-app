@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cbesdesktop/widgets/custom_check_box.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,7 @@ import 'package:provider/provider.dart';
 import './screens/auth_screen.dart';
 import './screens/home_screen.dart';
 import './providers/login_user_data.dart';
+import './widgets/custom_check_box.dart';
 import './providers/mqtt.dart';
 
 void main() async {

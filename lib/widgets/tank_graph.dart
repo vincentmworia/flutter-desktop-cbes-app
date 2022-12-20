@@ -41,26 +41,22 @@ class TankGraph extends StatelessWidget {
   static const graph3Color = Colors.orange;
   static const opacity = 0.45;
 
+  // TODO Graph filtration using HTTP requests
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Consumer<MqttProvider>(
         builder: (_, mqttProv, ___) => SfCartesianChart(
-          enableAxisAnimation: false,
           primaryXAxis: CategoryAxis(
               title: AxisTitle(text: "Time"), placeLabelsNearAxisLine: true),
-          // todo
-
           trackballBehavior: TrackballBehavior(
-            // markerSettings: TrackballMarkerSettings(),
             activationMode: ActivationMode.singleTap,
             enable: true,
             lineColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
             tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
             tooltipAlignment: ChartAlignment.far,
             shouldAlwaysShow: true,
-            // builder: (context, trackballDetails) => Container(width: 50,height: 50,c,),
           ),
 
           tooltipBehavior: TooltipBehavior(
@@ -74,26 +70,21 @@ class TankGraph extends StatelessWidget {
             title: AxisTitle(text: axisTitle),
           ),
           legend: Legend(
-            isVisible: true,
-            orientation: LegendItemOrientation.horizontal,
-            alignment: ChartAlignment.center,
-            isResponsive: true,
-            position: LegendPosition.bottom
-            // offset: Offset(0,80),
-            // title: LegendTitle()
-          ),
-          // Enable tooltip
+              isVisible: true,
+              orientation: LegendItemOrientation.horizontal,
+              alignment: ChartAlignment.center,
+              isResponsive: true,
+              position: LegendPosition.bottom
+              ),
           series: <ChartSeries>[
             if (area1Title != null)
+              // SplineSeries<GraphAxis, String>(
               SplineAreaSeries<GraphAxis, String>(
                 name: area1Title,
                 xAxisName: "Time (min)",
                 yAxisName: area1Title,
-                // todo Fetch appropriate data
                 dataSource: area1DataSource ?? [],
                 color: graph3Color.withOpacity(opacity),
-                // color: graph3Color.withOpacity(opacity*2),
-
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,
                 dataLabelSettings: const DataLabelSettings(
@@ -106,7 +97,6 @@ class TankGraph extends StatelessWidget {
                 name: area2Title,
                 xAxisName: "Time (min)",
                 yAxisName: area2Title,
-                // todo Fetch appropriate data
                 dataSource: area2DataSource ?? [],
                 color: graph2Color.withOpacity(opacity),
 
@@ -136,9 +126,6 @@ class TankGraph extends StatelessWidget {
             if (area1Title == null)
               SplineSeries<GraphAxis, String>(
                 name: spline1Title,
-
-                // enableTooltip: true,
-                // markerSettings: TrackballMarkerSettings(color: green),
                 xAxisName: "Time (min)",
                 yAxisName: spline1Title,
                 dataSource: spline1DataSource ?? [],
@@ -171,7 +158,6 @@ class TankGraph extends StatelessWidget {
                 yAxisName: spline3Title,
                 dataSource: spline3DataSource ?? [],
                 color: graph3Color,
-                // todo???
                 dataLabelSettings: const DataLabelSettings(
                   isVisible: false,
                   labelPosition: ChartDataLabelPosition.inside,
@@ -185,13 +171,3 @@ class TankGraph extends StatelessWidget {
     );
   }
 }
-
-/*
-                    AreaSeries
-                    LineSeries
-                    ColumnSeries
-                    BubbleSeries
-                    SplineSeries
-                    SplineAreaSeries
-                    StepAreaSeries
-                    */

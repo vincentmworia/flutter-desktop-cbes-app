@@ -138,18 +138,6 @@ class DashboardScreenPowerUnitConsumer extends StatelessWidget {
                           data4: e['data4'],
                         ))
                     .toList(),
-              // powerUnitData12
-              //     .map(
-              //       (e) => Expanded(
-              //           child: Padding(
-              //               padding: const EdgeInsets.all(10.0),
-              //               child: KdRadialGauge(
-              //                   title: e['title'],
-              //                   data: e['data'],
-              //                   gaugeHeight: height * 0.25,
-              //                   units: e['units']))),
-              //     )
-              //     .toList(),
               );
         },
       );

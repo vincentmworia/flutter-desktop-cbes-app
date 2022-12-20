@@ -6,7 +6,13 @@ class AdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("Admin Screen"),
+      child: Text("""
+      - Viewing online users in realtime
+      - Monitoring all users and their logins
+      - Allow Users to access application
+      - Promoting users to administrators
+      - Demoting users to normal users
+      """),
     );
   }
 }

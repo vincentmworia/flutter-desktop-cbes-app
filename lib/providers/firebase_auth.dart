@@ -17,7 +17,6 @@ class FirebaseAuthentication {
   static Uri _actionEndpointUrl(String action) => Uri.parse(
       "https://identitytoolkit.googleapis.com/v1/accounts:${action}key=$firebaseApiKey");
 
-  // todo create a refresh token after every 1 hour
   static String _getErrorMessage(String errorTitle) {
     var message = 'Operation failed';
 
@@ -125,16 +124,13 @@ class FirebaseAuthentication {
     return message!;
   }
 
-  // todo logout
   static Future<void> logout(BuildContext context) async {
     final client = Provider.of<MqttProvider>(context, listen: false);
     Provider.of<LoginUserData>(context, listen: false).resetLoggedInUser();
-    // todo
     // final prefs = await SharedPreferences.getInstance();
     // if(prefs.containsKey('loggedInUser')){
     //   await prefs.remove('loggedInUser');
     // }
-
     Future.delayed(Duration.zero)
         .then((_) {
           if (client.connectionStatus == ConnectionStatus.connected &&

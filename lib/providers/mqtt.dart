@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +23,8 @@ enum ConnectionStatus {
 // todo subscribe to all mqtt channels
 class MqttProvider with ChangeNotifier {
   late MqttServerClient _mqttClient;
-  Timer? timer;
+  Timer? timerGraph;
+  Timer? timerDummyData;
 
   MqttServerClient get mqttClient => _mqttClient;
 
@@ -79,7 +81,7 @@ class MqttProvider with ChangeNotifier {
 
   String? _deviceId;
   String? _devicesClient;
-  DateTime? _loginTime;
+  String? _loginTime;
 
   // todo If disconnected, nullify the token and forcefully logout the user
 
@@ -91,6 +93,8 @@ class MqttProvider with ChangeNotifier {
     _deviceId =
         '&${LoginUserData.getLoggedUser!.email}&${LoginUserData.getLoggedUser!.firstname}&${LoginUserData.getLoggedUser!.lastname}';
     _devicesClient = 'cbes/dekut/devices/$platform/$_deviceId';
+
+    _loginTime = DateTime.now().toIso8601String();
 
     _mqttClient = MqttServerClient.withPort(
         mqttHost, 'flutter_client/$_deviceId', mqttPort);
@@ -118,10 +122,6 @@ class MqttProvider with ChangeNotifier {
     _mqttClient.securityContext = SecurityContext.defaultContext;
 
     try {
-      if (kDebugMode) {
-        print("Connecting");
-      }
-
       await _mqttClient.connect();
     } catch (e) {
       if (kDebugMode) {
@@ -138,8 +138,47 @@ class MqttProvider with ChangeNotifier {
         }
       }
 
+      double randomDouble(int min, int max) =>
+          (Random().nextDouble() * (max - min)) + min;
+
+      // todo REMOVE THIS PART
+      timerDummyData = Timer.periodic(const Duration(seconds: 30), (_) async {
+        // todo Publish dummy environment data
+
+        var envDummyData = EnvironmentMeter(
+          usage: randomDouble(0, 100).toStringAsFixed(1),
+          temperature: randomDouble(0, 100).toStringAsFixed(1),
+          humidity: randomDouble(0, 100).toStringAsFixed(1),
+          illuminance: randomDouble(50, 500).toStringAsFixed(1),
+        ).asMap();
+
+        var pwrDummyData = PowerUnit(
+          status: true,
+          deviceMode: disconnectTopic,
+          time: DateTime.now().toIso8601String(),
+          acVoltage: randomDouble(210, 230).toStringAsFixed(1),
+          acFrequency: randomDouble(48, 53).toStringAsFixed(1),
+          pvInputVoltage: randomDouble(200, 300).toStringAsFixed(1),
+          pvInputPower: randomDouble(0, 100).toStringAsFixed(1),
+          outputApparentPower: randomDouble(0, 100).toStringAsFixed(1),
+          outputActivePower: randomDouble(0, 100).toStringAsFixed(1),
+          batteryVoltage: randomDouble(0, 100).toStringAsFixed(1),
+          batteryCapacity: randomDouble(0, 100).toStringAsFixed(1),
+          chargingCurrent: randomDouble(0, 10).toStringAsFixed(1),
+          batteryDischargeCurrent: randomDouble(0, 10).toStringAsFixed(1),
+          outputVoltage: randomDouble(220, 260).toStringAsFixed(1),
+          outputFrequency: randomDouble(48, 53).toStringAsFixed(1),
+        ).asMap();
+        // todo Publish dummy power unit data
+        publishMsg(
+            'cbes/dekut/data/environment_meter', json.encode(envDummyData));
+        await Future.delayed(const Duration(seconds: 30)).then((_) =>
+            publishMsg(
+                'cbes/dekut/data/power_unit', json.encode(pwrDummyData)));
+      });
+
       // todo change the duration dynamically on request from the client
-      timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      timerGraph = Timer.periodic(const Duration(seconds: 10), (timer) {
         if (_heatingUnitData != null) {
           removeFirstElement(temp1GraphData);
           removeFirstElement(temp2GraphData);
@@ -230,13 +269,13 @@ class MqttProvider with ChangeNotifier {
 
   void onConnected() {
     _connStatus = ConnectionStatus.connected;
-    _loginTime = DateTime.now();
     publishMsg(_devicesClient!, 'Connected-$_loginTime');
   }
 
   void onDisconnected() {
     _connStatus = ConnectionStatus.disconnected;
-    timer?.cancel();
+    timerGraph?.cancel();
+    timerDummyData?.cancel();
     notifyListeners();
     // TODO ON DISCONNECTED, FORCE THE USER OFFLINE
     // Use firebase Auth to force the application to HomePage

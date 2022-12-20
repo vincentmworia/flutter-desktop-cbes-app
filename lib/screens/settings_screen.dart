@@ -5,6 +5,13 @@ import '../providers/firebase_auth.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
+  // todo REMEMBER ME LOGIC
+  // todo
+  //  - Change username and password
+  //  - View logins
+  //  - Change email
+  //  - Logout
+
   @override
   Widget build(BuildContext context) {
     return Center(

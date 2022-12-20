@@ -324,10 +324,8 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
             //         const CustomCheckBox()
             //       ],
             //     ),
-            //   ),
-            spacing,
-            spacing,
-            spacing,
+            //   ), 
+            const SizedBox(height: 70),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize:
