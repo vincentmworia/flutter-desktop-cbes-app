@@ -154,7 +154,7 @@ class MqttProvider with ChangeNotifier {
 
         var pwrDummyData = PowerUnit(
           status: true,
-          deviceMode: disconnectTopic,
+          deviceMode:'Line Mode',
           time: DateTime.now().toIso8601String(),
           acVoltage: randomDouble(210, 230).toStringAsFixed(1),
           acFrequency: randomDouble(48, 53).toStringAsFixed(1),
