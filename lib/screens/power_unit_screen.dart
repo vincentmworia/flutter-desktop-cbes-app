@@ -48,9 +48,9 @@ class PowerUnitScreen extends StatelessWidget {
               ...voltageData
             },
             {
-              'title': 'Grid Frequency',
-              'data': mqttProv.powerUnitData?.acFrequency ?? '0.0',
-              ...frequencyData
+              'title': 'Output Active Power',
+              'data': mqttProv.powerUnitData?.outputActivePower ?? '0.0',
+              ...powerData
             },
             {
               'title': 'Battery Voltage',
@@ -69,14 +69,18 @@ class PowerUnitScreen extends StatelessWidget {
               ...voltageData
             },
             {
-              'title': 'Pv Power',
-              'data': mqttProv.powerUnitData?.pvInputPower ?? '0.0',
-              ...powerData
-            },
-            {
               'title': 'Output Apparent Power',
               'data': mqttProv.powerUnitData?.outputApparentPower ?? '0.0',
               ...powerData
+            },
+            {
+              'title': 'Battery Capacity',
+              'data': mqttProv.powerUnitData?.batteryCapacity ?? '0.0',
+              'minValue': 0.0,
+              'maxValue': 100.0,
+              'range1Value': 25.0,
+              'range2Value': 65.0,
+              'units': 'V',
             },
           ];
 
@@ -87,14 +91,14 @@ class PowerUnitScreen extends StatelessWidget {
               ...voltageData
             },
             {
-              'title': 'Output Frequency',
-              'data': mqttProv.powerUnitData?.outputFrequency ?? '0.0',
-              ...frequencyData
+              'title': 'Pv Power',
+              'data': mqttProv.powerUnitData?.pvInputPower ?? '0.0',
+              ...powerData
             },
             {
-              'title': 'Output Active Power',
-              'data': mqttProv.powerUnitData?.outputActivePower ?? '0.0',
-              ...powerData
+              'title': 'Grid Frequency',
+              'data': mqttProv.powerUnitData?.acFrequency ?? '0.0',
+              ...frequencyData
             },
           ];
           // todo add Battery Capacity data
@@ -188,12 +192,12 @@ class PowerUnitScreen extends StatelessWidget {
               Expanded(
                 child: TankGraph(
                   axisTitle: "Voltage (V)",
-                  area1Title: "Grid Voltage",
-                  area1DataSource: mqttProv.gridVoltageGraphData,
-                  area2Title: "Pv Voltage",
-                  area2DataSource: mqttProv.pvVoltageGraphData,
-                  area3Title: "Output Voltage",
-                  area3DataSource: mqttProv.outputVoltageGraphData,
+                  area1Title: "Output Power",
+                  area1DataSource: mqttProv.outputActivePowerGraphData,
+                  area2Title: "Pv Power",
+                  area2DataSource: mqttProv.pvPowerGraphData,
+                  // area3Title: "Output Voltage",
+                  // area3DataSource: mqttProv.outputVoltageGraphData,
                 ),
               ),
             ],

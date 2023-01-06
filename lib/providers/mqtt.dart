@@ -51,9 +51,9 @@ class MqttProvider with ChangeNotifier {
   final List<GraphAxis> humidityGraphData = [];
   final List<GraphAxis> illuminanceGraphData = [];
 
-  final List<GraphAxis> gridVoltageGraphData = [];
-  final List<GraphAxis> pvVoltageGraphData = [];
-  final List<GraphAxis> outputVoltageGraphData = [];
+  final List<GraphAxis> outputActivePowerGraphData = [];
+  final List<GraphAxis> pvPowerGraphData = [];
+  // final List<GraphAxis> outputVoltageGraphData = [];
 
   var _connStatus = ConnectionStatus.disconnected;
 
@@ -188,9 +188,9 @@ class MqttProvider with ChangeNotifier {
           removeFirstElement(temperatureGraphData);
           removeFirstElement(humidityGraphData);
           removeFirstElement(illuminanceGraphData);
-          removeFirstElement(gridVoltageGraphData);
-          removeFirstElement(pvVoltageGraphData);
-          removeFirstElement(outputVoltageGraphData);
+          removeFirstElement(outputActivePowerGraphData);
+          removeFirstElement(pvPowerGraphData);
+          // removeFirstElement(outputVoltageGraphData);
 
           final time = DateTime.now();
           temp1GraphData.add(GraphAxis(
@@ -209,12 +209,13 @@ class MqttProvider with ChangeNotifier {
               _duration(time), double.parse(_environmentMeterData!.humidity!)));
           illuminanceGraphData.add(GraphAxis(_duration(time),
               double.parse(_environmentMeterData!.illuminance!)));
-          gridVoltageGraphData.add(GraphAxis(
-              _duration(time), double.parse(_powerUnitData!.acVoltage!)));
-          pvVoltageGraphData.add(GraphAxis(
-              _duration(time), double.parse(_powerUnitData!.pvInputVoltage!)));
-          outputVoltageGraphData.add(GraphAxis(
-              _duration(time), double.parse(_powerUnitData!.outputVoltage!)));
+
+          outputActivePowerGraphData.add(GraphAxis(
+              _duration(time), double.parse(_powerUnitData!.outputActivePower!)));
+          pvPowerGraphData.add(GraphAxis(
+              _duration(time), double.parse(_powerUnitData!.pvInputPower!)));
+          // outputVoltageGraphData.add(GraphAxis(
+          //     _duration(time), double.parse(_powerUnitData!.outputVoltage!)));
         }
         notifyListeners();
       });

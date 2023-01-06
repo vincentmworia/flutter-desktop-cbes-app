@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "CBES DESKTOP APP"
-#define MyAppVersion "3.0.0"
+#define MyAppVersion "2.0.0.0"
 #define MyAppPublisher "Vincent Mwenda Mworia"
 #define MyAppExeName "cbesdesktop.exe"
 
@@ -19,7 +19,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=E:\CBES\PROJECT\cbesdesktop\installers
-OutputBaseFilename=cbessetup2
+OutputBaseFilename=cbessetup
 SetupIconFile=E:\CBES\PROJECT\icon.ico
 Password=cbesdesktop
 Compression=lzma
