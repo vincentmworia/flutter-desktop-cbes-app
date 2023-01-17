@@ -24,6 +24,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.3.60
   flutter_launcher_icons: ^0.11.0
   shared_preferences: ^2.0.15
+  loading_animation_widget: ^1.2.0+4
 
 dev_dependencies:
   flutter_test:

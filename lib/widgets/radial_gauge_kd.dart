@@ -16,7 +16,7 @@ class KdRadialGauge extends StatefulWidget {
   final String? data;
   final String units;
   static const minValue = 0.0;
-  static const maxValue = 50.0;
+  static const maxValue = 30.0;
 
   @override
   State<KdRadialGauge> createState() => _KdRadialGaugeState();
@@ -45,7 +45,7 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: Text(
-                widget.title == null ? '' : widget.title!.toUpperCase(),
+                widget.title == null ? '' : widget.title!/*.toUpperCase()*/,
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold),
@@ -79,7 +79,7 @@ class _KdRadialGaugeState extends State<KdRadialGauge> {
                 fractionDigits: 1,
 
                 alertColorArray: const [lowColor, mediumColor, highColor],
-                alertSpeedArray: const [0, 15, 30],
+                alertSpeedArray: const [0, 10,20],
               ),
             ),
           ],

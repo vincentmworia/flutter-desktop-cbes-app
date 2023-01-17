@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/firebase_auth.dart';
 import '../models/user.dart';
 import '../widgets/auth_screen_form.dart';
 import '../helpers/custom_data.dart';
+import '../widgets/custom_check_box.dart';
 import './home_screen.dart';
 
 enum AuthMode { login, register }
@@ -55,6 +59,26 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
+  @override
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (init) {
+      print('pref');
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey(RememberMeBnState.rememberMePrefName)) {
+        setState(() {
+          _isLoading = true;
+        });
+        print('contains');
+        final userData = User.fromLoginMap(
+            json.decode(prefs.getString(RememberMeBnState.rememberMePrefName)!)
+                as Map<String, dynamic>);
+        _performLogin(userData, true);
+      }
+      init = false;
+    }
+  }
+
   void _rebuildScreen(ConnectivityResult result) {
     if (mounted) {
       setState(() {
@@ -75,12 +99,33 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
+  void _performLogin(User user, [bool autoLog = false]) {
+    try {
+      Future.delayed(Duration.zero).then((value) async =>
+          await FirebaseAuthentication.signIn(user, context)
+              .then((message) async {
+            // setState(() {
+            //   _isLoading = false;
+            // });
+            if (message.startsWith("Welcome")) {
+              Future.delayed(Duration.zero).then((_) =>
+                  Navigator.pushReplacementNamed(
+                      context, HomeScreen.routeName));
+            } else {
+              await customDialog(context, message);
+            }
+          }));
+    } catch (e) {
+      Future.delayed(Duration.zero)
+          .then((value) async => await customDialog(context, 'Login Failed'));
+    }
+  }
+
   void _submit(User user) async {
     setState(() {
       _isLoading = true;
     });
     if (_authMode == AuthMode.register) {
-      // todo try catch this
       try {
         await FirebaseAuthentication.signUp(user)
             .then((message) async => await customDialog(context, message))
@@ -92,29 +137,15 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     }
     if (_authMode == AuthMode.login) {
-      try {
-        Future.delayed(Duration.zero).then((value) async =>
-            await FirebaseAuthentication.signIn(user, context)
-                .then((message) async {
-              setState(() {
-                _isLoading = false;
-              });
-              await customDialog(context, message);
-              if (message.startsWith("Welcome")) {
-                Future.delayed(Duration.zero).then((_) =>
-                    Navigator.pushReplacementNamed(
-                        context, HomeScreen.routeName));
-              }
-            }));
-      } catch (e) {
-        Future.delayed(Duration.zero)
-            .then((value) async => await customDialog(context, 'Login Failed'));
-      }
+      _performLogin(user);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // setState(() {
+    //   _isLoading = true;
+    // });
     if (_connectionStatus == ConnectivityResult.none) {
       setState(() {
         _isLoading = false;
@@ -125,6 +156,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
         _connectionStatus == ConnectivityResult.mobile ||
         _connectionStatus == ConnectivityResult.wifi;
+
     final deviceWidth = MediaQuery.of(context).size.width;
 
     final bgImage = Container(
@@ -134,8 +166,8 @@ class _AuthScreenState extends State<AuthScreen> {
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            Theme.of(context).colorScheme.secondary,
-            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            // Theme.of(context).colorScheme.secondary ,
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -188,25 +220,55 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                  color:
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.25),
+                  child: Center(
+                    child: LoadingAnimationWidget.fourRotatingDots(color: Theme.of(context).colorScheme.secondary , size: 100),
+                  ),
                 ),
               ),
+              //todo  transition from offline to online: try autologin
               if (!goodConnection)
                 Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                  color: Colors.white,
                   child: Center(
-                    child: Text(
-                      "OFFLINE",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing:
-                              MediaQuery.of(context).size.width * 0.035,
-                          fontSize: MediaQuery.of(context).size.width * 0.075,
-                          fontWeight: FontWeight.bold),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            'images/cbes_logo_main.PNG',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "No Internet",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.7),
+                              letterSpacing: 10,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
+                    // child: Text(
+                    //   "OFFLINE",
+                    //   textAlign: TextAlign.center,
+                    //   style: TextStyle(
+                    //       color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                    //       letterSpacing:
+                    //           MediaQuery.of(context).size.width * 0.035,
+                    //       fontSize: MediaQuery.of(context).size.width * 0.075,
+                    //       fontWeight: FontWeight.bold),
+                    // ),
                   ),
                 ),
             ],

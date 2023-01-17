@@ -15,6 +15,13 @@ class EnvironmentMeterScreen extends StatelessWidget {
 
   static final bdRadius = BorderRadius.circular(10);
 
+  static Map<String, double> range100Data = {
+    'minValue': 0.0,
+    'maxValue': 100.0,
+    'range1Value': 25.0,
+    'range2Value': 55.0
+  };
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, cons) {
@@ -25,28 +32,19 @@ class EnvironmentMeterScreen extends StatelessWidget {
               'title': 'Temperature',
               'units': '°C',
               'data': mqttProv.environmentMeterData?.temperature ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              ...range100Data
             },
             {
               'title': 'Humidity',
               'units': '%',
               'data': mqttProv.environmentMeterData?.humidity ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 100.0,
-              'range1Value': 25.0,
-              'range2Value': 55.0,
+              ...range100Data
             },
             {
               'title': 'Illuminance',
               'units': 'lux',
               'data': mqttProv.environmentMeterData?.illuminance ?? '0.0',
-              'minValue': 0.0,
-              'maxValue': 500.0,
-              'range1Value': 100.0,
-              'range2Value': 250.0,
+              ...range100Data
             },
           ];
           return Column(
@@ -90,8 +88,8 @@ class EnvironmentMeterScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: TankGraph(
-                      axisTitle: "Illuminance (lux)",
-                      spline1Title: "Illuminance",
+                      axisTitle: "Illuminance lux",
+                      spline1Title: 'Illuminance',
                       spline1DataSource: mqttProv.illuminanceGraphData,
                     ),
                   ),

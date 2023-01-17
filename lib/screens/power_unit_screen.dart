@@ -101,6 +101,7 @@ class PowerUnitScreen extends StatelessWidget {
               ...frequencyData
             },
           ];
+
           // todo add Battery Capacity data
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

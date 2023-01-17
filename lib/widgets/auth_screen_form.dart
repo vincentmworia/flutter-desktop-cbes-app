@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';
 import '../screens/auth_screen.dart';
 import './input_field.dart';
 import '../helpers/custom_data.dart';
+import './custom_check_box.dart';
 
 class AuthScreenForm extends StatefulWidget {
   const AuthScreenForm({
@@ -278,7 +283,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                 return null;
               },
               onSaved: (value) {
-                user.password =value!;
+                user.password = value!;
                 // user.password = Crypt.sha256(value!).toString() ;
               },
             ),
@@ -308,24 +313,28 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                   return null;
                 },
               ),
-            // todo remember me logic
-            // spacing,
-            // if (_authMode == AuthMode.login && deviceWidth > 750)
-            //   Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.end,
-            //       children: <Widget>[
-            //         Text("Remember Me",
-            //             style: TextStyle(
-            //                 color: Theme.of(context).colorScheme.secondary,
-            //                 fontSize: 16.0,
-            //                 fontWeight: FontWeight.w300)),
-            //         const CustomCheckBox()
-            //       ],
-            //     ),
-            //   ), 
-            const SizedBox(height: 70),
+            //  todo remember me logic
+            spacing,
+            if (_authMode == AuthMode.login && deviceWidth > 750)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      "Remember Me",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        // color: Colors.black,
+                        fontSize: 16.0,
+                        // fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    const CustomCheckBox()
+                  ],
+                ),
+              ),
+            spacing,
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize:
@@ -335,21 +344,29 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0))),
-                onPressed: () {
+                onPressed: () async {
                   FocusScope.of(context).unfocus();
                   if (_formKey.currentState == null ||
                       !(_formKey.currentState!.validate())) {
                     return;
                   }
                   _formKey.currentState!.save();
+                  // store the button state in shared preferences API
 
+                  if (RememberMeBnState.bnState == true) {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setString(RememberMeBnState.rememberMePrefName,
+                        json.encode(user.toLoginMap()));
+                  }
                   widget.submit(user);
                 },
-                child: widget.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
-                      )
-                    : Text(_authMode == AuthMode.login ? "Login" : "Register")),
+                child:
+                // widget.isLoading
+                //     ? const Center(
+                //         child: CircularProgressIndicator(color: Colors.white),
+                //       )
+                //     :
+                Text(_authMode == AuthMode.login ? "Login" : "Register")),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 28.0),
               child: TextButton(

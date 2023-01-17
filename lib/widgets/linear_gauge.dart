@@ -28,7 +28,7 @@ class LinearGauge extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            title == null ? '' : title!.toUpperCase(),
+            title == null ? '' : title!/*.toUpperCase()*/,
             style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold),

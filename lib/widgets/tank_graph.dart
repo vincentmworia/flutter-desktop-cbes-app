@@ -39,7 +39,7 @@ class TankGraph extends StatelessWidget {
   static const graph1Color = Colors.red;
   static const graph2Color = Colors.blue;
   static const graph3Color = Colors.orange;
-  static const opacity = 0.45;
+  static const opacity = 0.5;
 
   // TODO Graph filtration using HTTP requests
   @override
@@ -56,14 +56,12 @@ class TankGraph extends StatelessWidget {
             lineColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
             tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
             tooltipAlignment: ChartAlignment.far,
-            shouldAlwaysShow: true,
+            hideDelay: 10000, // shouldAlwaysShow: false,
           ),
-
           tooltipBehavior: TooltipBehavior(
             enable: true,
             activationMode: ActivationMode.singleTap,
           ),
-
           plotAreaBackgroundImage:
               const AssetImage('images/graph_background.PNG'),
           primaryYAxis: NumericAxis(
@@ -74,8 +72,7 @@ class TankGraph extends StatelessWidget {
               orientation: LegendItemOrientation.horizontal,
               alignment: ChartAlignment.center,
               isResponsive: true,
-              position: LegendPosition.bottom
-              ),
+              position: LegendPosition.bottom),
           series: <ChartSeries>[
             if (area1Title != null)
               // SplineSeries<GraphAxis, String>(
@@ -84,7 +81,8 @@ class TankGraph extends StatelessWidget {
                 xAxisName: "Time (min)",
                 yAxisName: area1Title,
                 dataSource: area1DataSource ?? [],
-                color: graph3Color.withOpacity(opacity),
+                // color: Colors.white,
+                color: graph1Color.withOpacity(opacity),
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,
                 dataLabelSettings: const DataLabelSettings(
@@ -99,7 +97,6 @@ class TankGraph extends StatelessWidget {
                 yAxisName: area2Title,
                 dataSource: area2DataSource ?? [],
                 color: graph2Color.withOpacity(opacity),
-
                 xValueMapper: (GraphAxis data, _) => data.x,
                 yValueMapper: (GraphAxis data, _) => data.y,
                 dataLabelSettings: const DataLabelSettings(

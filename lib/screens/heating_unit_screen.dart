@@ -91,7 +91,6 @@ class HeatingUnitScreen extends StatelessWidget {
                                   gaugeWidth: cons.maxWidth * 0.075),
                             ))
                         .toList()),
-
                 // todo Add the resolution to the title
                 graphParams: TankGraph(
                   axisTitle: "Temp (°C)",
@@ -113,11 +112,11 @@ class HeatingUnitScreen extends StatelessWidget {
                     final List<Map<String, String>> heatingUnitData = [
                       {
                         'title': 'Flow S.H',
-                        'data': mqttProv.heatingUnitData?.flow1 ?? '0.0'
+                        'data': mqttProv.heatingUnitData?.flow2 ?? '0.0'
                       },
                       {
                         'title': 'Flow H.E',
-                        'data': mqttProv.heatingUnitData?.flow2 ?? '0.0'
+                        'data': mqttProv.heatingUnitData?.flow1 ?? '0.0'
                       },
                     ];
 
@@ -138,9 +137,9 @@ class HeatingUnitScreen extends StatelessWidget {
                                       title: e['title']!,
                                       data: e['data']!,
                                       minValue: 0.0,
-                                      maxValue: 50.0,
-                                      range1Value: 13.0,
-                                      range2Value: 35.0,
+                                      maxValue: 30.0,
+                                      range1Value: 10.0,
+                                      range2Value: 20.0,
                                       units: 'lpm',
                                     ),
                                   ),
@@ -151,11 +150,9 @@ class HeatingUnitScreen extends StatelessWidget {
                 graphParams: TankGraph(
                   axisTitle: "Flow (lpm)",
                   spline1Title: "Flow (To Solar Heater)",
-                  // spline1Title: "Flow\n(To Solar\nHeater)",
-                  spline1DataSource: mqttProv.flow1GraphData,
+                  spline1DataSource: mqttProv.flow2GraphData,
                   spline2Title: "Flow (To Heat Exchanger)",
-                  // spline2Title: "Flow\n(To Heat\nExchanger)",
-                  spline2DataSource: mqttProv.flow2GraphData,
+                  spline2DataSource: mqttProv.flow1GraphData,
                 )),
             // graphParams:const TankGraph()),
           ],

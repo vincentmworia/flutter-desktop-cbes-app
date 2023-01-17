@@ -32,14 +32,24 @@ class User {
         allowed: user['allowed'] as String,
       );
 
+  static User fromLoginMap(Map<String, dynamic> user) => User(
+        email: user['email'] as String,
+        password: user['password'] as String,
+      );
+
   Map<String, dynamic> toMap() => {
         "localId": localId,
         "email": email,
         "phoneNumber": phoneNumber,
         "firstname": firstName,
         "lastname": lastName,
-        // "password": password,
+        "password": password,
         "privilege": privilege,
         "allowed": allowed,
+      };
+
+  Map<String, dynamic> toLoginMap() => {
+        "email": email,
+        "password": password,
       };
 }

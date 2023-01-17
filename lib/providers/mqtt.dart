@@ -53,6 +53,7 @@ class MqttProvider with ChangeNotifier {
 
   final List<GraphAxis> outputActivePowerGraphData = [];
   final List<GraphAxis> pvPowerGraphData = [];
+
   // final List<GraphAxis> outputVoltageGraphData = [];
 
   var _connStatus = ConnectionStatus.disconnected;
@@ -110,12 +111,12 @@ class MqttProvider with ChangeNotifier {
     _mqttClient.keepAlivePeriod = 60;
 
     final connMessage = MqttConnectMessage()
-        .authenticateAs(mqttUsername, mqttPassword)
-        .withWillTopic(_devicesClient!)
-        .withWillMessage('DisconnectedHard-$_loginTime')
-        .withWillRetain()
-        .startClean()
-        .withWillQos(MqttQos.exactlyOnce);
+      ..authenticateAs(mqttUsername, mqttPassword)
+      ..withWillTopic(_devicesClient!)
+      ..withWillMessage('DisconnectedHard-$_loginTime')
+      ..withWillRetain()
+      ..startClean()
+      ..withWillQos(MqttQos.exactlyOnce);
     _mqttClient.connectionMessage = connMessage;
 
     _mqttClient.secure = true;
@@ -142,40 +143,41 @@ class MqttProvider with ChangeNotifier {
           (Random().nextDouble() * (max - min)) + min;
 
       // todo REMOVE THIS PART
-      timerDummyData = Timer.periodic(const Duration(seconds: 30), (_) async {
-        // todo Publish dummy environment data
-
-        var envDummyData = EnvironmentMeter(
-          usage: randomDouble(0, 100).toStringAsFixed(1),
-          temperature: randomDouble(0, 100).toStringAsFixed(1),
-          humidity: randomDouble(0, 100).toStringAsFixed(1),
-          illuminance: randomDouble(50, 500).toStringAsFixed(1),
-        ).asMap();
-
-        var pwrDummyData = PowerUnit(
-          status: true,
-          deviceMode:'Line Mode',
-          time: DateTime.now().toIso8601String(),
-          acVoltage: randomDouble(210, 230).toStringAsFixed(1),
-          acFrequency: randomDouble(48, 53).toStringAsFixed(1),
-          pvInputVoltage: randomDouble(200, 300).toStringAsFixed(1),
-          pvInputPower: randomDouble(0, 100).toStringAsFixed(1),
-          outputApparentPower: randomDouble(0, 100).toStringAsFixed(1),
-          outputActivePower: randomDouble(0, 100).toStringAsFixed(1),
-          batteryVoltage: randomDouble(0, 100).toStringAsFixed(1),
-          batteryCapacity: randomDouble(0, 100).toStringAsFixed(1),
-          chargingCurrent: randomDouble(0, 10).toStringAsFixed(1),
-          batteryDischargeCurrent: randomDouble(0, 10).toStringAsFixed(1),
-          outputVoltage: randomDouble(220, 260).toStringAsFixed(1),
-          outputFrequency: randomDouble(48, 53).toStringAsFixed(1),
-        ).asMap();
-        // todo Publish dummy power unit data
-        publishMsg(
-            'cbes/dekut/data/environment_meter', json.encode(envDummyData));
-        await Future.delayed(const Duration(seconds: 30)).then((_) =>
-            publishMsg(
-                'cbes/dekut/data/power_unit', json.encode(pwrDummyData)));
-      });
+      // timerDummyData = Timer.periodic(const Duration(seconds: 30), (_) async {
+      //   // todo Publish dummy environment data
+      //
+      //   // var envDummyData = EnvironmentMeter(
+      //   //   usage: randomDouble(0, 100).toStringAsFixed(1),
+      //   //   temperature: randomDouble(0, 100).toStringAsFixed(1),
+      //   //   humidity: randomDouble(0, 100).toStringAsFixed(1),
+      //   //   illuminance: randomDouble(50, 500).toStringAsFixed(1),
+      //   // ).asMap();
+      //   //
+      //
+      //   var pwrDummyData = PowerUnit(
+      //     status: true,
+      //     deviceMode: 'Line Mode',
+      //     time: DateTime.now().toIso8601String(),
+      //     acVoltage: randomDouble(228, 230).toStringAsFixed(1),
+      //     acFrequency: randomDouble(49, 52).toStringAsFixed(1),
+      //     pvInputVoltage: randomDouble(230, 246).toStringAsFixed(1),
+      //     pvInputPower: randomDouble(60, 80).toStringAsFixed(1),
+      //     outputApparentPower: randomDouble(80, 100).toStringAsFixed(1),
+      //     outputActivePower: randomDouble(80, 100).toStringAsFixed(1),
+      //     batteryVoltage: randomDouble(60, 100).toStringAsFixed(1),
+      //     batteryCapacity: randomDouble(70, 100).toStringAsFixed(1),
+      //     chargingCurrent: randomDouble(7, 10).toStringAsFixed(1),
+      //     batteryDischargeCurrent: randomDouble(0, 10).toStringAsFixed(1),
+      //     outputVoltage: randomDouble(220, 260).toStringAsFixed(1),
+      //     outputFrequency: randomDouble(48, 53).toStringAsFixed(1),
+      //   ).asMap();
+      //   // todo Publish dummy power unit data
+      //   // publishMsg(
+      //   //     'cbes/dekut/data/environment_meter', json.encode(envDummyData));
+      //   await Future.delayed(const Duration(seconds: 30)).then((_) =>
+      //       publishMsg(
+      //           'cbes/dekut/data/power_unit', json.encode(pwrDummyData)));
+      // });
 
       // todo change the duration dynamically on request from the client
       timerGraph = Timer.periodic(const Duration(seconds: 10), (timer) {
@@ -203,15 +205,17 @@ class MqttProvider with ChangeNotifier {
               _duration(time), double.parse(_heatingUnitData!.flow1!)));
           flow2GraphData.add(GraphAxis(
               _duration(time), double.parse(_heatingUnitData!.flow2!)));
-          temperatureGraphData.add(GraphAxis(_duration(time),
-              double.parse(_environmentMeterData!.temperature!)));
-          humidityGraphData.add(GraphAxis(
-              _duration(time), double.parse(_environmentMeterData!.humidity!)));
-          illuminanceGraphData.add(GraphAxis(_duration(time),
-              double.parse(_environmentMeterData!.illuminance!)));
+          if (environmentMeterData != null) {
+            temperatureGraphData.add(GraphAxis(_duration(time),
+                double.parse(_environmentMeterData!.temperature!)));
+            humidityGraphData.add(GraphAxis(_duration(time),
+                double.parse(_environmentMeterData!.humidity!)));
+            illuminanceGraphData.add(GraphAxis(_duration(time),
+                double.parse(_environmentMeterData!.illuminance!)));
+          }
 
-          outputActivePowerGraphData.add(GraphAxis(
-              _duration(time), double.parse(_powerUnitData!.outputActivePower!)));
+          outputActivePowerGraphData.add(GraphAxis(_duration(time),
+              double.parse(_powerUnitData!.outputActivePower!)));
           pvPowerGraphData.add(GraphAxis(
               _duration(time), double.parse(_powerUnitData!.pvInputPower!)));
           // outputVoltageGraphData.add(GraphAxis(
@@ -232,6 +236,7 @@ class MqttProvider with ChangeNotifier {
         }
 
         if (topic == "cbes/dekut/data/environment_meter") {
+          print(json.decode(message) as Map<String, dynamic>);
           _environmentMeterData = EnvironmentMeter.fromMap(
               json.decode(message) as Map<String, dynamic>);
           notifyListeners();

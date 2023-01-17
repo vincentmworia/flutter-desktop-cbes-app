@@ -110,6 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  static const titleStyle = TextStyle();
+
   @override
   Widget build(BuildContext context) {
     // final goodConnection = _connectionStatus == ConnectivityResult.ethernet ||
@@ -135,27 +137,40 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              GestureDetector(
-                onDoubleTap: () {
-                  _switchPage(PageTitle.dashboard,
-                      HomeScreen.pageTitle(PageTitle.dashboard));
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.asset(
-                    'images/cbes_logo_cropped.PNG',
-                    fit: BoxFit.cover,
-                    width: 40,
-                    // height: 50,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onDoubleTap: () {
+                      _switchPage(PageTitle.dashboard,
+                          HomeScreen.pageTitle(PageTitle.dashboard));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.asset(
+                        'images/cbes_logo_cropped.PNG',
+                        fit: BoxFit.cover,
+                        width: 40,
+                        // height: 50,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                width: 20,
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const Text(
+                    'CBES',
+                    style: titleStyle,
+                  ),
+                ],
               ),
               Text(_pageTitle),
+              const Text(
+                'DeKUT',
+                style: titleStyle,
+              ),
             ],
           ),
           actions: [
@@ -216,45 +231,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Stack(
-          alignment: Alignment.center,
+        body: Row(
           children: [
-            Container(
-                width: MediaQuery.of(context).size.width * 0.85,
-                height: MediaQuery.of(context).size.height * 0.5,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('Images/cbes_logo_main.PNG'),
-                        fit: BoxFit.cover)),
-                child: ClipRRect(
-                    child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.8),
-                ))),
-            Row(
-              children: [
-                AnimatedContainer(
-                  duration: duration,
-                  width: _compressNavPlane ? 0 : 110,
-                  height: double.infinity,
-                  color:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.99),
-                  child: Visibility(
-                    visible: _showNavPlane,
-                    child: NavBarPlane(
-                      switchPage: _switchPage,
-                      pageTitle: _page,
-                    ),
-                  ),
+            AnimatedContainer(
+              duration: duration,
+              width: _compressNavPlane ? 0 : 110,
+              height: double.infinity,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.99),
+              child: Visibility(
+                visible: _showNavPlane,
+                child: NavBarPlane(
+                  switchPage: _switchPage,
+                  pageTitle: _page,
                 ),
-                Expanded(
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: _pageWidget(_page),
-                  ),
-                ),
-              ],
+              ),
+            ),
+            Expanded(
+              child: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: _pageWidget(_page),
+              ),
             ),
           ],
         ),

@@ -39,9 +39,9 @@ class DashboardScreenEnvironmentMeterConsumer extends StatelessWidget {
               'units': 'lux',
               'data': mqttProv.environmentMeterData?.illuminance ?? '0.0',
               'minValue': 0.0,
-              'maxValue': 500.0,
-              'range1Value': 100.0,
-              'range2Value': 250.0,
+              'maxValue': 100.0,
+              'range1Value': 30.0,
+              'range2Value': 70.0,
             },
           ];
           return Row(

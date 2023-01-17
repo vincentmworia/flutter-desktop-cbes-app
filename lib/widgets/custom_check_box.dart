@@ -31,12 +31,14 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
 }
 
 class RememberMeBnState with ChangeNotifier {
-  var _bnState = false;
+  // var _bnState = false;
 
-  bool get bnState => _bnState;
+  // bool get bnState => _bnState;
+  static const rememberMePrefName = 'autoLogUser';
+  static bool? bnState;
 
   void setBnState(bool buttonState) {
-    _bnState = buttonState;
+    bnState = buttonState;
     notifyListeners();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/signIn.dart';
 import '../models/logged_in.dart';
@@ -10,6 +11,7 @@ import '../models/user.dart';
 import '../private_data.dart';
 import '../models/signUp.dart';
 import '../screens/auth_screen.dart';
+import '../widgets/custom_check_box.dart';
 import './login_user_data.dart';
 import './mqtt.dart';
 
@@ -127,10 +129,12 @@ class FirebaseAuthentication {
   static Future<void> logout(BuildContext context) async {
     final client = Provider.of<MqttProvider>(context, listen: false);
     Provider.of<LoginUserData>(context, listen: false).resetLoggedInUser();
-    // final prefs = await SharedPreferences.getInstance();
-    // if(prefs.containsKey('loggedInUser')){
-    //   await prefs.remove('loggedInUser');
-    // }
+
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.containsKey(RememberMeBnState.rememberMePrefName)) {
+      prefs.remove(RememberMeBnState.rememberMePrefName);
+    }
     Future.delayed(Duration.zero)
         .then((_) {
           if (client.connectionStatus == ConnectionStatus.connected &&
