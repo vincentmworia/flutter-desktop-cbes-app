@@ -1,9 +1,13 @@
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../widgets/radial_gauge_sf.dart';
 import '../widgets/linear_gauge.dart';
+import '../widgets/search_view.dart';
 import '../widgets/tank_graph.dart';
 import '../providers/mqtt.dart';
 
@@ -57,6 +61,7 @@ class HeatingUnitScreen extends StatelessWidget {
       );
 
   static const temperatureTitle = 'Temperature';
+
   // static const flowTitle = 'Flow Rate';
 
   @override
@@ -74,22 +79,23 @@ class HeatingUnitScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.symmetric(
                 vertical: cons.maxHeight * 0.05,
-                horizontal: cons.maxWidth* 0.005,
+                horizontal: cons.maxWidth * 0.005,
               ),
               width: cons.maxWidth * 0.4,
               height: double.infinity,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
+                  SizedBox(
+                    height: cons.maxHeight * 0.5,
+                    // todo Break the child into a widget
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: heatingUnitData
                             .map((e) => Card(
                                   elevation: 8,
                                   shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10)),
+                                      borderRadius: BorderRadius.circular(10)),
                                   color: Colors.white.withOpacity(0.85),
                                   shadowColor:
                                       Theme.of(context).colorScheme.primary,
@@ -100,29 +106,7 @@ class HeatingUnitScreen extends StatelessWidget {
                                 ))
                             .toList()),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            DatePicker.showDatePicker(context,
-                                showTitleActions: true,
-                                minTime: DateTime(2000, 3, 5),
-                                maxTime: DateTime(2019, 6, 7),
-                                onChanged: (date) {
-                              print('change $date');
-                            }, onConfirm: (date) {
-                              print('confirm $date');
-                            },
-                                currentTime: DateTime.now(),
-                                locale: LocaleType.en);
-                          },
-                          child: const Text(
-                            'show date time picker (Chinese)',
-                            style: TextStyle(color: Colors.blue),
-                          ))
-                    ],
-                  ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -134,20 +118,115 @@ class HeatingUnitScreen extends StatelessWidget {
                           icon: const Icon(Icons.picture_as_pdf),
                           onPressed: () {},
                           label: const Text('Generate PDF')),
+
                     ],
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: TankGraph(
-                axisTitle: "Temp (°C)",
-                spline1DataSource: mqttProv.temp1GraphData,
-                spline1Title: "Tank 1",
-                spline2DataSource: mqttProv.temp2GraphData,
-                spline2Title: "Tank 2",
-                spline3DataSource: mqttProv.temp3GraphData,
-                spline3Title: "Tank 3",
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                margin:
+                                const EdgeInsets.only(top: 12, right: 6),
+                                child: Text(
+                                  'From:\t',
+                                  style:
+                                  Theme.of(context).textTheme.titleMedium,
+                                )),
+                            SizedBox(
+                                width: 165,
+                                height: 100,
+                                child: DateTimeField(
+                                  format: DateFormat("yyyy-MM-dd HH:mm"),
+                                  onShowPicker: (context, currentValue) async {
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        firstDate: DateTime(1900),
+                                        initialDate:
+                                        currentValue ?? DateTime.now(),
+                                        lastDate: DateTime(2100));
+                                    if (date != null) {
+                                      final time = await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.fromDateTime(
+                                            currentValue ?? DateTime.now()),
+                                      );
+                                      return DateTimeField.combine(date, time);
+                                    } else {
+                                      return currentValue;
+                                    }
+                                  },
+                                ))
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                margin:
+                                const EdgeInsets.only(top: 12, right: 6),
+                                child: Text(
+                                  'To:\t',
+                                  style:
+                                  Theme.of(context).textTheme.titleMedium,
+                                )),
+                            SizedBox(
+                                width: 165,
+                                height: 100,
+                                child: DateTimeField(
+                                  format: DateFormat("yyyy-MM-dd HH:mm"),
+                                  onShowPicker: (context, currentValue) async {
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        firstDate: DateTime(1900),
+                                        initialDate:
+                                        currentValue ?? DateTime.now(),
+                                        lastDate: DateTime(2100));
+                                    if (date != null) {
+                                      final time = await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.fromDateTime(
+                                            currentValue ?? DateTime.now()),
+                                      );
+                                      return DateTimeField.combine(date, time);
+                                    } else {
+                                      return currentValue;
+                                    }
+                                  },
+                                ))
+                          ],
+                        ),
+                        ElevatedButton(
+                            onPressed: () {}, child: const Text('Search')),
+                        Switch.adaptive(value: true, onChanged: (val) {}),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TankGraph(
+                      axisTitle: "Temp (°C)",
+                      spline1DataSource: mqttProv.temp1GraphData,
+                      spline1Title: "Tank 1",
+                      spline2DataSource: mqttProv.temp2GraphData,
+                      spline2Title: "Tank 2",
+                      spline3DataSource: mqttProv.temp3GraphData,
+                      spline3Title: "Tank 3",
+                    ),
+                  ),
+                ],
               ),
             ),
             // Column(

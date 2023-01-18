@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FlowmeterScreen extends StatelessWidget {
-  const FlowmeterScreen({Key? key}) : super(key: key);
+class FlowMeterScreen extends StatelessWidget {
+  const FlowMeterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

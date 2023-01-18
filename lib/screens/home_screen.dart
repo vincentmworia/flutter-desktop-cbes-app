@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case PageTitle.settings:
         return const SettingsScreen();
       case PageTitle.flowMeter:
-        return const FlowmeterScreen();
+        return const FlowMeterScreen();
       case PageTitle.shedMeter:
         return const ShedMeterScreen();
       case PageTitle.ductMeter:
