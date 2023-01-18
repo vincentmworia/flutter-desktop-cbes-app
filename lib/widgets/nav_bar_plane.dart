@@ -64,27 +64,21 @@ class _NavBarPlaneState extends State<NavBarPlane> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<PageTitle, IconData>> planeData =
-        LoginUserData.getLoggedUser!.privilege == userSuperAdmin ||
-                LoginUserData.getLoggedUser!.privilege == userAdmin
-            ? [
-                {PageTitle.dashboard: Icons.dashboard},
-                {PageTitle.solarHeaterMeter: Icons.heat_pump},
-                {PageTitle.environmentMeter: Icons.device_thermostat},
-                {PageTitle.electricalEnergyMeter: Icons.power_input},
-                {PageTitle.admin: Icons.admin_panel_settings},
-                {PageTitle.settings: Icons.settings}
-              ]
-            : [
-                {PageTitle.dashboard: Icons.dashboard},
-                {PageTitle.solarHeaterMeter: Icons.heat_pump},
-                {PageTitle.environmentMeter: Icons.device_thermostat},
-                {PageTitle.electricalEnergyMeter: Icons.power_input},
-                {PageTitle.settings: Icons.settings}
-              ];
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
+    final List<Map<PageTitle, IconData>> planeData = [
+      {PageTitle.dashboard: Icons.dashboard},
+      {PageTitle.solarHeaterMeter: Icons.heat_pump},
+      {PageTitle.flowMeter: Icons.water_drop},
+      {PageTitle.ductMeter: Icons.device_thermostat},
+      {PageTitle.environmentMeter: Icons.device_thermostat},
+      {PageTitle.shedMeter: Icons.device_thermostat},
+      {PageTitle.electricalEnergyMeter: Icons.power_input},
+      {PageTitle.thermalEnergyMeter: Icons.power_input},
+      if (LoginUserData.getLoggedUser!.privilege == userSuperAdmin ||
+          LoginUserData.getLoggedUser!.privilege == userAdmin)
+        {PageTitle.admin: Icons.admin_panel_settings},
+      {PageTitle.settings: Icons.settings}
+    ];
+    return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: planeData

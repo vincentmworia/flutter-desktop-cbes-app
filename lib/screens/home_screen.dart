@@ -9,11 +9,11 @@ import './auth_screen.dart';
 import '../widgets/nav_bar_plane.dart';
 import './dashboard_screen.dart';
 import './admin_screen.dart';
-import './heating_unit_screen.dart';
+import './solar_heater_screen.dart';
 import './settings_screen.dart';
 import './electrical_energy_screen.dart';
 import './environment_meter_screen.dart';
-import './piping_unit_screen.dart';
+import './flow_meter_screen.dart';
 import './thermal_energy_screen.dart';
 import './shed_meter_screen.dart';
 import './duct_meter_screen.dart';
@@ -21,12 +21,12 @@ import './duct_meter_screen.dart';
 enum PageTitle {
   dashboard,
   solarHeaterMeter,
-  pipingUnitMeter,
+  flowMeter,
   environmentMeter,
   shedMeter,
   ductMeter,
   electricalEnergyMeter,
-  thermalEnergyUnit,
+  thermalEnergyMeter,
   admin,
   settings
 }
@@ -49,18 +49,14 @@ class HomeScreen extends StatefulWidget {
         return "Administrator";
       case PageTitle.settings:
         return "Settings";
-      case PageTitle.pipingUnitMeter:
-        return "Piping Meter";
-        break;
+      case PageTitle.flowMeter:
+        return "Flow Meter";
       case PageTitle.shedMeter:
         return "Shed Meter";
-        break;
       case PageTitle.ductMeter:
         return "Duct Meter";
-        break;
-      case PageTitle.thermalEnergyUnit:
+      case PageTitle.thermalEnergyMeter:
         return "Thermal Energy";
-        break;
     }
   }
 
@@ -71,10 +67,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   PageTitle _page = PageTitle.dashboard;
   String _pageTitle = 'Dashboard';
-  var _compressNavPlane = true;
+  var _deCompressNavPlane = true;
   var _showNavPlane = false;
 
-  ConnectivityResult _connectionStatus = ConnectivityResult.ethernet;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
@@ -84,9 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       Future.delayed(Duration.zero)
           .then((value) async => await _connectivity.checkConnectivity())
-          .then((value) => setState(() {
-                _connectionStatus = value;
-              }));
+          .then((value) => setState(() {}));
 
       ConnectivityResult? prevResult;
       _connectivity.onConnectivityChanged.listen((result) async {
@@ -107,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       // todo
       _showNavPlane = false;
-      _compressNavPlane = true;
+      _deCompressNavPlane = true;
       _page = page;
       _pageTitle = title;
     });
@@ -127,22 +120,16 @@ class _HomeScreenState extends State<HomeScreen> {
         return const AdministratorScreen();
       case PageTitle.settings:
         return const SettingsScreen();
-      case PageTitle.pipingUnitMeter:
-       return const PipingUnitScreen();
-        break;
+      case PageTitle.flowMeter:
+        return const FlowmeterScreen();
       case PageTitle.shedMeter:
         return const ShedMeterScreen();
-        break;
       case PageTitle.ductMeter:
         return const DuctMeterScreen();
-        break;
-      case PageTitle.thermalEnergyUnit:
+      case PageTitle.thermalEnergyMeter:
         return const ThermalEnergyScreen();
-        break;
     }
   }
-
-  static const titleStyle = TextStyle();
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //   ));
     // }
 
-    const duration = Duration(milliseconds: 200);
+    const duration = Duration(milliseconds: 20);
 
     const txtStyle = TextStyle(
         color: Colors.white,
@@ -168,12 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(_pageTitle)),
+          title: AnimatedContainer(
+            duration: duration,
+            child: Padding(
+                padding:  EdgeInsets.only(left: _deCompressNavPlane?20:60),
+                child: Text(_pageTitle)),
+          ),
           actions: [
             SizedBox(
-              // color: Theme.of(context).colorScheme.secondary,
               width: MediaQuery.of(context).size.width * 0.6,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,21 +280,28 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white,
               hoverColor: Theme.of(context).colorScheme.primary,
               focusColor: Theme.of(context).colorScheme.primary,
-              onPressed: () {
-                setState(() {
-                  _showNavPlane = false;
-                  _compressNavPlane = !_compressNavPlane;
-                });
-                Future.delayed(duration).then((value) {
-                  if (!_compressNavPlane) {
-                    setState(() {
-                      _showNavPlane = true;
-                    });
-                    // print(_showNavPlane);
-                  }
-                });
+              onPressed: () async {
+                print(_deCompressNavPlane);
+                if (_deCompressNavPlane) {
+                  setState(() {
+                    _showNavPlane = false;
+                    _deCompressNavPlane = !_deCompressNavPlane;
+                  });
+                   Future.delayed(duration).then((value) => setState(() {
+                        _showNavPlane = true;
+                      }));
+                } else {
+                  // setState(() {
+                  //   // _showNavPlane = false;
+                  //   _compressNavPlane = !_compressNavPlane;
+                  // });
+                  setState(() {
+                    _showNavPlane = false;
+                    _deCompressNavPlane = !_deCompressNavPlane;
+                  });
+                }
               },
-              icon: Icon(_compressNavPlane ? Icons.menu : Icons.arrow_back),
+              icon: Icon(_deCompressNavPlane ? Icons.menu : Icons.arrow_back),
             ),
           ),
         ),
@@ -314,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             AnimatedContainer(
               duration: duration,
-              width: _compressNavPlane ? 0 : 110,
+              width: _deCompressNavPlane ? 0 : 130,
               height: double.infinity,
               color: Theme.of(context).colorScheme.primary.withOpacity(0.99),
               child: Visibility(

@@ -48,6 +48,7 @@ class TankGraph extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Consumer<MqttProvider>(
         builder: (_, mqttProv, ___) => SfCartesianChart(
+          // title: ChartTitle(text: 'Temperature for every 10 sec'),
           primaryXAxis: CategoryAxis(
               title: AxisTitle(text: "Time"), placeLabelsNearAxisLine: true),
           trackballBehavior: TrackballBehavior(
