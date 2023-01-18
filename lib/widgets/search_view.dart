@@ -1,3 +1,4 @@
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
@@ -10,35 +11,95 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
-  String _selectedDate = '';
-  String _dateCount = '';
-  String _range = '';
-  String _rangeCount = '';
   @override
   Widget build(BuildContext context) {
-    return  SfDateRangePicker(
-
-      onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-        setState(() {
-          if (args.value is PickerDateRange) {
-            _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
-            // ignore: lines_longer_than_80_chars
-                ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
-          } else if (args.value is DateTime) {
-            _selectedDate = args.value.toString();
-          } else if (args.value is List<DateTime>) {
-            _dateCount = args.value.length.toString();
-          } else {
-            _rangeCount = args.value.length.toString();
-          }
-        });
-      }
-      ,
-      selectionMode: DateRangePickerSelectionMode.range,
-      initialSelectedRange: PickerDateRange(
-          DateTime.now().subtract(const Duration(days: 4)),
-          DateTime.now().add(const Duration(days: 3))),
-
-    );
+    return
+      SizedBox(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    margin:
+                    const EdgeInsets.only(top: 12, right: 6),
+                    child: Text(
+                      'From:\t',
+                      style:
+                      Theme.of(context).textTheme.titleMedium,
+                    )),
+                SizedBox(
+                    width: 165,
+                    height: 100,
+                    child: DateTimeField(
+                      format: DateFormat("yyyy-MM-dd HH:mm"),
+                      onShowPicker: (context, currentValue) async {
+                        final date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate:
+                            currentValue ?? DateTime.now(),
+                            lastDate: DateTime(2100));
+                        if (date != null) {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(
+                                currentValue ?? DateTime.now()),
+                          );
+                          return DateTimeField.combine(date, time);
+                        } else {
+                          return currentValue;
+                        }
+                      },
+                    ))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    margin:
+                    const EdgeInsets.only(top: 12, right: 6),
+                    child: Text(
+                      'To:\t',
+                      style:
+                      Theme.of(context).textTheme.titleMedium,
+                    )),
+                SizedBox(
+                    width: 165,
+                    height: 100,
+                    child: DateTimeField(
+                      format: DateFormat("yyyy-MM-dd HH:mm"),
+                      onShowPicker: (context, currentValue) async {
+                        final date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate:
+                            currentValue ?? DateTime.now(),
+                            lastDate: DateTime(2100));
+                        if (date != null) {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(
+                                currentValue ?? DateTime.now()),
+                          );
+                          return DateTimeField.combine(date, time);
+                        } else {
+                          return currentValue;
+                        }
+                      },
+                    ))
+              ],
+            ),
+            ElevatedButton(
+                onPressed: () {}, child: const Text('Search')),
+          ],
+        ),
+      );
   }
 }

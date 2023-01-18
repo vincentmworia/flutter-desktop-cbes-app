@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_xlsio/xlsio.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as sf;
 
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -12,6 +14,7 @@ import '../widgets/linear_gauge.dart';
 import '../widgets/search_view.dart';
 import '../widgets/tank_graph.dart';
 import '../providers/mqtt.dart';
+import '../widgets/toggle_online_view.dart';
 
 class HeatingUnitScreen extends StatelessWidget {
   const HeatingUnitScreen({Key? key}) : super(key: key);
@@ -108,133 +111,14 @@ class HeatingUnitScreen extends StatelessWidget {
                                 ))
                             .toList()),
                   ),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton.icon(
-                          icon: const Icon(Icons.file_copy),
-                          onPressed: () {
-                            // Create a new Excel document.
-
-                            final Workbook workbook = new Workbook();
-//Accessing worksheet via index.
-                            final Worksheet sheet = workbook.worksheets[0];
-//Add Text.
-                            sheet.getRangeByName('A1').setText('Hello World');
-//Add Number
-                            sheet.getRangeByName('A3').setNumber(44);
-//Add DateTime
-                            sheet.getRangeByName('A5').setDateTime(DateTime(2020,12,12,1,10,20));
-// Save the document.
-                            final List<int> bytes = workbook.saveAsStream();
-                            File('AddingTextNumberDateTime.xlsx').writeAsBytes(bytes);
-//Dispose the workbook.
-                            workbook.dispose();
-
-                          },
-                          label: const Text('Generate Excel')),
-                      ElevatedButton.icon(
-                          icon: const Icon(Icons.picture_as_pdf),
-                          onPressed: () {},
-                          label: const Text('Generate PDF')),
-
-                    ],
-                  ),
+                  ToggleOnlineView()
                 ],
               ),
             ),
             Expanded(
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                margin:
-                                const EdgeInsets.only(top: 12, right: 6),
-                                child: Text(
-                                  'From:\t',
-                                  style:
-                                  Theme.of(context).textTheme.titleMedium,
-                                )),
-                            SizedBox(
-                                width: 165,
-                                height: 100,
-                                child: DateTimeField(
-                                  format: DateFormat("yyyy-MM-dd HH:mm"),
-                                  onShowPicker: (context, currentValue) async {
-                                    final date = await showDatePicker(
-                                        context: context,
-                                        firstDate: DateTime(1900),
-                                        initialDate:
-                                        currentValue ?? DateTime.now(),
-                                        lastDate: DateTime(2100));
-                                    if (date != null) {
-                                      final time = await showTimePicker(
-                                        context: context,
-                                        initialTime: TimeOfDay.fromDateTime(
-                                            currentValue ?? DateTime.now()),
-                                      );
-                                      return DateTimeField.combine(date, time);
-                                    } else {
-                                      return currentValue;
-                                    }
-                                  },
-                                ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                margin:
-                                const EdgeInsets.only(top: 12, right: 6),
-                                child: Text(
-                                  'To:\t',
-                                  style:
-                                  Theme.of(context).textTheme.titleMedium,
-                                )),
-                            SizedBox(
-                                width: 165,
-                                height: 100,
-                                child: DateTimeField(
-                                  format: DateFormat("yyyy-MM-dd HH:mm"),
-                                  onShowPicker: (context, currentValue) async {
-                                    final date = await showDatePicker(
-                                        context: context,
-                                        firstDate: DateTime(1900),
-                                        initialDate:
-                                        currentValue ?? DateTime.now(),
-                                        lastDate: DateTime(2100));
-                                    if (date != null) {
-                                      final time = await showTimePicker(
-                                        context: context,
-                                        initialTime: TimeOfDay.fromDateTime(
-                                            currentValue ?? DateTime.now()),
-                                      );
-                                      return DateTimeField.combine(date, time);
-                                    } else {
-                                      return currentValue;
-                                    }
-                                  },
-                                ))
-                          ],
-                        ),
-                        ElevatedButton(
-                            onPressed: () {}, child: const Text('Search')),
-                        Switch.adaptive(value: true, onChanged: (val) {}),
-                      ],
-                    ),
-                  ),
+
                   Expanded(
                     child: TankGraph(
                       axisTitle: "Temp (°C)",
