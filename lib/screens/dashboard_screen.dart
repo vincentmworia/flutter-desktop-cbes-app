@@ -16,17 +16,17 @@ class DashboardScreen extends StatelessWidget {
       final bdRadius = BorderRadius.circular(10);
       Widget cardView(String title, Widget? child) => GestureDetector(
             onDoubleTap: () {
-              if (title == HomeScreen.pageTitle(PageTitle.heatingUnit)) {
-                switchDashboardPage(PageTitle.heatingUnit,
-                    HomeScreen.pageTitle(PageTitle.heatingUnit));
+              if (title == HomeScreen.pageTitle(PageTitle.solarHeaterMeter)) {
+                switchDashboardPage(PageTitle.solarHeaterMeter,
+                    HomeScreen.pageTitle(PageTitle.solarHeaterMeter));
               }
               if (title == HomeScreen.pageTitle(PageTitle.environmentMeter)) {
                 switchDashboardPage(PageTitle.environmentMeter,
                     HomeScreen.pageTitle(PageTitle.environmentMeter));
               }
-              if (title == HomeScreen.pageTitle(PageTitle.powerUnit)) {
-                switchDashboardPage(PageTitle.powerUnit,
-                    HomeScreen.pageTitle(PageTitle.powerUnit));
+              if (title == HomeScreen.pageTitle(PageTitle.electricalEnergyMeter)) {
+                switchDashboardPage(PageTitle.electricalEnergyMeter,
+                    HomeScreen.pageTitle(PageTitle.electricalEnergyMeter));
               }
             },
             child: Card(
@@ -91,20 +91,37 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: EdgeInsets.all(cons.maxHeight * 0.05),
-                  child: cardView(
-                    'Power Unit',
-                    DashboardScreenPowerUnitConsumer(
-                      width: cons.maxWidth,
-                      height: cons.maxHeight,
-                    ),
-                  ),
-                )),
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  cardView(
+                      'Shed Meter',
+                      DashboardScreenHeatingUnitConsumer(
+                        width: cons.maxWidth,
+                        height: cons.maxHeight,
+                      )),
+                  cardView(
+                      'Energy Meter',
+                      DashboardScreenEnvironmentMeterConsumer(
+                        width: cons.maxWidth,
+                        height: cons.maxHeight,
+                      )),
+                ],
+              ),
+            ),
             // Expanded(
             //     flex: 1,
-            //     child: Container()),
+            //     child: Padding(
+            //       padding: EdgeInsets.all(cons.maxHeight * 0.05),
+            //       child: cardView(
+            //         'Power Unit',
+            //         DashboardScreenPowerUnitConsumer(
+            //           width: cons.maxWidth,
+            //           height: cons.maxHeight,
+            //         ),
+            //       ),
+            //     )),
           ],
         ),
       );

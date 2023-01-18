@@ -52,8 +52,8 @@ class MyApp extends StatelessWidget {
             secondary: appSecondaryColor,
           ),
           appBarTheme: AppBarTheme(
-            toolbarHeight: 70,
-            centerTitle: true,
+            toolbarHeight: 65,
+            // centerTitle: true,
             elevation: 0,
             titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Colors.white, fontSize: 25.0, letterSpacing: 5.0),

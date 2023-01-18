@@ -11,14 +11,22 @@ import './dashboard_screen.dart';
 import './admin_screen.dart';
 import './heating_unit_screen.dart';
 import './settings_screen.dart';
-import './power_unit_screen.dart';
+import './electrical_energy_screen.dart';
 import './environment_meter_screen.dart';
+import './piping_unit_screen.dart';
+import './thermal_energy_screen.dart';
+import './shed_meter_screen.dart';
+import './duct_meter_screen.dart';
 
 enum PageTitle {
   dashboard,
-  heatingUnit,
+  solarHeaterMeter,
+  pipingUnitMeter,
   environmentMeter,
-  powerUnit,
+  shedMeter,
+  ductMeter,
+  electricalEnergyMeter,
+  thermalEnergyUnit,
   admin,
   settings
 }
@@ -31,16 +39,28 @@ class HomeScreen extends StatefulWidget {
     switch (page) {
       case PageTitle.dashboard:
         return "Dashboard";
-      case PageTitle.heatingUnit:
-        return "Solar Heating Unit";
+      case PageTitle.solarHeaterMeter:
+        return "Solar Heater";
       case PageTitle.environmentMeter:
         return "Environment Meter";
-      case PageTitle.powerUnit:
-        return "Power Unit";
+      case PageTitle.electricalEnergyMeter:
+        return "Electrical Energy";
       case PageTitle.admin:
-        return "Admin Screen";
+        return "Administrator";
       case PageTitle.settings:
         return "Settings";
+      case PageTitle.pipingUnitMeter:
+        return "Piping Meter";
+        break;
+      case PageTitle.shedMeter:
+        return "Shed Meter";
+        break;
+      case PageTitle.ductMeter:
+        return "Duct Meter";
+        break;
+      case PageTitle.thermalEnergyUnit:
+        return "Thermal Energy";
+        break;
     }
   }
 
@@ -97,16 +117,28 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (page) {
       case PageTitle.dashboard:
         return DashboardScreen(switchDashboardPage: _switchPage);
-      case PageTitle.heatingUnit:
+      case PageTitle.solarHeaterMeter:
         return const HeatingUnitScreen();
       case PageTitle.environmentMeter:
         return const EnvironmentMeterScreen();
-      case PageTitle.powerUnit:
-        return const PowerUnitScreen();
+      case PageTitle.electricalEnergyMeter:
+        return const ElectricalEnergyScreen();
       case PageTitle.admin:
-        return const AdminScreen();
+        return const AdministratorScreen();
       case PageTitle.settings:
         return const SettingsScreen();
+      case PageTitle.pipingUnitMeter:
+       return const PipingUnitScreen();
+        break;
+      case PageTitle.shedMeter:
+        return const ShedMeterScreen();
+        break;
+      case PageTitle.ductMeter:
+        return const DuctMeterScreen();
+        break;
+      case PageTitle.thermalEnergyUnit:
+        return const ThermalEnergyScreen();
+        break;
     }
   }
 
@@ -136,74 +168,121 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          title: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(_pageTitle)),
+          actions: [
+            SizedBox(
+              // color: Theme.of(context).colorScheme.secondary,
+              width: MediaQuery.of(context).size.width * 0.6,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                    onDoubleTap: () {
-                      _switchPage(PageTitle.dashboard,
-                          HomeScreen.pageTitle(PageTitle.dashboard));
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Image.asset(
-                        'images/cbes_logo_cropped.PNG',
-                        fit: BoxFit.cover,
-                        width: 40,
-                        // height: 50,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onDoubleTap: () {
+                          _switchPage(PageTitle.dashboard,
+                              HomeScreen.pageTitle(PageTitle.dashboard));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.asset(
+                            'images/cbes_logo_cropped.PNG',
+                            fit: BoxFit.cover,
+                            width: 40,
+                            // height: 50,
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'DeKUT\tCBES',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            letterSpacing: 1.0),
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  const Text(
-                    'CBES',
-                    style: titleStyle,
-                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.person,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 25),
+                        child: Text(
+                          '${LoginUserData.getLoggedUser!.firstname} ${LoginUserData.getLoggedUser!.lastname}',
+                          overflow: TextOverflow.clip,
+                          style: txtStyle,
+                        ),
+                      ),
+                    ],
+                  )
+
+                  // GestureDetector(
+                  //   onDoubleTap: () {
+                  //     _switchPage(PageTitle.dashboard,
+                  //         HomeScreen.pageTitle(PageTitle.dashboard));
+                  //   },
+                  //   child: ClipRRect(
+                  //     borderRadius: BorderRadius.circular(5),
+                  //     child: Image.asset(
+                  //       'images/cbes_logo_cropped.PNG',
+                  //       fit: BoxFit.cover,
+                  //       width: 40,
+                  //       // height: 50,
+                  //     ),
+                  //   ),
+                  // ),
+                  // const Text(
+                  //   'DeKUT\tCBES',
+                  //   style: TextStyle(
+                  //       fontWeight: FontWeight.w600,
+                  //       color: Colors.white,
+                  //       fontSize: 20.0,
+                  //       letterSpacing: 1.0),
+                  // ),
                 ],
               ),
-              Text(_pageTitle),
-              const Text(
-                'DeKUT',
-                style: titleStyle,
-              ),
-            ],
-          ),
-          actions: [
-            Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Icon(
-                  _connectionStatus == ConnectivityResult.wifi
-                      ? Icons.wifi
-                      : _connectionStatus == ConnectivityResult.mobile
-                          ? Icons.signal_cellular_alt
-                          : _connectionStatus == ConnectivityResult.ethernet
-                              ? Icons.cable
-                              : Icons.signal_cellular_0_bar,
-                  size: 30,
-                  color: Colors.white,
-                )),
-            const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(
-                  Icons.person,
-                  size: 30,
-                  color: Colors.white,
-                )),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 25),
-                child: Text(
-                  '${LoginUserData.getLoggedUser!.firstname} ${LoginUserData.getLoggedUser!.lastname}',
-                  overflow: TextOverflow.clip,
-                  style: txtStyle,
-                ),
-              ),
             ),
+            // Padding(
+            //     padding: const EdgeInsets.only(right: 10),
+            //     child: Icon(
+            //       _connectionStatus == ConnectivityResult.wifi
+            //           ? Icons.wifi
+            //           : _connectionStatus == ConnectivityResult.mobile
+            //               ? Icons.signal_cellular_alt
+            //               : _connectionStatus == ConnectivityResult.ethernet
+            //                   ? Icons.cable
+            //                   : Icons.signal_cellular_0_bar,
+            //       size: 30,
+            //       color: Colors.white,
+            //     )),
+            // const Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 10),
+            //     child: Icon(
+            //       Icons.person,
+            //       size: 30,
+            //       color: Colors.white,
+            //     )),
+            // Center(
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(right: 25),
+            //     child: Text(
+            //       '${LoginUserData.getLoggedUser!.firstname} ${LoginUserData.getLoggedUser!.lastname}',
+            //       overflow: TextOverflow.clip,
+            //       style: txtStyle,
+            //     ),
+            //   ),
+            // ),
           ],
           leading: Padding(
             padding: const EdgeInsets.only(left: 25),

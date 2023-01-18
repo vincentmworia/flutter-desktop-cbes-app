@@ -5,8 +5,8 @@ import '../widgets/radial_gauge_sf.dart';
 import '../widgets/tank_graph.dart';
 import '../providers/mqtt.dart';
 
-class PowerUnitScreen extends StatelessWidget {
-  const PowerUnitScreen({Key? key}) : super(key: key);
+class ElectricalEnergyScreen extends StatelessWidget {
+  const ElectricalEnergyScreen({Key? key}) : super(key: key);
 
   static const _pageRatio = 0.25;
 

@@ -118,7 +118,9 @@ class FirebaseAuthentication {
       });
     } catch (e) {
       message = e.toString();
-      if (message != null && message!.contains('identity')) {
+      if (message != null &&
+          (message!.contains('identity') ||
+              message!.contains('Connection closed before full'))) {
         message = 'Please check your internet connection';
       }
       return message ?? 'Login error';

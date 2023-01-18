@@ -69,17 +69,17 @@ class _NavBarPlaneState extends State<NavBarPlane> {
                 LoginUserData.getLoggedUser!.privilege == userAdmin
             ? [
                 {PageTitle.dashboard: Icons.dashboard},
-                {PageTitle.heatingUnit: Icons.heat_pump},
+                {PageTitle.solarHeaterMeter: Icons.heat_pump},
                 {PageTitle.environmentMeter: Icons.device_thermostat},
-                {PageTitle.powerUnit: Icons.power_input},
+                {PageTitle.electricalEnergyMeter: Icons.power_input},
                 {PageTitle.admin: Icons.admin_panel_settings},
                 {PageTitle.settings: Icons.settings}
               ]
             : [
                 {PageTitle.dashboard: Icons.dashboard},
-                {PageTitle.heatingUnit: Icons.heat_pump},
+                {PageTitle.solarHeaterMeter: Icons.heat_pump},
                 {PageTitle.environmentMeter: Icons.device_thermostat},
-                {PageTitle.powerUnit: Icons.power_input},
+                {PageTitle.electricalEnergyMeter: Icons.power_input},
                 {PageTitle.settings: Icons.settings}
               ];
     return SizedBox(

@@ -59,11 +59,15 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
-  @override
-  Future<void> didChangeDependencies() async {
-    super.didChangeDependencies();
+  // @override
+  // Future<void> didChangeDependencies() async {
+  //   super.didChangeDependencies();
+  //   tryAutoLogin();
+  // }
+
+  Future<void> tryAutoLogin() async {
     if (init) {
-      print('pref');
+      // print('pref');
       final prefs = await SharedPreferences.getInstance();
       if (prefs.containsKey(RememberMeBnState.rememberMePrefName)) {
         setState(() {
@@ -107,13 +111,19 @@ class _AuthScreenState extends State<AuthScreen> {
             // setState(() {
             //   _isLoading = false;
             // });
+            if(mounted){
             if (message.startsWith("Welcome")) {
-              Future.delayed(Duration.zero).then((_) =>
-                  Navigator.pushReplacementNamed(
-                      context, HomeScreen.routeName));
+              Future.delayed(Duration.zero).then((_) {
+
+                  Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+
+              }
+                 );
             } else {
-              await customDialog(context, message);
-            }
+
+                await customDialog(context, message);
+
+            }}
           }));
     } catch (e) {
       Future.delayed(Duration.zero)
@@ -143,9 +153,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   _isLoading = true;
-    // });
+    print('Building');
+    tryAutoLogin();
     if (_connectionStatus == ConnectivityResult.none) {
       setState(() {
         _isLoading = false;
@@ -157,6 +166,9 @@ class _AuthScreenState extends State<AuthScreen> {
         _connectionStatus == ConnectivityResult.mobile ||
         _connectionStatus == ConnectivityResult.wifi;
 
+    if (!goodConnection) {
+      init = true;
+    }
     final deviceWidth = MediaQuery.of(context).size.width;
 
     final bgImage = Container(
@@ -166,7 +178,7 @@ class _AuthScreenState extends State<AuthScreen> {
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            Theme.of(context).colorScheme.primary.withOpacity(0.25),
             // Theme.of(context).colorScheme.secondary ,
           ],
           begin: Alignment.topCenter,
@@ -223,7 +235,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   color:
                       Theme.of(context).colorScheme.secondary.withOpacity(0.25),
                   child: Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(color: Theme.of(context).colorScheme.secondary , size: 100),
+                    child: LoadingAnimationWidget.fourRotatingDots(
+                        color: Theme.of(context).colorScheme.secondary,
+                        size: 100),
                   ),
                 ),
               ),
