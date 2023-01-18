@@ -2,6 +2,8 @@ import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart';
+
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -112,7 +114,25 @@ class HeatingUnitScreen extends StatelessWidget {
                     children: [
                       ElevatedButton.icon(
                           icon: const Icon(Icons.file_copy),
-                          onPressed: () {},
+                          onPressed: () {
+                            // Create a new Excel document.
+
+                            final Workbook workbook = new Workbook();
+//Accessing worksheet via index.
+                            final Worksheet sheet = workbook.worksheets[0];
+//Add Text.
+                            sheet.getRangeByName('A1').setText('Hello World');
+//Add Number
+                            sheet.getRangeByName('A3').setNumber(44);
+//Add DateTime
+                            sheet.getRangeByName('A5').setDateTime(DateTime(2020,12,12,1,10,20));
+// Save the document.
+                            final List<int> bytes = workbook.saveAsStream();
+                            File('AddingTextNumberDateTime.xlsx').writeAsBytes(bytes);
+//Dispose the workbook.
+                            workbook.dispose();
+
+                          },
                           label: const Text('Generate Excel')),
                       ElevatedButton.icon(
                           icon: const Icon(Icons.picture_as_pdf),
